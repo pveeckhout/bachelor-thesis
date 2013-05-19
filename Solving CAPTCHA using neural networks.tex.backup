@@ -226,7 +226,7 @@ Ingediend op \datum
 \section{Premise}
 \label{sec:Premise}
 
-%% TODO: Write premise
+%% TODO: Write introduction
 
 \section{Research questions}
 \label{sec:researquestions}
@@ -236,9 +236,7 @@ Ingediend op \datum
 \chapter{Methodology}
 \label{ch:methodology}
 
-
-
-%% TODO: write methodology
+%% TODO: methodology
 
 \chapter{Corpus}
 \label{ch:corpus}
@@ -248,17 +246,11 @@ Ingediend op \datum
 \section{CAPTCHA}
 \label{sec:captcha}
 
-%% TODO: write methodology
-
 \section{Neural Networks}
 \label{sec:neuralnetworks}
 
-%% TODO: write methodology
-
 \section{Implementation}
 \label{sec:implementation}
-
-%% TODO: write methodology
 
 %% 
 %% Conclusie
@@ -266,8 +258,6 @@ Ingediend op \datum
 
 \chapter{Conclusion}
 \label{ch:conclusie}
-
-%% TODO: write methodology
 
 %%---------- Bijlagen ----------------------------------------------------
 
