@@ -1,6 +1,6 @@
 \select@language {UKenglish}
 \contentsline {chapter}{\numberline {1}Solving CAPTCHA using neural networks}{3}{chapter.1}
-\contentsline {paragraph}{A history of SPAM.}{3}{section*.3}
+\contentsline {paragraph}{The history of SPAM.}{3}{section*.3}
 \contentsline {paragraph}{Birth of CAPTCHA.}{3}{section*.4}
 \contentsline {paragraph}{Spammers fight back.}{4}{section*.5}
 \contentsline {chapter}{\numberline {2}Premise and research questions}{5}{chapter.2}
