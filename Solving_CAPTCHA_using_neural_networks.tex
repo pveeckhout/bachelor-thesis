@@ -202,22 +202,33 @@ Submitted on \datum
 \chapter*{Preamble}
 \label{ch:preamble}
 
-%% Vergeet ook niet te bedankten wie je geholpen/gesteund/... heeft
-
+Firstly, dear reader, I would like to thank you for taking the time to read this thesis. Without an audience this entire endeavour would not mean as much as it doe right now, while you are reading it's results. I personally believe this is because I would like my life not to go unnoticed. So if this thesis helps, or influences you in any way, the this work has gained more meaning.\\Secondly I would like to thank the following persons who have made it possible for me to arrive at this point. Special thanks and mentions go to:
+\begin{itemize}
+\item my parent, for giving me the opportunity and supplying the means for me to pursue my academic career.
+\item my girlfriend, because she has helped me countless times. Because she helped through the rough spots. Because she never once complained about the time consuming job of writing this work.
+\item my good friends, willing proof readers and content critics Wouter Dekens, Patrick Van Brussel and Thijs van der Burght.
+\item Johan Van Schoor and Bert Van Vreckem for the support, organisation, guidance and feedback.
+\end{itemize}\\Bare in mind that this is not an exclusive list. So lastly I would like to thank all the other people who are not mentioned by name, like the teaching and support staff at University College Ghent.\\\\Ghent BELGIUM, June 2013
+\begin{center}
+\includegraphics[width=6cm]{./img/signature.png}\\[.5cm]
+\studenta
+\end{center}
 
 \chapter{Solving CAPTCHA using neural networks}
 \label{ch:introduction}
+\paragraph{The target audience.}
+This thesis was written with an audience in mind that already has some technical understanding of computers and how they operate on hardware level (processor etc.). If you feel that your current knowledge is insufficient, or just want to read up some more, then I refer you to the "How Computers Work - Processor and Main Memory" \citep{Young2001} e-book.
 \paragraph{The history of SPAM.} 
-Ever since the internet has found its way into the daily usage in our society there have been people out there who don't always have other peoples best interests in mind. In this particular case I am referring to people aiming to advertise their product, services, etc \ldots in an aggressive manner. The methods of advertising include but are not limited to: \begin{itemize}
+Ever since the internet has found its way into the daily usage in our society there have been people out there who don't always have other people's best interests in mind. In this particular case I am referring to people aiming to advertise their product, services, etc \ldots in an aggressive manner. The methods of advertising include but are not limited to: \begin{itemize}
 \item Sending bulk emails without the recipients permission (SPAM). 
-\item Posting irrelevant links and info on fora and various social media.
-\item Flooding chat channels with their links and info. 
+\item Posting irrelevant links and information on fora and various social media.
+\item Flooding chat channels with their links and information. 
 \end{itemize}
-These emails, posts and messages inconvenience the end-users, requiring time to filter out the junk. The economic costs of SPAM has led to a decrease in the Japanese GDP by 500 billion Yen (3.78 billion Euro) in 2004 and were projected to reach a decrease of 1\% of the total GDP by 2010 unless adequate countermeasures were taken \citep{Ukai2007}. \citep{Khong2004} reseached the economic arguments for regulating junk mails, the efficiency of these regulations.
+These emails, posts and messages inconvenience the end-users, requiring time to filter out the junk. The economic costs of SPAM has led to a decrease in the Japanese GDP by 500 billion Yen (3.78 billion Euro) in 2004 and were projected to reach a decrease of 1\% of the total GDP by 2010 unless adequate countermeasures were taken \citep{Ukai2007}. \citep{Khong2004} reseached the economic arguments for regulating junk mails and the efficiency of these regulations.
 \paragraph{Birth of CAPTCHA.} 
 The two previously mentioned researches signify the importance and impact of SPAM on our daily lives. The users of the internet quickly tried to implement methods to prevent spammers from spreading their advertisements to the masses. Several prevention and detection methods and systems were developed successfully. These range from hidden text only visible to automated scripts, to invalid HTML tags. One of the methods developed for this purpose is a CAPTCHA test. CAPTCHA is an acronym based on the word ''capture'' and is spelled out completely as 'Completely Automated Public Turing test to tell Computers and Humans Apart'. An attempt to trademark  the term was made by Carnegie Mellon University on 15 October 2004, but the application was eventually dropped on 12 April 2008
 \paragraph{Spammers fight back.}
-All these prevention and detection methods did not stop the spammers from trying to reach an audience as large  as possible. They rely on this vast audience because of the return rates being as low as 0.0023\% \citep{Cobb2003}. Trying to reach such a large audience the spammers start to device ways to circumvent or break the existing systems. One of these methods is solving CAPTCHA tests making use of the adaptive learning and pattern recognizing capabilities of neural networks. These networks can be used to recognize letters from images with adversial clutter.
+All these prevention and detection methods did not stop the spammers from trying to reach an audience as large  as possible. They rely on this vast audience because of the return rates being as low as 0.0023\% \citep{Cobb2003}. Trying to reach such a large audience the spammers start to device ways to circumvent or break the existing systems. One of these methods is solving CAPTCHA tests making use of the adaptive learning and pattern recognizing capabilities of neural networks. These networks can be used to recognize letters from images with adversarial clutter.
 This is the area I will focus on in this thesis. This thesis will list some of the difficulties regarding the extraction of relevant data from a CAPTCHA, and how to possibly overcome these difficulties. However the main focus will be on searching for the types and configuration of neural networks best used for pattern recognition.
 
 
