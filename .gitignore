@@ -1,0 +1,5 @@
+# Ignore all in build\
+build\*
+
+# Do track .pdf files in build\
+!build\*.pdf
