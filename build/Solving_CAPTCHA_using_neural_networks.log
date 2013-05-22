@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.5.21)  22 MAY 2013 03:14
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.5.21)  22 MAY 2013 20:15
 entering extended mode
-**Solving*CAPTCHA*using*neural*networks.tex
+**Solving_CAPTCHA_using_neural_networks.tex
 
-("E:\User Data\Pieter\Documents\bachelor-thesis\Solving CAPTCHA using neural ne
+("E:\User Data\Pieter\Documents\bachelor-thesis\Solving_CAPTCHA_using_neural_ne
 tworks.tex"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
@@ -552,22 +552,22 @@ LaTeX Info: Redefining \cite on input line 694.
 \f@ncyO@olf=\skip58
 \f@ncyO@orf=\skip59
 )
-("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving CAPTCHA using neu
-ral networks.aux")
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 102.
-LaTeX Font Info:    ... okay on input line 102.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 102.
-LaTeX Font Info:    ... okay on input line 102.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 102.
-LaTeX Font Info:    ... okay on input line 102.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 102.
-LaTeX Font Info:    ... okay on input line 102.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 102.
-LaTeX Font Info:    ... okay on input line 102.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 102.
-LaTeX Font Info:    ... okay on input line 102.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 102.
-LaTeX Font Info:    ... okay on input line 102.
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.aux")
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -584,7 +584,7 @@ LaTeX Font Info:    ... okay on input line 102.
 \everyMPtoPDFconversion=\toks26
 )
 \AtBeginShipoutBox=\box33
-Package hyperref Info: Link coloring OFF on input line 102.
+Package hyperref Info: Link coloring OFF on input line 98.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -593,21 +593,21 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count128
 )
-LaTeX Info: Redefining \ref on input line 102.
-LaTeX Info: Redefining \pageref on input line 102.
-LaTeX Info: Redefining \nameref on input line 102.
+LaTeX Info: Redefining \ref on input line 98.
+LaTeX Info: Redefining \pageref on input line 98.
+LaTeX Info: Redefining \nameref on input line 98.
 
-("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving CAPTCHA using neu
-ral networks.out")
-("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving CAPTCHA using neu
-ral networks.out")
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.out")
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.out")
 \@outlinefile=\write3
 \c@lstlisting=\count129
- <./img/FBO-NL.jpg, id=59, 2007.5pt x 1370.11874pt>
+ <./img/FBO-NL.jpg, id=47, 2007.5pt x 1370.11874pt>
 File: ./img/FBO-NL.jpg Graphic file (type jpg)
 
 <use ./img/FBO-NL.jpg>
-Package pdftex.def Info: ./img/FBO-NL.jpg used on input line 109.
+Package pdftex.def Info: ./img/FBO-NL.jpg used on input line 105.
 (pdftex.def)             Requested size: 113.81102pt x 77.6669pt.
 
 
@@ -617,7 +617,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.123 {\Large \ondertitel}\\
+l.119 {\Large \ondertitel}\\
                             [0.4cm]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -625,14 +625,14 @@ or  <return>  to continue without it.
 
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <12> not available
-(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 132.
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 128.
 
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 136.
+LaTeX Font Info:    Try loading font information for U+msa on input line 132.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 136.
+LaTeX Font Info:    Try loading font information for U+msb on input line 132.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -647,7 +647,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.166 {\Large \ondertitel}\\
+l.162 {\Large \ondertitel}\\
                             [0.4cm]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -657,67 +657,43 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.189 \end{titlepage}
+l.185 \end{titlepage}
                       [1]
-("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving CAPTCHA using neu
-ral networks.toc")
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.toc")
 \tf@toc=\write4
 pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.197 \begin{abstract}
+l.193 \begin{abstract}
                        [2
 
 ]pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.204 \end{abstract}
+l.200 \end{abstract}
                      [1]pdfTeX warning (ext4): destination with the same identi
 fier (name{page.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.212 \chapter
+l.208 \chapter
               {Solving CAPTCHA using neural networks} [2
 
 ]
 Chapter 1.
-
-Package hyperref Warning: Difference (4) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 215.
-
-LaTeX Font Info:    Try loading font information for OMS+cmss on input line 216
+LaTeX Font Info:    Try loading font information for OMS+cmss on input line 212
 .
-LaTeX Font Info:    No file OMScmss.fd. on input line 216.
+LaTeX Font Info:    No file OMScmss.fd. on input line 212.
 
 LaTeX Font Warning: Font shape `OMS/cmss/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbullet' on input line 216.
-
-
-Package natbib Warning: Citation `Ukai2007' on page 3 undefined on input line 2
-20.
-
-
-Package natbib Warning: Citation `Khong2004' on page 3 undefined on input line 
-220.
-
-
-Package hyperref Warning: Difference (3) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 222.
+(Font)              for symbol `textbullet' on input line 212.
 
 [3
 
 ]
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 224.
-
-
-Package natbib Warning: Citation `Cobb2003' on page 4 undefined on input line 2
-24.
-
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 14.49998pt.
@@ -742,65 +718,65 @@ Chapter 5.
 
 ]
 Appendix A.
-No file Solving*CAPTCHA*using*neural*networks.bbl.
-[9
+
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.bbl" [9
+
+]) [10
 
 ]
-("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving CAPTCHA using neu
-ral networks.lof")
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.lof")
 \tf@lof=\write5
- [10
-
-]
-("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving CAPTCHA using neu
-ral networks.lot")
-\tf@lot=\write6
  [11
 
 ]
-("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving CAPTCHA using neu
-ral networks.lol")
-\tf@lol=\write7
-
-
-Package natbib Warning: There were undefined citations.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 321.
-[12
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.lot")
+\tf@lot=\write6
+ [12
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 321.
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.lol")
+\tf@lol=\write7
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 317.
+ [13
 
-("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving CAPTCHA using neu
-ral networks.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 321.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 321.
-Package rerunfilecheck Info: File `Solving*CAPTCHA*using*neural*networks.out' h
+]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 317.
+
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.aux")
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 317.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 317.
+Package rerunfilecheck Info: File `Solving_CAPTCHA_using_neural_networks.out' h
 as not changed.
-(rerunfilecheck)             Checksum: <no file>.
+(rerunfilecheck)             Checksum: E536C14130CA857AEAAFCECFE9152C18;619.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 321.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 317.
  ) 
 Here is how much of TeX's memory you used:
- 8363 strings out of 493921
- 118052 string characters out of 3144873
- 201946 words of memory out of 3000000
- 11503 multiletter control sequences out of 15000+200000
- 10445 words of font info for 39 fonts, out of 3000000 for 9000
+ 8380 strings out of 493921
+ 118446 string characters out of 3144873
+ 202058 words of memory out of 3000000
+ 11512 multiletter control sequences out of 15000+200000
+ 10614 words of font info for 40 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 29i,11n,43p,849b,356s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 29i,11n,43p,845b,356s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><
 C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss12.pfb><C:
 /Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:
 /Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmssi12.pfb><C:/
-Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on "E:/User Data/Pieter/Documents/bachelor-thesis/build/Solving 
-CAPTCHA using neural networks.pdf" (16 pages, 636271 bytes).
+Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Pr
+ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on "E:/User Data/Pieter/Documents/bachelor-thesis/build/Solving_
+CAPTCHA_using_neural_networks.pdf" (17 pages, 651156 bytes).
 PDF statistics:
- 173 PDF objects out of 1000 (max. 8388607)
- 32 named destinations out of 1000 (max. 500000)
- 118 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 188 PDF objects out of 1000 (max. 8388607)
+ 37 named destinations out of 1000 (max. 500000)
+ 94 words of extra memory for PDF output out of 10000 (max. 10000000)
 
