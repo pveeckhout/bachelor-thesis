@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.5.21)  22 MAY 2013 22:41
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.5.21)  22 MAY 2013 23:07
 entering extended mode
 **Solving_CAPTCHA_using_neural_networks.tex
 
@@ -675,28 +675,14 @@ l.193 \begin{abstract}
                    \relax 
 l.200 \end{abstract}
                      [1]
-LaTeX Font Info:    Try loading font information for OMS+cmss on input line 207
+LaTeX Font Info:    Try loading font information for OMS+cmss on input line 206
 .
-LaTeX Font Info:    No file OMScmss.fd. on input line 207.
+LaTeX Font Info:    No file OMScmss.fd. on input line 206.
 
 
 LaTeX Font Warning: Font shape `OMS/cmss/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbullet' on input line 207.
-
-
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.211 \end{itemize}\\B
-                      are in mind that this is not an exclusive list. So las...
-
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
+(Font)              for symbol `textbullet' on input line 206.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 211--212
@@ -708,35 +694,19 @@ File: ./img/signature.png Graphic file (type png)
 
 <use ./img/signature.png>
 Package pdftex.def Info: ./img/signature.png used on input line 213.
-(pdftex.def)             Requested size: 170.71652pt x 65.01025pt.
+(pdftex.def)             Requested size: 142.26378pt x 54.17427pt.
 pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.217 \chapter
+l.216 \chapter
               {Solving CAPTCHA using neural networks} [2
 
  <E:/User Data/Pieter/Documents/bachelor-thesis/img/signature.png>]
 Chapter 1.
-
-Package natbib Warning: Citation `Young2001' on page 3 undefined on input line 
-220.
-
-
-Package natbib Warning: Citation `Ukai2007' on page 3 undefined on input line 2
-27.
-
-
-Package natbib Warning: Citation `Khong2004' on page 3 undefined on input line 
-227.
-
 [3
 
 ]
-
-Package natbib Warning: Citation `Cobb2003' on page 4 undefined on input line 2
-31.
-
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 14.49998pt.
@@ -761,39 +731,38 @@ Chapter 5.
 
 ]
 Appendix A.
-No file Solving_CAPTCHA_using_neural_networks.bbl.
-[9
+
+("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
+ral_networks.bbl" [9
+
+]) [10
 
 ]
 ("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
 ral_networks.lof")
 \tf@lof=\write5
- [10
+ [11
 
 ]
 ("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
 ral_networks.lot")
 \tf@lot=\write6
- [11
+ [12
 
 ]
 ("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
 ral_networks.lol")
 \tf@lol=\write7
-
-
-Package natbib Warning: There were undefined citations.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 328.
-[12
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 317.
+ [13
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 328.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 317.
 
 ("E:\User Data\Pieter\Documents\bachelor-thesis\build\Solving_CAPTCHA_using_neu
 ral_networks.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 328.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 328.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 317.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 317.
 Package rerunfilecheck Info: File `Solving_CAPTCHA_using_neural_networks.out' h
 as not changed.
 (rerunfilecheck)             Checksum: E536C14130CA857AEAAFCECFE9152C18;619.
@@ -801,25 +770,26 @@ as not changed.
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 328.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 317.
  ) 
 Here is how much of TeX's memory you used:
- 8368 strings out of 493921
- 118149 string characters out of 3144873
- 201975 words of memory out of 3000000
- 11505 multiletter control sequences out of 15000+200000
- 10445 words of font info for 39 fonts, out of 3000000 for 9000
+ 8391 strings out of 493921
+ 118634 string characters out of 3144873
+ 203082 words of memory out of 3000000
+ 11519 multiletter control sequences out of 15000+200000
+ 10614 words of font info for 40 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  29i,11n,43p,845b,356s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><
 C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss12.pfb><C:
 /Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:
 /Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmssi12.pfb><C:/
-Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Pr
+ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
 Output written on "E:/User Data/Pieter/Documents/bachelor-thesis/build/Solving_
-CAPTCHA_using_neural_networks.pdf" (16 pages, 646123 bytes).
+CAPTCHA_using_neural_networks.pdf" (17 pages, 663663 bytes).
 PDF statistics:
- 164 PDF objects out of 1000 (max. 8388607)
- 33 named destinations out of 1000 (max. 500000)
+ 195 PDF objects out of 1000 (max. 8388607)
+ 39 named destinations out of 1000 (max. 500000)
  99 words of extra memory for PDF output out of 10000 (max. 10000000)
 

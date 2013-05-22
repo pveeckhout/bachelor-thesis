@@ -2,7 +2,7 @@
 \contentsline {chapter}{\numberline {1}Solving CAPTCHA using neural networks}{3}{chapter.1}
 \contentsline {paragraph}{The target audience.}{3}{section*.3}
 \contentsline {paragraph}{The history of SPAM.}{3}{section*.4}
-\contentsline {paragraph}{Birth of CAPTCHA.}{3}{section*.5}
+\contentsline {paragraph}{Birth of CAPTCHA.}{4}{section*.5}
 \contentsline {paragraph}{Spammers fight back.}{4}{section*.6}
 \contentsline {chapter}{\numberline {2}Premise and research questions}{5}{chapter.2}
 \contentsline {section}{\numberline {2.1}Premise}{5}{section.2.1}
