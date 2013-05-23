@@ -1,4 +1,4 @@
-# This is my README
+# Solving CAPTCHA with neural networks
 This project is my bachelor thesis for University College Ghent, professional Bachelor of applied Computer Science
 
 The thesis will be based on my personal experiences trying to device a working system to crack CAPTCHA images as well as on literature study.
