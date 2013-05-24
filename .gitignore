@@ -5,6 +5,5 @@ source/
 build/*
 #but do NOT ignore the folder itself
 !build/
-
 # and do NOT ignore all .pdf files in build/
-!build/**/*.pdf
+!build/*.pdf
