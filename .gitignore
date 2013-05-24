@@ -1,5 +1,7 @@
-# ignore all files in the build/ directory
+# ignore all files in these directories
 build/
+source/
+source
 
 # but do track all .pdf files in build/
 !build/**/*.pdf

@@ -64,7 +64,8 @@
 
 %%---------- Custom Commands ---------------------------------------
 % CAPTCHA
-\newcommand{\captcha}{CAPTCHA }
+\newcommand{\captchasp}{CAPTCHA }
+\newcommand{\captcha}{CAPTCHA}
 
 
 %%---------- Documenteigenschappen ---------------------------------------
@@ -85,7 +86,7 @@
 %\newcommand{\mentor}{Jan Janssen, ACME Inc.}
 
 % De titel van je scriptie/stageverslag
-\newcommand{\titel}{Solving \captcha using neural networks}
+\newcommand{\titel}{Solving \captchasp using neural networks}
 
 % Ondertitel
 \newcommand{\ondertitel}{}
@@ -209,7 +210,7 @@ Submitted on \datum
 \label{ch:preamble}
 Firstly, dear reader, I would like to thank you for taking the time to read this thesis. Without an audience this entire endeavour would not mean as much as it does right now, while you are reading it's results. I personally believe this is because I would like my life not to go unnoticed. So if this thesis helps, or influences you in any way, then this work has gained more meaning.\\Secondly I would like to thank the following persons who have made it possible for me to arrive at this point. Special thanks and mentions go to:
 \begin{itemize}
-\item my parents, for giving me the opportunity and supplying the means for me to pursue my academic career.
+\item my parents, for supporting me and giving me the opportunity and supplying the means for me to pursue my academic career.
 \item my girlfriend, because she has helped me countless times, she helped me through the rough spots. Because she never once complained about the time consuming job of writing this work.
 \item my good friends, willing proof readers and content critics Wouter Dekens, Patrick Van Brussel and Thijs van der Burgt.
 \item Johan Van Schoor and Bert Van Vreckem for the support, organisation, guidance and feedback.
@@ -219,7 +220,7 @@ Bare in mind that this is not an exclusive list. So lastly I would like to thank
 \includegraphics[width=5cm]{./img/signature.png}\\[.5cm]
 \studenta
 \end{center}
-\chapter{Solving CAPTCHA using neural networks}
+\chapter{\titel}
 \label{ch:introduction}
 \paragraph{The target audience.}
 This thesis was written with an audience in mind that already has some technical understanding of computers and how they operate on hardware level (processor etc.). If you feel that your current knowledge is insufficient, or just want to read up some more, then I refer you to the ''How Computers Work - Processor and Main Memory'' \citep{Young2001} e-book.
@@ -237,51 +238,51 @@ All these prevention and detection methods did not stop the spammers from trying
 This is the area I will focus on in this thesis. This thesis will list some of the difficulties regarding the extraction of relevant data from a CAPTCHA, and how to possibly overcome these difficulties. However the main focus will be on searching for the types and configuration of neural networks best used for pattern recognition.
 \chapter{Premise and research questions}
 \label{ch:Premise}
-
 \section{Premise}
 \label{sec:Premise}
-
-%% VRAAGSTELLING
-%% TODO: Write premise
-
+The main objective of this thesis is to ascertain whether neural networks are capable of solving the current generation of CAPTCHA images. we will define the premise  as following:\\\\
+\emph{''Are neural networks a viable tool for solving the current generation of CAPTCHA?''}
 \section{Research questions}
 \label{sec:researquestions}
-
-%What different types of CAPTCHA exist?
-
-%What are the difficulties for solving a CAPTCHA automatically
-
-%What are the types of neural networks suitable for OCR
-
-%Is this a feasible endeavour at this point of personal computing power
-%% TODO: Write research question
-
+The research can be divided into two separate subjects. If one was to develop software for automatic CAPTCHA solving, following questions and problems would need to be addressed.
+\paragraph{\captcha :}
+\begin{itemize}
+\item What are the different types of CAPTCHA?
+\item How can the distorted text be extracted?
+\end{itemize}
+\paragraph{Neural networks:}
+\begin{itemize}
+\item How do neural networks operate?
+\item Which types of neural networks are well suited pattern recognition?
+\item What network configuration would perform best?
+\end{itemize}
+\paragraph{general:}
+\begin{itemize}
+\item How future proof would this solution be?
+\item Is there enough economic incentive to invest in development?
+\end{itemize}
 \chapter{Methodology}
 \label{ch:methodology}
-
-
-
-%% TODO: write methodology
-
+\paragraph{Research philosophy.}
+\paragraph{Research approach.}
+\paragraph{Access.}
+\paragraph{Research strategy.}
 \chapter{Corpus}
 \label{ch:corpus}
-
-%% TODO: define structure
-
 \section{CAPTCHA}
 \label{sec:captcha}
 
-%% TODO: write methodology
+%% TODO: write captcha
 
 \section{Neural Networks}
 \label{sec:neuralnetworks}
 
-%% TODO: write methodology
+%% TODO: write neural network
 
 \section{Implementation}
 \label{sec:implementation}
 
-%% TODO: write methodology
+%% TODO: write implementation
 
 %% 
 %% Conclusie
