@@ -1,5 +1,6 @@
 # ignore all files in these directories
 build/
+build
 source/
 source
 
