@@ -2,7 +2,7 @@
 /build/
 
 # ignore all files inside dist folder
-/dist/
+/dist/*
 
 # do not ignore dist folder itself
 !/dist/
