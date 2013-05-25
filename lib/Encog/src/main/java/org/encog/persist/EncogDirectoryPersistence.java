@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -41,243 +41,256 @@ import org.encog.util.logging.EncogLogging;
 /**
  * Handles Encog persistence for a directory. This is the usual mode where each
  * resource is stored in a separate EG file.
- * 
+ * <p/>
  */
 public class EncogDirectoryPersistence {
 
-	/**
-	 * Load an EG object as a reousrce.
-	 * @param res The resource name.
-	 * @return The loaded object.
-	 */
-	public static Object loadResourceObject(final String res) {
-		InputStream is = null;
-		try {
-		 is = ResourceInputStream.openResourceInputStream(res);
-		return loadObject(is);
-		} finally {
-			try {
-				if( is!=null ) {
-					is.close();
-				}
-			} catch(IOException ex) {
-				
-			}
-		}
-	}
-	
-	/**
-	 * Load the specified object.
-	 * @param file The file to load.
-	 * @return The loaded object.
-	 */
-	public static Object loadObject(final File file) {
-		FileInputStream fis = null;
+    /**
+     * Load an EG object as a reousrce.
+     * <p/>
+     * @param res The resource name.
+     * <p/>
+     * @return The loaded object.
+     */
+    public static Object loadResourceObject(final String res) {
+        InputStream is = null;
+        try {
+            is = ResourceInputStream.openResourceInputStream(res);
+            return loadObject(is);
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException ex) {
+            }
+        }
+    }
 
-		try {
-			fis = new FileInputStream(file);
-			final Object result = EncogDirectoryPersistence.loadObject(fis);
+    /**
+     * Load the specified object.
+     * <p/>
+     * @param file The file to load.
+     * <p/>
+     * @return The loaded object.
+     */
+    public static Object loadObject(final File file) {
+        FileInputStream fis = null;
 
-			return result;
-		} catch (final IOException ex) {
-			throw new PersistError(ex);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (final IOException e) {
-					EncogLogging.log(e);
-				}
-			}
-		}
-	}
+        try {
+            fis = new FileInputStream(file);
+            final Object result = EncogDirectoryPersistence.loadObject(fis);
 
-	/**
-	 * Load an object from an input stream.
-	 * @param is The input stream to read from.
-	 * @return The loaded object.
-	 */
-	public static Object loadObject(final InputStream is) {
+            return result;
+        } catch (final IOException ex) {
+            throw new PersistError(ex);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (final IOException e) {
+                    EncogLogging.log(e);
+                }
+            }
+        }
+    }
 
-		final String header = EncogDirectoryPersistence.readLine(is);
-		final String[] params = header.split(",");
+    /**
+     * Load an object from an input stream.
+     * <p/>
+     * @param is The input stream to read from.
+     * <p/>
+     * @return The loaded object.
+     */
+    public static Object loadObject(final InputStream is) {
 
-		if (!"encog".equals(params[0])) {
-			throw new PersistError("Not a valid EG file.");
-		}
+        final String header = EncogDirectoryPersistence.readLine(is);
+        final String[] params = header.split(",");
 
-		final String name = params[1];
+        if (!"encog".equals(params[0])) {
+            throw new PersistError("Not a valid EG file.");
+        }
 
-		final EncogPersistor p = PersistorRegistry.getInstance().getPersistor(
-				name);
+        final String name = params[1];
 
-		if (p == null) {
-			throw new PersistError("Do not know how to read the object: "
-					+ name);
-		}
+        final EncogPersistor p = PersistorRegistry.getInstance().getPersistor(
+                name);
 
-		if (p.getFileVersion() < Integer.parseInt(params[4])) {
-			throw new PersistError(
-					"The file you are trying to read is from a later version of Encog.  Please upgrade Encog to read this file.");
-		}
+        if (p == null) {
+            throw new PersistError("Do not know how to read the object: " +
+                    name);
+        }
 
-		return p.read(is);
+        if (p.getFileVersion() < Integer.parseInt(params[4])) {
+            throw new PersistError(
+                    "The file you are trying to read is from a later version of Encog.  Please upgrade Encog to read this file.");
+        }
 
-	}
+        return p.read(is);
 
-	/**
-	 * Read a line from the input stream.
-	 * @param is The input stream.
-	 * @return The line read.
-	 */
-	private static String readLine(final InputStream is) {
-		try {
-			final StringBuilder result = new StringBuilder();
+    }
 
-			char ch;
+    /**
+     * Read a line from the input stream.
+     * <p/>
+     * @param is The input stream.
+     * <p/>
+     * @return The line read.
+     */
+    private static String readLine(final InputStream is) {
+        try {
+            final StringBuilder result = new StringBuilder();
 
-			do {
-				final int b = is.read();
-				if (b == -1) {
-					return result.toString();
-				}
+            char ch;
 
-				ch = (char) b;
+            do {
+                final int b = is.read();
+                if (b == -1) {
+                    return result.toString();
+                }
 
-				if ((ch != 13) && (ch != 10)) {
-					result.append(ch);
-				}
+                ch = (char) b;
 
-			} while (ch != 10);
+                if ((ch != 13) && (ch != 10)) {
+                    result.append(ch);
+                }
 
-			return result.toString();
-		} catch (final IOException ex) {
-			throw new PersistError(ex);
-		}
-	}
+            } while (ch != 10);
 
-	/**
-	 * Save the specified object.
-	 * @param filename The filename to save to.
-	 * @param obj The Object to save.
-	 */
-	public static void saveObject(final File filename, 
-			final Object obj) {
-		FileOutputStream fos = null;
+            return result.toString();
+        } catch (final IOException ex) {
+            throw new PersistError(ex);
+        }
+    }
 
-		try {
-			fos = new FileOutputStream(filename);
-			EncogDirectoryPersistence.saveObject(fos, obj);
-		} catch (final IOException ex) {
-			throw new PersistError(ex);
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (final IOException e) {
-				EncogLogging.log(e);
-			}
-		}
-	}
+    /**
+     * Save the specified object.
+     * <p/>
+     * @param filename The filename to save to.
+     * @param obj      The Object to save.
+     */
+    public static void saveObject(final File filename,
+                                  final Object obj) {
+        FileOutputStream fos = null;
 
-	/**
-	 * Save the specified object.
-	 * @param os The output stream to write to.
-	 * @param obj The object to save.
-	 */
-	public static void saveObject(final OutputStream os, final Object obj) {
-		try {
-			final EncogPersistor p = PersistorRegistry.getInstance()
-					.getPersistor(obj.getClass());
+        try {
+            fos = new FileOutputStream(filename);
+            EncogDirectoryPersistence.saveObject(fos, obj);
+        } catch (final IOException ex) {
+            throw new PersistError(ex);
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (final IOException e) {
+                EncogLogging.log(e);
+            }
+        }
+    }
 
-			if (p == null) {
-				throw new PersistError("Do not know how to persist object: "
-						+ obj.getClass().getSimpleName());
-			}
+    /**
+     * Save the specified object.
+     * <p/>
+     * @param os  The output stream to write to.
+     * @param obj The object to save.
+     */
+    public static void saveObject(final OutputStream os, final Object obj) {
+        try {
+            final EncogPersistor p = PersistorRegistry.getInstance()
+                    .getPersistor(obj.getClass());
 
-			os.flush();
-			final PrintWriter pw = new PrintWriter(os);
-			final Date now = new Date();
-			pw.println("encog," + obj.getClass().getSimpleName() + ",java,"
-					+ Encog.VERSION + "," + p.getFileVersion() + ","
-					+ now.getTime());
-			pw.flush();
-			p.save(os, obj);
-		} catch (final IOException ex) {
-			throw new PersistError(ex);
-		}
-	}
+            if (p == null) {
+                throw new PersistError("Do not know how to persist object: " +
+                        obj.getClass().getSimpleName());
+            }
 
-	/**
-	 * The directory that holds the EG files.
-	 */
-	private final File parent;
+            os.flush();
+            final PrintWriter pw = new PrintWriter(os);
+            final Date now = new Date();
+            pw.println("encog," + obj.getClass().getSimpleName() + ",java," +
+                    Encog.VERSION + "," + p.getFileVersion() + "," +
+                    now.getTime());
+            pw.flush();
+            p.save(os, obj);
+        } catch (final IOException ex) {
+            throw new PersistError(ex);
+        }
+    }
+    /**
+     * The directory that holds the EG files.
+     */
+    private final File parent;
 
-	/**
-	 * Construct the object.
-	 * @param parent The directory to use.
-	 */
-	public EncogDirectoryPersistence(final File parent) {
-		this.parent = parent;
-	}
+    /**
+     * Construct the object.
+     * <p/>
+     * @param parent The directory to use.
+     */
+    public EncogDirectoryPersistence(final File parent) {
+        this.parent = parent;
+    }
 
-	/**
-	 * Get the type of an Encog object in an EG file, without the 
-	 * need to read the entire file.
-	 * @param name The filename to read.
-	 * @return The type.
-	 */
-	public String getEncogType(final String name) {
-		BufferedReader br = null;
-		
-		try {
-			final File path = new File(this.parent, name);
-			br = new BufferedReader(new FileReader(path));
-			final String header = br.readLine();
-			if( header==null ) {
-				throw new PersistError("Invalid file, can't find header");
-			}
-			final String[] params = header.split(",");
+    /**
+     * Get the type of an Encog object in an EG file, without the
+     * need to read the entire file.
+     * <p/>
+     * @param name The filename to read.
+     * <p/>
+     * @return The type.
+     */
+    public String getEncogType(final String name) {
+        BufferedReader br = null;
 
-			return params[1];
-		} catch (final IOException ex) {
-			throw new PersistError(ex);
-		} finally {
-			if( br!=null ) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					EncogLogging.log(e);
-				}				
-			}
-		}
-	}
+        try {
+            final File path = new File(this.parent, name);
+            br = new BufferedReader(new FileReader(path));
+            final String header = br.readLine();
+            if (header == null) {
+                throw new PersistError("Invalid file, can't find header");
+            }
+            final String[] params = header.split(",");
 
-	/**
-	 * @return The directory.
-	 */
-	public final File getParent() {
-		return this.parent;
-	}
+            return params[1];
+        } catch (final IOException ex) {
+            throw new PersistError(ex);
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    EncogLogging.log(e);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Load a file from the directory that this object refers to.
-	 * @param name The name to load.
-	 * @return The object.
-	 */
-	public final Object loadFromDirectory(final String name) {
-		final File path = new File(this.parent, name);
-		return EncogDirectoryPersistence.loadObject(path);
-	}
+    /**
+     * @return The directory.
+     */
+    public final File getParent() {
+        return this.parent;
+    }
 
-	/**
-	 * Save a file to the directory that this object refers to.
-	 * @param name The name to load.
-	 */
-	public final void saveToDirectory(final String name, final Object obj) {
-		final File path = new File(this.parent, name);
-		EncogDirectoryPersistence.saveObject(path, obj);
-	}
+    /**
+     * Load a file from the directory that this object refers to.
+     * <p/>
+     * @param name The name to load.
+     * <p/>
+     * @return The object.
+     */
+    public final Object loadFromDirectory(final String name) {
+        final File path = new File(this.parent, name);
+        return EncogDirectoryPersistence.loadObject(path);
+    }
 
+    /**
+     * Save a file to the directory that this object refers to.
+     * <p/>
+     * @param name The name to load.
+     */
+    public final void saveToDirectory(final String name, final Object obj) {
+        final File path = new File(this.parent, name);
+        EncogDirectoryPersistence.saveObject(path, obj);
+    }
 }

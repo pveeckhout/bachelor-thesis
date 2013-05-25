@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -44,29 +44,30 @@ public class RegularizationStrategy implements Strategy {
     @Override
     public void init(MLTrain train) {
         this.train = train;
-        if( !(train.getMethod() instanceof MLEncodable) ) {
-        	throw new EncogError("Method must implement MLEncodable to be used with regularization.");
+        if (!(train.getMethod() instanceof MLEncodable)) {
+            throw new EncogError(
+                    "Method must implement MLEncodable to be used with regularization.");
         }
-        this.encodable = ((MLEncodable)train.getMethod());
+        this.encodable = ((MLEncodable) train.getMethod());
         this.weights = new double[this.encodable.encodedArrayLength()];
         this.newWeights = new double[this.encodable.encodedArrayLength()];
     }
 
     @Override
     public void preIteration() {
-    	((MLEncodable)train.getMethod()).encodeToArray(weights);
+        ((MLEncodable) train.getMethod()).encodeToArray(weights);
     }
 
     @Override
-	public void postIteration() {
+    public void postIteration() {
 
-		this.encodable.encodeToArray(newWeights);
+        this.encodable.encodeToArray(newWeights);
 
-		for (int i = 0; i < newWeights.length; i++) {
-			newWeights[i] -= lambda * weights[i];
-		}
+        for (int i = 0; i < newWeights.length; i++) {
+            newWeights[i] -= lambda * weights[i];
+        }
 
-		this.encodable.decodeFromArray(newWeights);
-		EngineArray.arrayCopy(newWeights, weights);
-	}
+        this.encodable.decodeFromArray(newWeights);
+        EngineArray.arrayCopy(newWeights, weights);
+    }
 }

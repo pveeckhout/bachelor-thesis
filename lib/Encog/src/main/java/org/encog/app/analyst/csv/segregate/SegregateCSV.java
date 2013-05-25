@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,132 +40,131 @@ import org.encog.util.csv.ReadCSV;
  * be used to create training and evaluation datasets.
  */
 public class SegregateCSV extends BasicFile {
-	
-	/**
-	 * TOtal percents should add to this.
-	 */
-	public static final int TOTAL_PCT = 100;
-	
-	/**
-	 * The segregation targets.
-	 */
-	private List<SegregateTargetPercent> targets 
-		= new ArrayList<SegregateTargetPercent>();
 
-	/**
-	 * Analyze the input file.
-	 * 
-	 * @param inputFile
-	 *            The input file.
-	 * @param headers
-	 *            The headers.
-	 * @param format
-	 *            The format of the input file.
-	 */
-	public void analyze(final File inputFile, final boolean headers,
-			final CSVFormat format) {
-		setInputFilename(inputFile);
-		setExpectInputHeaders(headers);
-		setInputFormat(format);
+    /**
+     * TOtal percents should add to this.
+     */
+    public static final int TOTAL_PCT = 100;
+    /**
+     * The segregation targets.
+     */
+    private List<SegregateTargetPercent> targets =
+            new ArrayList<SegregateTargetPercent>();
 
-		setAnalyzed(true);
+    /**
+     * Analyze the input file.
+     * <p/>
+     * @param inputFile
+     *                  The input file.
+     * @param headers
+     *                  The headers.
+     * @param format
+     *                  The format of the input file.
+     */
+    public void analyze(final File inputFile, final boolean headers,
+                        final CSVFormat format) {
+        setInputFilename(inputFile);
+        setExpectInputHeaders(headers);
+        setInputFormat(format);
 
-		performBasicCounts();
+        setAnalyzed(true);
 
-		balanceTargets();
-	}
+        performBasicCounts();
 
-	/**
-	 * Balance the targets.
-	 */
-	private void balanceTargets() {
-		SegregateTargetPercent smallestItem = null;
-		int numberAssigned = 0;
+        balanceTargets();
+    }
 
-		// first try to assign as many as can be assigned
-		for (final SegregateTargetPercent p : this.targets) {
-			final SegregateTargetPercent stp = p;
+    /**
+     * Balance the targets.
+     */
+    private void balanceTargets() {
+        SegregateTargetPercent smallestItem = null;
+        int numberAssigned = 0;
 
-			// assign a number of records to this
-			final double percent = stp.getPercent() / Format.HUNDRED_PERCENT;
-			final int c = (int) (getRecordCount() * percent);
-			stp.setNumberRemaining(c);
+        // first try to assign as many as can be assigned
+        for (final SegregateTargetPercent p : this.targets) {
+            final SegregateTargetPercent stp = p;
 
-			// track the smallest group
-			if ((smallestItem == null)
-					|| (smallestItem.getPercent() > stp.getPercent())) {
-				smallestItem = stp;
-			}
+            // assign a number of records to this
+            final double percent = stp.getPercent() / Format.HUNDRED_PERCENT;
+            final int c = (int) (getRecordCount() * percent);
+            stp.setNumberRemaining(c);
 
-			numberAssigned += c;
+            // track the smallest group
+            if ((smallestItem == null) ||
+                    (smallestItem.getPercent() > stp.getPercent())) {
+                smallestItem = stp;
+            }
 
-		}
+            numberAssigned += c;
 
-		// see if there are any remaining items
-		final int remain = getRecordCount() - numberAssigned;
+        }
 
-		// if there are extras, just add them to the largest group
-		if (remain > 0) {
-			smallestItem.setNumberRemaining(smallestItem.getNumberRemaining()
-					+ remain);
-		}
-	}
+        // see if there are any remaining items
+        final int remain = getRecordCount() - numberAssigned;
 
-	/**
-	 * @return The segregation targets.
-	 */
-	public List<SegregateTargetPercent> getTargets() {
-		return this.targets;
-	}
+        // if there are extras, just add them to the largest group
+        if (remain > 0) {
+            smallestItem.setNumberRemaining(smallestItem.getNumberRemaining() +
+                    remain);
+        }
+    }
 
-	/**
-	 * Process the input file and segregate into the output files.
-	 */
-	public void process() {
-		validate();
+    /**
+     * @return The segregation targets.
+     */
+    public List<SegregateTargetPercent> getTargets() {
+        return this.targets;
+    }
 
-		final ReadCSV csv = new ReadCSV(getInputFilename().toString(),
-				isExpectInputHeaders(), getFormat());
-		resetStatus();
-		for (final SegregateTargetPercent target : this.targets) {
-			final PrintWriter tw = prepareOutputFile(target.getFilename());
+    /**
+     * Process the input file and segregate into the output files.
+     */
+    public void process() {
+        validate();
 
-			while ((target.getNumberRemaining() > 0) && csv.next()
-					&& !shouldStop()) {
-				updateStatus(false);
-				final LoadedRow row = new LoadedRow(csv);
-				writeRow(tw, row);
-				target.setNumberRemaining(target.getNumberRemaining() - 1);
-			}
+        final ReadCSV csv = new ReadCSV(getInputFilename().toString(),
+                                        isExpectInputHeaders(), getFormat());
+        resetStatus();
+        for (final SegregateTargetPercent target : this.targets) {
+            final PrintWriter tw = prepareOutputFile(target.getFilename());
 
-			tw.close();
-		}
-		reportDone(false);
-		csv.close();
-	}
+            while ((target.getNumberRemaining() > 0) && csv.next() &&
+                    !shouldStop()) {
+                updateStatus(false);
+                final LoadedRow row = new LoadedRow(csv);
+                writeRow(tw, row);
+                target.setNumberRemaining(target.getNumberRemaining() - 1);
+            }
 
-	/**
-	 * Validate that the data is correct.
-	 */
-	private void validate() {
-		validateAnalyzed();
+            tw.close();
+        }
+        reportDone(false);
+        csv.close();
+    }
 
-		if (this.targets.size() < 1) {
-			throw new QuantError("There are no segregation targets.");
-		}
+    /**
+     * Validate that the data is correct.
+     */
+    private void validate() {
+        validateAnalyzed();
 
-		if (this.targets.size() < 2) {
-			throw new QuantError(
-					"There must be at least two segregation targets.");
-		}
+        if (this.targets.size() < 1) {
+            throw new QuantError("There are no segregation targets.");
+        }
 
-		int total = 0;
-		for (final SegregateTargetPercent p : this.targets) {
-			total += p.getPercent();
-		}
+        if (this.targets.size() < 2) {
+            throw new QuantError(
+                    "There must be at least two segregation targets.");
+        }
 
-		if (total != TOTAL_PCT) {
-			throw new QuantError("Target percents must equal 100.");
-		}
-	}
+        int total = 0;
+        for (final SegregateTargetPercent p : this.targets) {
+            total += p.getPercent();
+        }
+
+        if (total != TOTAL_PCT) {
+            throw new QuantError("Target percents must equal 100.");
+        }
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,125 +34,121 @@ import org.encog.neural.networks.layers.BasicLayer;
  * layer. There is also a context layer which accepts output from the output
  * layer and outputs back to the hidden layer. This makes it a recurrent neural
  * network.
- * 
+ * <p/>
  * The Jordan neural network is useful for temporal input data. The specified
  * activation function will be used on all layers. The Jordan neural network is
  * similar to the Elman neural network.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class JordanPattern implements NeuralNetworkPattern {
 
-	/**
-	 * The number of input neurons.
-	 */
-	private int inputNeurons;
+    /**
+     * The number of input neurons.
+     */
+    private int inputNeurons;
+    /**
+     * The number of output neurons.
+     */
+    private int outputNeurons;
+    /**
+     * The number of hidden neurons.
+     */
+    private int hiddenNeurons;
+    /**
+     * The activation function.
+     */
+    private ActivationFunction activation;
 
-	/**
-	 * The number of output neurons.
-	 */
-	private int outputNeurons;
+    /**
+     * Construct an object to create a Jordan type neural network.
+     */
+    public JordanPattern() {
+        this.inputNeurons = -1;
+        this.outputNeurons = -1;
+        this.hiddenNeurons = -1;
+    }
 
-	/**
-	 * The number of hidden neurons.
-	 */
-	private int hiddenNeurons;
+    /**
+     * Add a hidden layer, there should be only one.
+     * <p/>
+     * @param count
+     *              The number of neurons in this hidden layer.
+     */
+    @Override
+    public void addHiddenLayer(final int count) {
+        if (this.hiddenNeurons != -1) {
+            throw new PatternError(
+                    "A Jordan neural network should have only one hidden " +
+                    "layer.");
+        }
 
-	/**
-	 * The activation function.
-	 */
-	private ActivationFunction activation;
+        this.hiddenNeurons = count;
 
-	/**
-	 * Construct an object to create a Jordan type neural network.
-	 */
-	public JordanPattern() {
-		this.inputNeurons = -1;
-		this.outputNeurons = -1;
-		this.hiddenNeurons = -1;
-	}
+    }
 
-	/**
-	 * Add a hidden layer, there should be only one.
-	 * 
-	 * @param count
-	 *            The number of neurons in this hidden layer.
-	 */
-	@Override
-	public void addHiddenLayer(final int count) {
-		if (this.hiddenNeurons != -1) {
-			throw new PatternError(
-					"A Jordan neural network should have only one hidden "
-							+ "layer.");
-		}
+    /**
+     * Clear out any hidden neurons.
+     */
+    @Override
+    public void clear() {
+        this.hiddenNeurons = -1;
+    }
 
-		this.hiddenNeurons = count;
+    /**
+     * Generate a Jordan neural network.
+     * <p/>
+     * @return A Jordan neural network.
+     */
+    @Override
+    public MLMethod generate() {
 
-	}
+        BasicLayer hidden, output;
 
-	/**
-	 * Clear out any hidden neurons.
-	 */
-	@Override
-	public void clear() {
-		this.hiddenNeurons = -1;
-	}
+        final BasicNetwork network = new BasicNetwork();
+        network.addLayer(new BasicLayer(null, true,
+                                        this.inputNeurons));
+        network.addLayer(hidden = new BasicLayer(this.activation, true,
+                                                 this.hiddenNeurons));
+        network.addLayer(output = new BasicLayer(this.activation, false,
+                                                 this.outputNeurons));
+        hidden.setContextFedBy(output);
+        network.getStructure().finalizeStructure();
+        network.reset();
+        return network;
+    }
 
-	/**
-	 * Generate a Jordan neural network.
-	 * 
-	 * @return A Jordan neural network.
-	 */
-	@Override
-	public MLMethod generate() {
+    /**
+     * Set the activation function to use on each of the layers.
+     * <p/>
+     * @param activation
+     *                   The activation function.
+     */
+    @Override
+    public void setActivationFunction(final ActivationFunction activation) {
+        this.activation = activation;
+    }
 
-		BasicLayer hidden, output;
+    /**
+     * Set the number of input neurons.
+     * <p/>
+     * @param count
+     *              Neuron count.
+     */
+    @Override
+    public void setInputNeurons(final int count) {
+        this.inputNeurons = count;
+    }
 
-		final BasicNetwork network = new BasicNetwork();
-		network.addLayer(new BasicLayer(null, true,
-				this.inputNeurons));
-		network.addLayer(hidden = new BasicLayer(this.activation, true,
-				this.hiddenNeurons));
-		network.addLayer(output = new BasicLayer(this.activation, false,
-				this.outputNeurons));
-		hidden.setContextFedBy(output);
-		network.getStructure().finalizeStructure();
-		network.reset();
-		return network;
-	}
-
-	/**
-	 * Set the activation function to use on each of the layers.
-	 * 
-	 * @param activation
-	 *            The activation function.
-	 */
-	@Override
-	public void setActivationFunction(final ActivationFunction activation) {
-		this.activation = activation;
-	}
-
-	/**
-	 * Set the number of input neurons.
-	 * 
-	 * @param count
-	 *            Neuron count.
-	 */
-	@Override
-	public void setInputNeurons(final int count) {
-		this.inputNeurons = count;
-	}
-
-	/**
-	 * Set the number of output neurons.
-	 * 
-	 * @param count
-	 *            Neuron count.
-	 */
-	@Override
-	public void setOutputNeurons(final int count) {
-		this.outputNeurons = count;
-	}
-
+    /**
+     * Set the number of output neurons.
+     * <p/>
+     * @param count
+     *              Neuron count.
+     */
+    @Override
+    public void setOutputNeurons(final int count) {
+        this.outputNeurons = count;
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,199 +40,192 @@ import org.encog.ml.ea.species.Species;
  * species that holds every genome.
  */
 public class BasicPopulation extends BasicML implements Population,
-		Serializable {
+        Serializable {
 
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The object name.
+     */
+    private String name;
+    /**
+     * The species that make up the population.
+     */
+    private final List<Species> species = new ArrayList<Species>();
+    /**
+     * The best genome.
+     */
+    private Genome bestGenome;
+    /**
+     * A factory that can be used to store create genomes.
+     */
+    private GenomeFactory genomeFactory;
+    /**
+     * How many genomes should be created.
+     */
+    private int populationSize;
 
-	/**
-	 * The object name.
-	 */
-	private String name;
+    /**
+     * Construct an empty population.
+     */
+    public BasicPopulation() {
+        this.populationSize = 0;
+    }
 
-	/**
-	 * The species that make up the population.
-	 */
-	private final List<Species> species = new ArrayList<Species>();
+    /**
+     * Construct a population.
+     * <p/>
+     * @param thePopulationSize
+     *                          The population size.
+     */
+    public BasicPopulation(final int thePopulationSize,
+                           final GenomeFactory theGenomeFactory) {
+        this.populationSize = thePopulationSize;
+        this.genomeFactory = theGenomeFactory;
+    }
 
-	/**
-	 * The best genome.
-	 */
-	private Genome bestGenome;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clear() {
+        this.species.clear();
 
-	/**
-	 * A factory that can be used to store create genomes.
-	 */
-	private GenomeFactory genomeFactory;
+    }
 
-	/**
-	 * How many genomes should be created.
-	 */
-	private int populationSize;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Species createSpecies() {
+        final Species species = new BasicSpecies();
+        species.setPopulation(this);
+        getSpecies().add(species);
+        return species;
+    }
 
-	/**
-	 * Construct an empty population.
-	 */
-	public BasicPopulation() {
-		this.populationSize = 0;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Species determineBestSpecies() {
+        for (final Species species : this.species) {
+            if (species.getMembers().contains(this.bestGenome)) {
+                return species;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Construct a population.
-	 * 
-	 * @param thePopulationSize
-	 *            The population size.
-	 */
-	public BasicPopulation(final int thePopulationSize,
-			final GenomeFactory theGenomeFactory) {
-		this.populationSize = thePopulationSize;
-		this.genomeFactory = theGenomeFactory;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Genome> flatten() {
+        final List<Genome> result = new ArrayList<Genome>();
+        for (final Species species : this.species) {
+            result.addAll(species.getMembers());
+        }
+        return result;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void clear() {
-		this.species.clear();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Genome getBestGenome() {
+        return this.bestGenome;
+    }
 
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public GenomeFactory getGenomeFactory() {
+        return this.genomeFactory;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Species createSpecies() {
-		final Species species = new BasicSpecies();
-		species.setPopulation(this);
-		getSpecies().add(species);
-		return species;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getMaxIndividualSize() {
+        return Integer.MAX_VALUE;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Species determineBestSpecies() {
-		for (final Species species : this.species) {
-			if (species.getMembers().contains(this.bestGenome)) {
-				return species;
-			}
-		}
-		return null;
-	}
+    /**
+     * @return The name.
+     */
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Genome> flatten() {
-		final List<Genome> result = new ArrayList<Genome>();
-		for (final Species species : this.species) {
-			result.addAll(species.getMembers());
-		}
-		return result;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getPopulationSize() {
+        return this.populationSize;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Genome getBestGenome() {
-		return this.bestGenome;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Species> getSpecies() {
+        return this.species;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public GenomeFactory getGenomeFactory() {
-		return this.genomeFactory;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setBestGenome(final Genome genome) {
+        this.bestGenome = genome;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getMaxIndividualSize() {
-		return Integer.MAX_VALUE;
-	}
+    }
 
-	/**
-	 * @return The name.
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setGenomeFactory(final GenomeFactory factory) {
+        this.genomeFactory = factory;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getPopulationSize() {
-		return this.populationSize;
-	}
+    /**
+     * Set the name.
+     * <p/>
+     * @param theName
+     *                The new name.
+     */
+    public void setName(final String theName) {
+        this.name = theName;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Species> getSpecies() {
-		return this.species;
-	}
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setBestGenome(final Genome genome) {
-		this.bestGenome = genome;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setPopulationSize(final int thePopulationSize) {
+        this.populationSize = thePopulationSize;
+    }
 
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int size() {
+        return flatten().size();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setGenomeFactory(final GenomeFactory factory) {
-		this.genomeFactory = factory;
-	}
-
-	/**
-	 * Set the name.
-	 * 
-	 * @param theName
-	 *            The new name.
-	 */
-	public void setName(final String theName) {
-		this.name = theName;
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setPopulationSize(final int thePopulationSize) {
-		this.populationSize = thePopulationSize;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int size() {
-		return flatten().size();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateProperties() {
-
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateProperties() {
+    }
 }

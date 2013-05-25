@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,50 +37,51 @@ import org.encog.util.kmeans.KMeansUtil;
  *
  */
 public class Clusters {
-	private final Hashtable<MLDataPair, Integer> clustersHash;
-	private final ArrayList<Collection<MLDataPair>> clusters;
 
-	public Clusters(final int k, final MLDataSet observations) {
+    private final Hashtable<MLDataPair, Integer> clustersHash;
+    private final ArrayList<Collection<MLDataPair>> clusters;
 
-		this.clustersHash = new Hashtable<MLDataPair, Integer>();
-		this.clusters = new ArrayList<Collection<MLDataPair>>();
+    public Clusters(final int k, final MLDataSet observations) {
 
-		final List<MLDataPair> list = new ArrayList<MLDataPair>();
-		for (final MLDataPair pair : observations) {
-			list.add(pair);
-		}
-		final KMeansUtil<MLDataPair> kmc = new KMeansUtil<MLDataPair>(k, list);
-		kmc.process();
+        this.clustersHash = new Hashtable<MLDataPair, Integer>();
+        this.clusters = new ArrayList<Collection<MLDataPair>>();
 
-		for (int i = 0; i < k; i++) {
-			final Collection<MLDataPair> cluster = kmc.get(i);
-			this.clusters.add(cluster);
+        final List<MLDataPair> list = new ArrayList<MLDataPair>();
+        for (final MLDataPair pair : observations) {
+            list.add(pair);
+        }
+        final KMeansUtil<MLDataPair> kmc = new KMeansUtil<MLDataPair>(k, list);
+        kmc.process();
 
-			for (final MLDataPair element : cluster) {
-				this.clustersHash.put(element, i);
-			}
-		}
-	}
+        for (int i = 0; i < k; i++) {
+            final Collection<MLDataPair> cluster = kmc.get(i);
+            this.clusters.add(cluster);
 
-	public Collection<MLDataPair> cluster(final int clusterNb) {
-		return this.clusters.get(clusterNb);
-	}
+            for (final MLDataPair element : cluster) {
+                this.clustersHash.put(element, i);
+            }
+        }
+    }
 
-	public int cluster(final MLDataPair o) {
-		return this.clustersHash.get(o);
-	}
+    public Collection<MLDataPair> cluster(final int clusterNb) {
+        return this.clusters.get(clusterNb);
+    }
 
-	public boolean isInCluster(final MLDataPair o, final int x) {
-		return cluster(o) == x;
-	}
+    public int cluster(final MLDataPair o) {
+        return this.clustersHash.get(o);
+    }
 
-	public void put(final MLDataPair o, final int clusterNb) {
-		this.clustersHash.put(o, clusterNb);
-		this.clusters.get(clusterNb).add(o);
-	}
+    public boolean isInCluster(final MLDataPair o, final int x) {
+        return cluster(o) == x;
+    }
 
-	public void remove(final MLDataPair o, final int clusterNb) {
-		this.clustersHash.put(o, -1);
-		this.clusters.get(clusterNb).remove(o);
-	}
+    public void put(final MLDataPair o, final int clusterNb) {
+        this.clustersHash.put(o, clusterNb);
+        this.clusters.get(clusterNb).add(o);
+    }
+
+    public void remove(final MLDataPair o, final int clusterNb) {
+        this.clustersHash.put(o, -1);
+        this.clusters.get(clusterNb).remove(o);
+    }
 }

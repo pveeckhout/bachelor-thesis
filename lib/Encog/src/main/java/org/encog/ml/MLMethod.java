@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
 package org.encog.ml;
 
 /**
- * This interface is the base for all Encog Machine Learning methods.  It 
- * defines very little, other than the fact that a subclass is a Machine 
- * Learning Method.  A MLMethod is an algorithm that accepts data and 
- * provides some sort of insight into it.  This could be a neural network, 
+ * This interface is the base for all Encog Machine Learning methods. It
+ * defines very little, other than the fact that a subclass is a Machine
+ * Learning Method. A MLMethod is an algorithm that accepts data and
+ * provides some sort of insight into it. This could be a neural network,
  * support vector machine, clustering algorithm, or something else entirely.
- * 
+ * <p/>
  * Many MLMethods must be trained by a MLTrain object before they are useful.
  */
 public interface MLMethod {

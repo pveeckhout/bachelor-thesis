@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -29,30 +29,33 @@ import org.encog.neural.networks.training.concurrent.jobs.TrainingJob;
 /**
  * Performers actually perform the training. Currently there are performers for
  * OpenCL and CPU.
- * 
+ * <p/>
  */
 public interface ConcurrentTrainingPerformer extends Runnable {
-	
-	/**
-	 * @return True, if this performer is ready to train a job.
-	 */
-	boolean ready();
 
-	/**
-	 * Perform the specified job.
-	 * @param job The job to perform.
-	 */
-	void perform(TrainingJob job);
-	
-	/**
-	 * Set the manager.
-	 * @param manager The manager.
-	 */
-	void setManager(ConcurrentTrainingManager manager);
-	
-	/**
-	 * Get the manager.
-	 * @return The manager
-	 */
-	ConcurrentTrainingManager getManager();
+    /**
+     * @return True, if this performer is ready to train a job.
+     */
+    boolean ready();
+
+    /**
+     * Perform the specified job.
+     * <p/>
+     * @param job The job to perform.
+     */
+    void perform(TrainingJob job);
+
+    /**
+     * Set the manager.
+     * <p/>
+     * @param manager The manager.
+     */
+    void setManager(ConcurrentTrainingManager manager);
+
+    /**
+     * Get the manager.
+     * <p/>
+     * @return The manager
+     */
+    ConcurrentTrainingManager getManager();
 }

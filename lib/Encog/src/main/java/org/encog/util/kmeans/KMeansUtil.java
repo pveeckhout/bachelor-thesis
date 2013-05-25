@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,161 +33,168 @@ import java.util.List;
  * @param <K> The type to cluster.
  */
 public class KMeansUtil<K extends CentroidFactory<? super K>> {
-	
-	/**
-	 * The clusters.
-	 */
-	private final ArrayList<Cluster<K>> clusters;
-	
-	/**
-	 * The number of clusters.
-	 */
-	private final int k;
 
-	/**
-	 * Construct the clusters.  Call process to perform the cluster.
-	 * @param theK The number of clusters.
-	 * @param theElements The elements to cluster.
-	 */
-	public KMeansUtil(int theK, List<? extends K> theElements) {
-		this.k = theK;
-		clusters = new ArrayList<Cluster<K>>(theK);
-		initRandomClusters(theElements);
-	}
+    /**
+     * The clusters.
+     */
+    private final ArrayList<Cluster<K>> clusters;
+    /**
+     * The number of clusters.
+     */
+    private final int k;
 
-	/**
-	 * Create random clusters.
-	 * @param elements The elements to cluster.
-	 */
-	private void initRandomClusters(List<? extends K> elements) {
+    /**
+     * Construct the clusters. Call process to perform the cluster.
+     * <p/>
+     * @param theK        The number of clusters.
+     * @param theElements The elements to cluster.
+     */
+    public KMeansUtil(int theK, List<? extends K> theElements) {
+        this.k = theK;
+        clusters = new ArrayList<Cluster<K>>(theK);
+        initRandomClusters(theElements);
+    }
 
-		int clusterIndex = 0;
-		int elementIndex = 0;
+    /**
+     * Create random clusters.
+     * <p/>
+     * @param elements The elements to cluster.
+     */
+    private void initRandomClusters(List<? extends K> elements) {
 
-		// first simply fill out the clusters, until we run out of clusters
-		while ((elementIndex < elements.size()) && (clusterIndex < k)
-				&& (elements.size() - elementIndex > k - clusterIndex)) {
-			K element = elements.get(elementIndex);
+        int clusterIndex = 0;
+        int elementIndex = 0;
 
-			boolean added = false;
+        // first simply fill out the clusters, until we run out of clusters
+        while ((elementIndex < elements.size()) && (clusterIndex < k) &&
+                (elements.size() - elementIndex > k - clusterIndex)) {
+            K element = elements.get(elementIndex);
 
-			// if this element is identical to another, add it to this cluster
-			for (int i = 0; i < clusterIndex; i++) {
-				Cluster<K> cluster = clusters.get(i);
+            boolean added = false;
 
-				if (cluster.centroid().distance(element) == 0) {
-					cluster.add(element);
-					added = true;
-					break;
-				}
-			}
+            // if this element is identical to another, add it to this cluster
+            for (int i = 0; i < clusterIndex; i++) {
+                Cluster<K> cluster = clusters.get(i);
 
-			if (!added) {
-				clusters.add(new Cluster<K>(elements.get(elementIndex)));
-				clusterIndex++;
-			}
-			elementIndex++;
-		}
+                if (cluster.centroid().distance(element) == 0) {
+                    cluster.add(element);
+                    added = true;
+                    break;
+                }
+            }
 
-		// create
-		while (clusterIndex < k && elementIndex < elements.size()) {
-			clusters.add(new Cluster<K>(elements.get(elementIndex)));
-			elementIndex++;
-			clusterIndex++;
-		}
+            if (!added) {
+                clusters.add(new Cluster<K>(elements.get(elementIndex)));
+                clusterIndex++;
+            }
+            elementIndex++;
+        }
 
-		// handle case where there were not enough clusters created, 
-		// create empty ones.
-		while (clusterIndex < k) {
-			clusters.add(new Cluster<K>());
-			clusterIndex++;
-		}
+        // create
+        while (clusterIndex < k && elementIndex < elements.size()) {
+            clusters.add(new Cluster<K>(elements.get(elementIndex)));
+            elementIndex++;
+            clusterIndex++;
+        }
 
-		// otherwise, handle case where there were still unassigned elements
-		// add them to the nearest clusters.
-		while (elementIndex < elements.size()) {
-			K element = elements.get(elementIndex);
-			nearestCluster(element).add(element);
-			elementIndex++;
-		}
+        // handle case where there were not enough clusters created,
+        // create empty ones.
+        while (clusterIndex < k) {
+            clusters.add(new Cluster<K>());
+            clusterIndex++;
+        }
 
-	}
+        // otherwise, handle case where there were still unassigned elements
+        // add them to the nearest clusters.
+        while (elementIndex < elements.size()) {
+            K element = elements.get(elementIndex);
+            nearestCluster(element).add(element);
+            elementIndex++;
+        }
 
-	/**
-	 * Perform the cluster.
-	 */
-	public void process() {
+    }
 
-		boolean done;
-		do {
-			done = true;
+    /**
+     * Perform the cluster.
+     */
+    public void process() {
 
-			for (int i = 0; i < k; i++) {
-				Cluster<K> thisCluster = clusters.get(i);
-				List<K> thisElements = thisCluster.getContents();
+        boolean done;
+        do {
+            done = true;
 
-				for (int j = 0; j < thisElements.size(); j++) {
-					K thisElement = thisElements.get(j);
+            for (int i = 0; i < k; i++) {
+                Cluster<K> thisCluster = clusters.get(i);
+                List<K> thisElements = thisCluster.getContents();
 
-					// don't make a cluster empty
-					if (thisCluster.centroid().distance(thisElement) > 0) {
-						Cluster<K> nearestCluster = nearestCluster(thisElement);
+                for (int j = 0; j < thisElements.size(); j++) {
+                    K thisElement = thisElements.get(j);
 
-						// move to nearer cluster
-						if (thisCluster != nearestCluster) {
-							nearestCluster.add(thisElement);
-							thisCluster.remove(j);
-							done = false;
-						}
-					}
-				}
-			}
-		} while (!done);
-	}
+                    // don't make a cluster empty
+                    if (thisCluster.centroid().distance(thisElement) > 0) {
+                        Cluster<K> nearestCluster = nearestCluster(thisElement);
 
-	/**
-	 * Find the nearest cluster to the element.
-	 * @param element The element.
-	 * @return The nearest cluster.
-	 */
-	private Cluster<K> nearestCluster(K element) {
-		double distance = Double.MAX_VALUE;
-		Cluster<K> result = null;
+                        // move to nearer cluster
+                        if (thisCluster != nearestCluster) {
+                            nearestCluster.add(thisElement);
+                            thisCluster.remove(j);
+                            done = false;
+                        }
+                    }
+                }
+            }
+        } while (!done);
+    }
 
-		for (int i = 0; i < clusters.size(); i++) {
-			double thisDistance = clusters.get(i).centroid().distance(element);
+    /**
+     * Find the nearest cluster to the element.
+     * <p/>
+     * @param element The element.
+     * <p/>
+     * @return The nearest cluster.
+     */
+    private Cluster<K> nearestCluster(K element) {
+        double distance = Double.MAX_VALUE;
+        Cluster<K> result = null;
 
-			if (distance > thisDistance) {
-				distance = thisDistance;
-				result = clusters.get(i);
-			}
-		}
+        for (int i = 0; i < clusters.size(); i++) {
+            double thisDistance = clusters.get(i).centroid().distance(element);
 
-		return result;
-	}
+            if (distance > thisDistance) {
+                distance = thisDistance;
+                result = clusters.get(i);
+            }
+        }
 
-	/**
-	 * Get a cluster by index.
-	 * @param index The index to get.
-	 * @return The cluster.
-	 */
-	public Collection<K> get(int index) {
-		return clusters.get(index).getContents();
-	}
+        return result;
+    }
 
-	/**
-	 * @return The number of clusters.
-	 */
-	public int size() {
-		return clusters.size();
-	}
+    /**
+     * Get a cluster by index.
+     * <p/>
+     * @param index The index to get.
+     * <p/>
+     * @return The cluster.
+     */
+    public Collection<K> get(int index) {
+        return clusters.get(index).getContents();
+    }
 
-	/**
-	 * Get a cluster by index.
-	 * @param i The index to get.
-	 * @return The cluster.
-	 */
-	public Cluster<K> getCluster(int i) {
-		return this.clusters.get(i);
-	}
+    /**
+     * @return The number of clusters.
+     */
+    public int size() {
+        return clusters.size();
+    }
+
+    /**
+     * Get a cluster by index.
+     * <p/>
+     * @param i The index to get.
+     * <p/>
+     * @return The cluster.
+     */
+    public Cluster<K> getCluster(int i) {
+        return this.clusters.get(i);
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,120 +35,126 @@ import org.encog.ml.genetic.genome.IntegerArrayGenome;
 
 /**
  * A simple cross over where genes are simply "spliced". Genes are not allowed
- * to repeat.  This method only works with IntegerArrayGenome.
+ * to repeat. This method only works with IntegerArrayGenome.
  */
 public class SpliceNoRepeat implements EvolutionaryOperator {
-	
-	private EvolutionaryAlgorithm owner;
 
-	/**
-	 * Get a list of the genes that have not been taken before. This is useful
-	 * if you do not wish the same gene to appear more than once in a
-	 * chromosome.
-	 * 
-	 * @param source
-	 *            The pool of genes to select from.
-	 * @param taken
-	 *            An array of the taken genes.
-	 * @return Those genes in source that are not taken.
-	 */
-	private static int getNotTaken(final IntegerArrayGenome source,
-			final Set<Integer> taken) {
+    private EvolutionaryAlgorithm owner;
 
-		for (final int trial : source.getData()) {
-			if (!taken.contains(trial)) {
-				taken.add(trial);
-				return trial;
-			}
-		}
+    /**
+     * Get a list of the genes that have not been taken before. This is useful
+     * if you do not wish the same gene to appear more than once in a
+     * chromosome.
+     * <p/>
+     * @param source
+     *               The pool of genes to select from.
+     * @param taken
+     *               An array of the taken genes.
+     * <p/>
+     * @return Those genes in source that are not taken.
+     */
+    private static int getNotTaken(final IntegerArrayGenome source,
+                                   final Set<Integer> taken) {
 
-		throw new GeneticError("Ran out of integers to select.");
-	}
+        for (final int trial : source.getData()) {
+            if (!taken.contains(trial)) {
+                taken.add(trial);
+                return trial;
+            }
+        }
 
-	/**
-	 * The cut length.
-	 */
-	private int cutLength;
+        throw new GeneticError("Ran out of integers to select.");
+    }
+    /**
+     * The cut length.
+     */
+    private int cutLength;
 
-	/**
-	 * Construct a splice crossover.
-	 * 
-	 * @param theCutLength
-	 *            The cut length.
-	 */
-	public SpliceNoRepeat(final int theCutLength) {
-		this.cutLength = theCutLength;
-	}
+    /**
+     * Construct a splice crossover.
+     * <p/>
+     * @param theCutLength
+     *                     The cut length.
+     */
+    public SpliceNoRepeat(final int theCutLength) {
+        this.cutLength = theCutLength;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void performOperation(Random rnd, Genome[] parents, int parentIndex,
-			Genome[] offspring, int offspringIndex) {
-		
-		IntegerArrayGenome mother = (IntegerArrayGenome)parents[parentIndex];
-		IntegerArrayGenome father = (IntegerArrayGenome)parents[parentIndex+1];
-		IntegerArrayGenome offspring1 = (IntegerArrayGenome)this.owner.getPopulation().getGenomeFactory().factor();
-		IntegerArrayGenome offspring2 = (IntegerArrayGenome)this.owner.getPopulation().getGenomeFactory().factor();
-		
-		offspring[offspringIndex] = offspring1;
-		offspring[offspringIndex+1] = offspring2;
-		
-		final int geneLength = mother.size();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void performOperation(Random rnd, Genome[] parents, int parentIndex,
+                                 Genome[] offspring, int offspringIndex) {
 
-		// the chromosome must be cut at two positions, determine them
-		final int cutpoint1 = (int) (Math.random() 
-				* (geneLength - this.cutLength));
-		final int cutpoint2 = cutpoint1 + this.cutLength;
+        IntegerArrayGenome mother = (IntegerArrayGenome) parents[parentIndex];
+        IntegerArrayGenome father =
+                (IntegerArrayGenome) parents[parentIndex + 1];
+        IntegerArrayGenome offspring1 = (IntegerArrayGenome) this.owner
+                .getPopulation().getGenomeFactory().factor();
+        IntegerArrayGenome offspring2 = (IntegerArrayGenome) this.owner
+                .getPopulation().getGenomeFactory().factor();
 
-		// keep track of which genes have been taken in each of the two
-		// offspring, defaults to false.
-		final Set<Integer> taken1 = new HashSet<Integer>();
-		final Set<Integer> taken2 = new HashSet<Integer>();
+        offspring[offspringIndex] = offspring1;
+        offspring[offspringIndex + 1] = offspring2;
 
-		// handle cut section
-		for (int i = 0; i < geneLength; i++) {
-			if (!((i < cutpoint1) || (i > cutpoint2))) {
-				offspring1.copy(father,i,i);
-				offspring2.copy(mother,i,i);
-				taken1.add(father.getData()[i]);
-				taken2.add(mother.getData()[i]);
-			}
-		}
+        final int geneLength = mother.size();
 
-		// handle outer sections
-		for (int i = 0; i < geneLength; i++) {
-			if ((i < cutpoint1) || (i > cutpoint2)) {
+        // the chromosome must be cut at two positions, determine them
+        final int cutpoint1 = (int) (Math.random() *
+                (geneLength - this.cutLength));
+        final int cutpoint2 = cutpoint1 + this.cutLength;
 
-				offspring1.getData()[i] = SpliceNoRepeat.getNotTaken(mother, taken1);
-				offspring2.getData()[i] = SpliceNoRepeat.getNotTaken(father, taken2);
+        // keep track of which genes have been taken in each of the two
+        // offspring, defaults to false.
+        final Set<Integer> taken1 = new HashSet<Integer>();
+        final Set<Integer> taken2 = new HashSet<Integer>();
 
-			}
-		}
-	}
-	
-	/**
-	 * @return The number of offspring produced, which is 2 for splice crossover.
-	 */
-	@Override
-	public int offspringProduced() {
-		return 2;
-	}
+        // handle cut section
+        for (int i = 0; i < geneLength; i++) {
+            if (!((i < cutpoint1) || (i > cutpoint2))) {
+                offspring1.copy(father, i, i);
+                offspring2.copy(mother, i, i);
+                taken1.add(father.getData()[i]);
+                taken2.add(mother.getData()[i]);
+            }
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int parentsNeeded() {
-		return 2;
-	}
+        // handle outer sections
+        for (int i = 0; i < geneLength; i++) {
+            if ((i < cutpoint1) || (i > cutpoint2)) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void init(EvolutionaryAlgorithm theOwner) {
-		this.owner = theOwner;	
-	}
+                offspring1.getData()[i] = SpliceNoRepeat.getNotTaken(mother,
+                                                                     taken1);
+                offspring2.getData()[i] = SpliceNoRepeat.getNotTaken(father,
+                                                                     taken2);
+
+            }
+        }
+    }
+
+    /**
+     * @return The number of offspring produced, which is 2 for splice
+     *         crossover.
+     */
+    @Override
+    public int offspringProduced() {
+        return 2;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int parentsNeeded() {
+        return 2;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init(EvolutionaryAlgorithm theOwner) {
+        this.owner = theOwner;
+    }
 }

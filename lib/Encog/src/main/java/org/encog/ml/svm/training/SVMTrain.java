@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -43,231 +43,229 @@ import org.encog.util.logging.EncogLogging;
  */
 public class SVMTrain extends BasicTraining {
 
+    /**
+     * The network that is to be trained.
+     */
+    private final SVM network;
+    /**
+     * The problem to train for.
+     */
+    private svm_problem problem;
+    /**
+     * The number of folds.
+     */
+    private int fold = 0;
+    /**
+     * Is the training done.
+     */
+    private boolean trainingDone;
+    /**
+     * The gamma value.
+     */
+    private double gamma;
+    /**
+     * The const c value.
+     */
+    private double c;
 
-	/**
-	 * The network that is to be trained.
-	 */
-	private final SVM network;
+    /**
+     * Construct a trainer for an SVM network.
+     * <p/>
+     * @param method
+     *                The network to train.
+     * @param dataSet
+     *                The training data for this network.
+     */
+    public SVMTrain(final SVM method, final MLDataSet dataSet) {
+        super(TrainingImplementationType.OnePass);
+        this.network = method;
+        setTraining(dataSet);
+        this.trainingDone = false;
 
-	/**
-	 * The problem to train for.
-	 */
-	private svm_problem problem;
+        this.problem = EncodeSVMProblem.encode(dataSet, 0);
+        this.gamma = 1.0 / this.network.getInputCount();
+        this.c = 1.0;
+    }
 
-	/**
-	 * The number of folds.
-	 */
-	private int fold = 0;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canContinue() {
+        return false;
+    }
 
-	/**
-	 * Is the training done.
-	 */
-	private boolean trainingDone;
+    /**
+     * Evaluate the error for the specified model.
+     * <p/>
+     * @param param
+     *               The params for the SVN.
+     * @param prob
+     *               The problem to evaluate.
+     * @param target
+     *               The output values from the SVN.
+     * <p/>
+     * @return The calculated error.
+     */
+    private double evaluate(final svm_parameter param, final svm_problem prob,
+                            final double[] target) {
+        int totalCorrect = 0;
 
-	/**
-	 * The gamma value.
-	 */
-	private double gamma;
+        final ErrorCalculation error = new ErrorCalculation();
 
-	/**
-	 * The const c value.
-	 */
-	private double c;
+        if ((param.svm_type == svm_parameter.EPSILON_SVR) ||
+                (param.svm_type == svm_parameter.NU_SVR)) {
+            for (int i = 0; i < prob.l; i++) {
+                final double ideal = prob.y[i];
+                final double actual = target[i];
+                error.updateError(actual, ideal);
+            }
+            return error.calculate();
+        } else {
+            for (int i = 0; i < prob.l; i++) {
+                if (target[i] == prob.y[i]) {
+                    ++totalCorrect;
+                }
+            }
 
-	/**
-	 * Construct a trainer for an SVM network.
-	 * 
-	 * @param method
-	 *            The network to train.
-	 * @param dataSet
-	 *            The training data for this network.
-	 */
-	public SVMTrain(final SVM method, final MLDataSet dataSet) {
-		super(TrainingImplementationType.OnePass);
-		this.network = method;
-		setTraining(dataSet);
-		this.trainingDone = false;
+            return Format.HUNDRED_PERCENT * totalCorrect / prob.l;
+        }
+    }
 
-		this.problem = EncodeSVMProblem.encode(dataSet, 0);
-		this.gamma = 1.0 / this.network.getInputCount();
-		this.c = 1.0;
-	}
+    /**
+     * @return The constant C.
+     */
+    public double getC() {
+        return this.c;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean canContinue() {
-		return false;
-	}
+    /**
+     * @return the fold
+     */
+    public int getFold() {
+        return this.fold;
+    }
 
-	/**
-	 * Evaluate the error for the specified model.
-	 * 
-	 * @param param
-	 *            The params for the SVN.
-	 * @param prob
-	 *            The problem to evaluate.
-	 * @param target
-	 *            The output values from the SVN.
-	 * @return The calculated error.
-	 */
-	private double evaluate(final svm_parameter param, final svm_problem prob,
-			final double[] target) {
-		int totalCorrect = 0;
+    /**
+     * @return The gamma.
+     */
+    public double getGamma() {
+        return this.gamma;
+    }
 
-		final ErrorCalculation error = new ErrorCalculation();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MLMethod getMethod() {
+        return this.network;
+    }
 
-		if ((param.svm_type == svm_parameter.EPSILON_SVR)
-				|| (param.svm_type == svm_parameter.NU_SVR)) {
-			for (int i = 0; i < prob.l; i++) {
-				final double ideal = prob.y[i];
-				final double actual = target[i];
-				error.updateError(actual, ideal);
-			}
-			return error.calculate();
-		} else {
-			for (int i = 0; i < prob.l; i++) {
-				if (target[i] == prob.y[i]) {
-					++totalCorrect;
-				}
-			}
+    /**
+     * @return The problem being trained.
+     */
+    public svm_problem getProblem() {
+        return this.problem;
+    }
 
-			return Format.HUNDRED_PERCENT * totalCorrect / prob.l;
-		}
-	}
+    /**
+     * @return True if the training is done.
+     */
+    @Override
+    public boolean isTrainingDone() {
+        return this.trainingDone;
+    }
 
-	/**
-	 * @return The constant C.
-	 */
-	public double getC() {
-		return this.c;
-	}
+    /**
+     * Perform either a train or a cross validation. If the folds property is
+     * greater than 1 then cross validation will be done. Cross validation does
+     * not produce a usable model, but it does set the error.
+     * <p/>
+     * If you are cross validating try C and Gamma values until you have a good
+     * error rate. Then use those values to train, producing the final model.
+     */
+    @Override
+    public void iteration() {
 
-	/**
-	 * @return the fold
-	 */
-	public int getFold() {
-		return this.fold;
-	}
+        this.network.getParams().C = this.c;
+        this.network.getParams().gamma = this.gamma;
+        EncogLogging.log(EncogLogging.LEVEL_INFO,
+                         "Training with parameters C = " + c + ", gamma = " +
+                gamma);
 
-	/**
-	 * @return The gamma.
-	 */
-	public double getGamma() {
-		return this.gamma;
-	}
+        if (this.fold > 1) {
+            // cross validate
+            final double[] target = new double[this.problem.l];
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MLMethod getMethod() {
-		return this.network;
-	}
+            svm.svm_cross_validation(this.problem, this.network.getParams(),
+                                     this.fold, target);
+            this.network.setModel(null);
 
-	/**
-	 * @return The problem being trained.
-	 */
-	public svm_problem getProblem() {
-		return this.problem;
-	}
+            setError(evaluate(this.network.getParams(), this.problem, target));
+        } else {
+            // train
+            this.network.setModel(svm.svm_train(this.problem,
+                                                this.network.getParams()));
 
-	/**
-	 * @return True if the training is done.
-	 */
-	@Override
-	public boolean isTrainingDone() {
-		return this.trainingDone;
-	}
+            setError(this.network.calculateError(getTraining()));
+        }
 
-	/**
-	 * Perform either a train or a cross validation.  If the folds property is 
-	 * greater than 1 then cross validation will be done.  Cross validation does 
-	 * not produce a usable model, but it does set the error. 
-	 * 
-	 * If you are cross validating try C and Gamma values until you have a good 
-	 * error rate.  Then use those values to train, producing the final model.
-	 */
-	@Override
-	public void iteration() {
+        this.trainingDone = true;
+    }
 
-		this.network.getParams().C = this.c;
-		this.network.getParams().gamma = this.gamma;
-		EncogLogging.log(EncogLogging.LEVEL_INFO, "Training with parameters C = " + c + ", gamma = " + gamma);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final TrainingContinuation pause() {
+        return null;
+    }
 
-		if (this.fold > 1) {
-			// cross validate
-			final double[] target = new double[this.problem.l];
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void resume(final TrainingContinuation state) {
+    }
 
-			svm.svm_cross_validation(this.problem, this.network.getParams(),
-					this.fold, target);
-			this.network.setModel(null);
+    /**
+     * Set the constant C.
+     * <p/>
+     * @param theC
+     *             The constant C.
+     */
+    public void setC(final double theC) {
+        this.c = theC;
 
-			setError(evaluate(this.network.getParams(), this.problem, target));
-		} else {
-			// train
-			this.network.setModel(svm.svm_train(this.problem,
-					this.network.getParams()));
+        if (this.c <= 0 || this.c < Encog.DEFAULT_DOUBLE_EQUAL) {
+            throw new EncogError(
+                    "SVM training cannot use a c value less than zero.");
+        }
 
-			setError(this.network.calculateError(getTraining()));
-		}
+    }
 
-		this.trainingDone = true;
-	}
+    /**
+     * Set the number of folds.
+     * <p/>
+     * @param theFold
+     *                the fold to set.
+     */
+    public void setFold(final int theFold) {
+        this.fold = theFold;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final TrainingContinuation pause() {
-		return null;
-	}
+    /**
+     * Set the gamma.
+     * <p/>
+     * @param theGamma The new gamma.
+     */
+    public void setGamma(final double theGamma) {
+        this.gamma = theGamma;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void resume(final TrainingContinuation state) {
+        if (this.gamma <= 0 || this.gamma < Encog.DEFAULT_DOUBLE_EQUAL) {
+            throw new EncogError(
+                    "SVM training cannot use a gamma value less than zero.");
+        }
 
-	}
-
-	/**
-	 * Set the constant C.
-	 * 
-	 * @param theC
-	 *            The constant C.
-	 */
-	public void setC(final double theC) {
-		this.c = theC;
-		
-		if( this.c<=0 || this.c<Encog.DEFAULT_DOUBLE_EQUAL ) {
-			throw new EncogError("SVM training cannot use a c value less than zero.");
-		}
-		
-	}
-
-	/**
-	 * Set the number of folds.
-	 * 
-	 * @param theFold
-	 *            the fold to set.
-	 */
-	public void setFold(final int theFold) {
-		this.fold = theFold;
-	}
-
-	/**
-	 * Set the gamma.
-	 * @param theGamma The new gamma.
-	 */
-	public void setGamma(final double theGamma) {
-		this.gamma = theGamma;
-		
-		if( this.gamma<=0 || this.gamma<Encog.DEFAULT_DOUBLE_EQUAL ) {
-			throw new EncogError("SVM training cannot use a gamma value less than zero.");
-		}
-		
-	}
-
+    }
 }

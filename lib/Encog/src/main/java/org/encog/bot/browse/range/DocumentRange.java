@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -41,186 +41,177 @@ import org.encog.bot.dataunit.TextDataUnit;
  */
 public class DocumentRange {
 
-	/**
-	 * The beginning index for this range.
-	 */
-	private int begin;
+    /**
+     * The beginning index for this range.
+     */
+    private int begin;
+    /**
+     * The ending index for this range.
+     */
+    private int end;
+    /**
+     * The source page for this range.
+     */
+    private WebPage source;
+    /**
+     * The id attribute, on the source tag. Useful for DIV tags.
+     */
+    private String idAttribute;
+    /**
+     * The class attribute. on the source tag.
+     */
+    private String classAttribute;
+    /**
+     * Sub elements of this range.
+     */
+    private final List<DocumentRange> elements = new ArrayList<DocumentRange>();
+    /**
+     * The parent to this range, or null if top.
+     */
+    private DocumentRange parent;
 
-	/**
-	 * The ending index for this range.
-	 */
-	private int end;
+    /**
+     * Construct a document range from the specified WebPage.
+     *
+     * @param theSource
+     *                  The web page that this range belongs to.
+     */
+    public DocumentRange(final WebPage theSource) {
+        this.source = theSource;
+    }
 
-	/**
-	 * The source page for this range.
-	 */
-	private WebPage source;
+    /**
+     * Add an element.
+     *
+     * @param element
+     *                The element to add.
+     */
+    public final void addElement(final DocumentRange element) {
+        this.elements.add(element);
+        element.setParent(this);
+    }
 
-	/**
-	 * The id attribute, on the source tag. Useful for DIV tags.
-	 */
-	private String idAttribute;
+    /**
+     * @return The beginning index.
+     */
+    public final int getBegin() {
+        return this.begin;
+    }
 
-	/**
-	 * The class attribute. on the source tag.
-	 */
-	private String classAttribute;
+    /**
+     * @return the classAttribute
+     */
+    public final String getClassAttribute() {
+        return this.classAttribute;
+    }
 
-	/**
-	 * Sub elements of this range.
-	 */
-	private final List<DocumentRange> elements = new ArrayList<DocumentRange>();
+    /**
+     * @return The elements of this document range.
+     */
+    public final List<DocumentRange> getElements() {
+        return this.elements;
+    }
 
-	/**
-	 * The parent to this range, or null if top.
-	 */
-	private DocumentRange parent;
+    /**
+     * @return The ending index.
+     */
+    public final int getEnd() {
+        return this.end;
+    }
 
+    /**
+     * @return the idAttribute
+     */
+    public final String getIdAttribute() {
+        return this.idAttribute;
+    }
 
-	/**
-	 * Construct a document range from the specified WebPage.
-	 *
-	 * @param theSource
-	 *            The web page that this range belongs to.
-	 */
-	public DocumentRange(final WebPage theSource) {
-		this.source = theSource;
-	}
+    /**
+     * @return The web page that owns this class.
+     */
+    public final DocumentRange getParent() {
+        return this.parent;
+    }
 
-	/**
-	 * Add an element.
-	 *
-	 * @param element
-	 *            The element to add.
-	 */
-	public final void addElement(final DocumentRange element) {
-		this.elements.add(element);
-		element.setParent(this);
-	}
+    /**
+     * @return The web page that this range is owned by.
+     */
+    public final WebPage getSource() {
+        return this.source;
+    }
 
-	/**
-	 * @return The beginning index.
-	 */
-	public final int getBegin() {
-		return this.begin;
-	}
+    /**
+     * Get the text from this range.
+     *
+     * @return The text from this range.
+     */
+    public final String getTextOnly() {
+        final StringBuilder result = new StringBuilder();
 
-	/**
-	 * @return the classAttribute
-	 */
-	public final String getClassAttribute() {
-		return this.classAttribute;
-	}
+        for (int i = getBegin(); i < getEnd(); i++) {
+            final DataUnit du = this.source.getData().get(i);
+            if (du instanceof TextDataUnit) {
+                result.append(du.toString());
+                result.append("\n");
+            }
+        }
 
-	/**
-	 * @return The elements of this document range.
-	 */
-	public final List<DocumentRange> getElements() {
-		return this.elements;
-	}
+        return result.toString();
+    }
 
-	/**
-	 * @return The ending index.
-	 */
-	public final int getEnd() {
-		return this.end;
-	}
+    /**
+     * Set the beginning index.
+     *
+     * @param theBegin
+     *                 The beginning index.
+     */
+    public final void setBegin(final int theBegin) {
+        this.begin = theBegin;
+    }
 
-	/**
-	 * @return the idAttribute
-	 */
-	public final String getIdAttribute() {
-		return this.idAttribute;
-	}
+    /**
+     * @param theClassAttribute
+     *                          the classAttribute to set
+     */
+    public final void setClassAttribute(final String theClassAttribute) {
+        this.classAttribute = theClassAttribute;
+    }
 
-	/**
-	 * @return The web page that owns this class.
-	 */
-	public final DocumentRange getParent() {
-		return this.parent;
-	}
+    /**
+     * Set the ending index.
+     *
+     * @param theEnd
+     *               The ending index.
+     */
+    public final void setEnd(final int theEnd) {
+        this.end = theEnd;
+    }
 
-	/**
-	 * @return The web page that this range is owned by.
-	 */
-	public final WebPage getSource() {
-		return this.source;
-	}
+    /**
+     * @param id
+     *           the idAttribute to set
+     */
+    public final void setIdAttribute(final String id) {
+        this.idAttribute = id;
+    }
 
-	/**
-	 * Get the text from this range.
-	 *
-	 * @return The text from this range.
-	 */
-	public final String getTextOnly() {
-		final StringBuilder result = new StringBuilder();
+    /**
+     * Set the parent.
+     *
+     * @param theParent
+     *                  The parent.
+     */
+    public final void setParent(final DocumentRange theParent) {
+        this.parent = theParent;
+    }
 
-		for (int i = getBegin(); i < getEnd(); i++) {
-			final DataUnit du = this.source.getData().get(i);
-			if (du instanceof TextDataUnit) {
-				result.append(du.toString());
-				result.append("\n");
-			}
-		}
-
-		return result.toString();
-	}
-
-	/**
-	 * Set the beginning index.
-	 *
-	 * @param theBegin
-	 *            The beginning index.
-	 */
-	public final void setBegin(final int theBegin) {
-		this.begin = theBegin;
-	}
-
-	/**
-	 * @param theClassAttribute
-	 *            the classAttribute to set
-	 */
-	public final void setClassAttribute(final String theClassAttribute) {
-		this.classAttribute = theClassAttribute;
-	}
-
-	/**
-	 * Set the ending index.
-	 *
-	 * @param theEnd
-	 *            The ending index.
-	 */
-	public final void setEnd(final int theEnd) {
-		this.end = theEnd;
-	}
-
-	/**
-	 * @param id
-	 *            the idAttribute to set
-	 */
-	public final void setIdAttribute(final String id) {
-		this.idAttribute = id;
-	}
-
-	/**
-	 * Set the parent.
-	 *
-	 * @param theParent
-	 *            The parent.
-	 */
-	public final void setParent(final DocumentRange theParent) {
-		this.parent = theParent;
-	}
-
-	/**
-	 * Set the source web page.
-	 *
-	 * @param theSource
-	 *            The source web page.
-	 */
-	public final void setSource(final WebPage theSource) {
-		this.source = theSource;
-	}
-
-
+    /**
+     * Set the source web page.
+     *
+     * @param theSource
+     *                  The source web page.
+     */
+    public final void setSource(final WebPage theSource) {
+        this.source = theSource;
+    }
 }

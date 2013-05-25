@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,88 +40,88 @@ import org.encog.parse.expression.common.RenderCommonExpression;
  * EncogProgram genomes make use of.
  */
 public class PrgPopulation extends BasicPopulation implements MLRegression {
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = 1L;
 
-	/**
-	 * The context.
-	 */
-	private final EncogProgramContext context;
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The context.
+     */
+    private final EncogProgramContext context;
 
-	/**
-	 * Construct the population.
-	 * 
-	 * @param theContext
-	 *            The context.
-	 * @param thePopulationSize
-	 *            The population size.
-	 */
-	public PrgPopulation(final EncogProgramContext theContext,
-			final int thePopulationSize) {
-		super(thePopulationSize, new PrgGenomeFactory(theContext));
-		this.context = theContext;
-	}
+    /**
+     * Construct the population.
+     * <p/>
+     * @param theContext
+     *                          The context.
+     * @param thePopulationSize
+     *                          The population size.
+     */
+    public PrgPopulation(final EncogProgramContext theContext,
+                         final int thePopulationSize) {
+        super(thePopulationSize, new PrgGenomeFactory(theContext));
+        this.context = theContext;
+    }
 
-	/**
-	 * Compute the output from the best Genome. Note: it is not safe to call
-	 * this method while training is progressing.
-	 * 
-	 * @param input
-	 *            The input to the
-	 */
-	@Override
-	public MLData compute(final MLData input) {
-		final EncogProgram best = (EncogProgram) getBestGenome();
-		return best.compute(input);
-	}
+    /**
+     * Compute the output from the best Genome. Note: it is not safe to call
+     * this method while training is progressing.
+     * <p/>
+     * @param input
+     *              The input to the
+     */
+    @Override
+    public MLData compute(final MLData input) {
+        final EncogProgram best = (EncogProgram) getBestGenome();
+        return best.compute(input);
+    }
 
-	/**
-	 * Dump the specified number of genomes.
-	 * 
-	 * @param i
-	 *            The specified number of genomes.
-	 */
-	public void dumpMembers(final int i) {
+    /**
+     * Dump the specified number of genomes.
+     * <p/>
+     * @param i
+     *          The specified number of genomes.
+     */
+    public void dumpMembers(final int i) {
 
-		final RenderCommonExpression render = new RenderCommonExpression();
+        final RenderCommonExpression render = new RenderCommonExpression();
 
-		int index = 0;
-		for (final Species species : getSpecies()) {
-			System.out.println("** Species: " + species.toString());
-			for (final Genome obj : species.getMembers()) {
-				final EncogProgram prg = (EncogProgram) obj;
-				System.out.println(index + ": Score " + prg.getScore() + " : "
-						+ render.render(prg));
-				index++;
-				if (index > i) {
-					break;
-				}
-			}
-		}
-	}
+        int index = 0;
+        for (final Species species : getSpecies()) {
+            System.out.println("** Species: " + species.toString());
+            for (final Genome obj : species.getMembers()) {
+                final EncogProgram prg = (EncogProgram) obj;
+                System.out.println(index + ": Score " + prg.getScore() + " : " +
+                        render.render(prg));
+                index++;
+                if (index > i) {
+                    break;
+                }
+            }
+        }
+    }
 
-	/**
-	 * @return The context for the programs.
-	 */
-	public EncogProgramContext getContext() {
-		return this.context;
-	}
+    /**
+     * @return The context for the programs.
+     */
+    public EncogProgramContext getContext() {
+        return this.context;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getInputCount() {
-		return getContext().getDefinedVariables().size();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInputCount() {
+        return getContext().getDefinedVariables().size();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getOutputCount() {
-		return 1;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getOutputCount() {
+        return 1;
+    }
 }

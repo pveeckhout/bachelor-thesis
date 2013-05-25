@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,31 +31,33 @@ import org.encog.engine.network.activation.ActivationFunction;
  * Specifies how the inputs to a neuron are to be summed.
  */
 public interface InputSummation {
-	
-	/**
-	 * Add an input connection.
-	 * @param connection The connection to add.
-	 */
-	void add(FreeformConnection connection);
 
-	/**
-	 * Perform the summation, and apply the activation function.
-	 * @return The sum.
-	 */
-	double calculate();
+    /**
+     * Add an input connection.
+     * <p/>
+     * @param connection The connection to add.
+     */
+    void add(FreeformConnection connection);
 
-	/**
-	 * @return The activation function
-	 */
-	ActivationFunction getActivationFunction();
+    /**
+     * Perform the summation, and apply the activation function.
+     * <p/>
+     * @return The sum.
+     */
+    double calculate();
 
-	/**
-	 * @return The preactivation sum.
-	 */
-	double getSum();
+    /**
+     * @return The activation function
+     */
+    ActivationFunction getActivationFunction();
 
-	/**
-	 * @return The input connections.
-	 */
-	List<FreeformConnection> list();
+    /**
+     * @return The preactivation sum.
+     */
+    double getSum();
+
+    /**
+     * @return The input connections.
+     */
+    List<FreeformConnection> list();
 }

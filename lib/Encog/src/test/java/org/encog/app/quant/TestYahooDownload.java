@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,44 +37,44 @@ import org.junit.Assert;
 
 public class TestYahooDownload extends TestCase {
 
-	public void testYahooDownloadError() throws IOException {
-		try {
-			YahooDownload yahoo = new YahooDownload();
-			yahoo.setPercision(2);
-			// load a non-sense ticker, should throw error
-			yahoo.loadAllData("sdfhusdhfuish", new File("test.txt"), CSVFormat.ENGLISH,
-					new GregorianCalendar(2000, 00, 01).getTime(),
-					new GregorianCalendar(2000, 00, 10).getTime());
+    public void testYahooDownloadError() throws IOException {
+        try {
+            YahooDownload yahoo = new YahooDownload();
+            yahoo.setPercision(2);
+            // load a non-sense ticker, should throw error
+            yahoo.loadAllData("sdfhusdhfuish", new File("test.txt"),
+                              CSVFormat.ENGLISH,
+                              new GregorianCalendar(2000, 00, 01).getTime(),
+                              new GregorianCalendar(2000, 00, 10).getTime());
 
-			// bad!
-			Assert.assertTrue(false);
-		} catch (QuantError e) {
-			// good!
-		}
-	}
+            // bad!
+            Assert.assertTrue(false);
+        } catch (QuantError e) {
+            // good!
+        }
+    }
 
-	public void testYahooDownloadCSV() throws IOException {
-		YahooDownload yahoo = new YahooDownload();
-		yahoo.setPercision(2);
-		yahoo.loadAllData("yhoo", new File("test.txt"), CSVFormat.ENGLISH,
-				new GregorianCalendar(2000, 00, 01).getTime(),
-				new GregorianCalendar(2000, 00, 10).getTime());
-		BufferedReader tr = new BufferedReader(new FileReader("test.txt"));
+    public void testYahooDownloadCSV() throws IOException {
+        YahooDownload yahoo = new YahooDownload();
+        yahoo.setPercision(2);
+        yahoo.loadAllData("yhoo", new File("test.txt"), CSVFormat.ENGLISH,
+                          new GregorianCalendar(2000, 00, 01).getTime(),
+                          new GregorianCalendar(2000, 00, 10).getTime());
+        BufferedReader tr = new BufferedReader(new FileReader("test.txt"));
 
-		Assert.assertEquals(
-				"date,time,open price,high price,low price,close price,volume,adjusted price",
-				tr.readLine());
-		Assert.assertEquals(
-				"20000110,0,432.5,451.25,420,436.06,61022400,109.01",
-				tr.readLine());
-		Assert.assertEquals("20000107,0,366.75,408,363,407.25,48999600,101.81",
-				tr.readLine());
-		Assert.assertEquals("20000106,0,406.25,413,361,368.19,71301200,92.05",
-				tr.readLine());
-		Assert.assertEquals(
-				"20000105,0,430.5,431.13,402,410.5,83194800,102.62",
-				tr.readLine());
-		tr.close();
-	}
-
+        Assert.assertEquals(
+                "date,time,open price,high price,low price,close price,volume,adjusted price",
+                tr.readLine());
+        Assert.assertEquals(
+                "20000110,0,432.5,451.25,420,436.06,61022400,109.01",
+                tr.readLine());
+        Assert.assertEquals("20000107,0,366.75,408,363,407.25,48999600,101.81",
+                            tr.readLine());
+        Assert.assertEquals("20000106,0,406.25,413,361,368.19,71301200,92.05",
+                            tr.readLine());
+        Assert.assertEquals(
+                "20000105,0,430.5,431.13,402,410.5,83194800,102.62",
+                tr.readLine());
+        tr.close();
+    }
 }

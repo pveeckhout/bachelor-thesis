@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,136 +31,140 @@ import org.encog.ca.universe.Universe;
 import org.encog.ca.universe.UniverseListener;
 
 public class BasicCARunner implements CARunner, Runnable {
-	private Universe universe;
-	private Universe tempUniverse;
-	private CAProgram physics;
-	private boolean running;
-	private int iteration;
-	private double percentChanged;
-	private double percentInvalid;
-	private List<UniverseListener> listeners = new ArrayList<UniverseListener>();
-	private Thread thread;
 
-	public BasicCARunner(Universe theUniverse, CAProgram thePhysics) {
-		init(theUniverse, thePhysics);
-	}
-	
-	public void init(Universe theUniverse, CAProgram thePhysics)
-	{
-		this.universe = theUniverse;
-		this.tempUniverse = (Universe) theUniverse.clone();
-		this.physics = thePhysics;
-	}
+    private Universe universe;
+    private Universe tempUniverse;
+    private CAProgram physics;
+    private boolean running;
+    private int iteration;
+    private double percentChanged;
+    private double percentInvalid;
+    private List<UniverseListener> listeners = new ArrayList<UniverseListener>();
+    private Thread thread;
 
-	public void addListener(UniverseListener listener) {
-		this.listeners.add(listener);
-	}
+    public BasicCARunner(Universe theUniverse, CAProgram thePhysics) {
+        init(theUniverse, thePhysics);
+    }
 
-	public String toString() {
-		return "Iteration: " + this.iteration + ", Diff=" + percentChanged+ ", Invalid="+ this.percentInvalid+", Score=" + this.getScore();
-	}
+    public void init(Universe theUniverse, CAProgram thePhysics) {
+        this.universe = theUniverse;
+        this.tempUniverse = (Universe) theUniverse.clone();
+        this.physics = thePhysics;
+    }
 
-	public void iteration() {
-		this.tempUniverse.copy(this.universe);
+    public void addListener(UniverseListener listener) {
+        this.listeners.add(listener);
+    }
 
-		this.physics.setSourceUniverse(this.universe);
-		this.physics.setTargetUniverse(this.tempUniverse);
-		this.physics.iteration();
-		
-		this.percentChanged = this.tempUniverse.compare(universe);
-		this.percentInvalid = this.tempUniverse.calculatePercentInvalid();
-		this.iteration++;
+    public String toString() {
+        return "Iteration: " + this.iteration + ", Diff=" + percentChanged +
+                ", Invalid=" + this.percentInvalid + ", Score=" + this
+                .getScore();
+    }
 
-		this.universe.copy(this.tempUniverse);
+    public void iteration() {
+        this.tempUniverse.copy(this.universe);
 
-		for (UniverseListener listener : this.listeners) {
-			listener.iterationComplete();
-		}
-	}
+        this.physics.setSourceUniverse(this.universe);
+        this.physics.setTargetUniverse(this.tempUniverse);
+        this.physics.iteration();
 
-	public void start() {
-		if (!running) {
-			this.running = true;
-			this.thread = new Thread(this);
-			thread.start();
-		}
-	}
+        this.percentChanged = this.tempUniverse.compare(universe);
+        this.percentInvalid = this.tempUniverse.calculatePercentInvalid();
+        this.iteration++;
 
-	public void stop() {
-		this.running = false;
-		try {
-			if (this.thread != null) {
-				this.thread.join();
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+        this.universe.copy(this.tempUniverse);
 
-	@Override
-	public void run() {
-		this.running = true;
+        for (UniverseListener listener : this.listeners) {
+            listener.iterationComplete();
+        }
+    }
 
-		while (this.running) {
-			iteration();
-		}
-	}
+    public void start() {
+        if (!running) {
+            this.running = true;
+            this.thread = new Thread(this);
+            thread.start();
+        }
+    }
 
-	public void reset() {
-		this.physics.randomize();
-		this.universe.randomize();
-		this.iteration = 0;
-	}
+    public void stop() {
+        this.running = false;
+        try {
+            if (this.thread != null) {
+                this.thread.join();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public int runToConverge(int maxIterations) {
-		this.iteration = 0;
-		for (;;) {
-			iteration();
+    @Override
+    public void run() {
+        this.running = true;
 
-			if (this.iteration > 5 && this.percentChanged < 0.01)
-				break;
+        while (this.running) {
+            iteration();
+        }
+    }
 
-			if (this.iteration > maxIterations)
-				break;
-		}
-		return this.iteration;
-	}
-	
-	public boolean isRunning() {
-		return this.running;
-	}
+    public void reset() {
+        this.physics.randomize();
+        this.universe.randomize();
+        this.iteration = 0;
+    }
 
-	@Override
-	public Universe getUniverse() {
-		return this.universe;
-	}
+    public int runToConverge(int maxIterations) {
+        this.iteration = 0;
+        for (;;) {
+            iteration();
 
-	@Override
-	public CAProgram getPhysics() {
-		return this.physics;
-	}
+            if (this.iteration > 5 && this.percentChanged < 0.01) {
+                break;
+            }
 
-	@Override
-	public int runToConverge(int i, double desiredScore) {
-		this.iteration = 0;
-		do {
-			this.iteration();
+            if (this.iteration > maxIterations) {
+                break;
+            }
+        }
+        return this.iteration;
+    }
 
-		} while( (this.iteration<25 || this.percentChanged>desiredScore) && this.iteration<i);
-		
-		return this.iteration;
-	}
+    public boolean isRunning() {
+        return this.running;
+    }
 
-	@Override
-	public double getScore() {
-		if( this.percentChanged<0.2 || this.percentChanged >0.5 ) {
-			return 0;
-		}
-		
-		double score = 1.0 + ( 0.5 - (this.percentChanged-0.2) - this.percentInvalid);
-		
-		return score;
-	}
-	
-	
+    @Override
+    public Universe getUniverse() {
+        return this.universe;
+    }
+
+    @Override
+    public CAProgram getPhysics() {
+        return this.physics;
+    }
+
+    @Override
+    public int runToConverge(int i, double desiredScore) {
+        this.iteration = 0;
+        do {
+            this.iteration();
+
+        } while ((this.iteration < 25 || this.percentChanged > desiredScore) &&
+                this.iteration < i);
+
+        return this.iteration;
+    }
+
+    @Override
+    public double getScore() {
+        if (this.percentChanged < 0.2 || this.percentChanged > 0.5) {
+            return 0;
+        }
+
+        double score = 1.0 + (0.5 - (this.percentChanged - 0.2) -
+                this.percentInvalid);
+
+        return score;
+    }
 }

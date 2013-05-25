@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,156 +40,153 @@ import org.encog.util.EngineArray;
  *
  */
 public class SOM extends BasicML implements MLClassification, MLResettable,
-		MLError {
+        MLError {
 
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * Serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * Do not allow patterns to go below this very small number.
+     */
+    public static final double VERYSMALL = 1.E-30;
+    /**
+     * The weights of the output neurons base on the input from the input
+     * neurons.
+     */
+    private Matrix weights;
 
-	/**
-	 * Do not allow patterns to go below this very small number.
-	 */
-	public static final double VERYSMALL = 1.E-30;
+    /**
+     * Default constructor.
+     */
+    public SOM() {
+    }
 
-	/**
-	 * The weights of the output neurons base on the input from the input
-	 * neurons.
-	 */
-	private Matrix weights;
+    /**
+     * The constructor.
+     * <p/>
+     * @param inputCount
+     *                    Number of input neurons
+     * @param outputCount
+     *                    Number of output neurons
+     */
+    public SOM(final int inputCount, final int outputCount) {
+        this.weights = new Matrix(outputCount, inputCount);
+    }
 
-	/**
-	 * Default constructor.
-	 */
-	public SOM() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double calculateError(final MLDataSet data) {
 
-	}
+        final BestMatchingUnit bmu = new BestMatchingUnit(this);
 
-	/**
-	 * The constructor.
-	 * 
-	 * @param inputCount
-	 *            Number of input neurons
-	 * @param outputCount
-	 *            Number of output neurons
-	 */
-	public SOM(final int inputCount, final int outputCount) {
-		this.weights = new Matrix(outputCount, inputCount);
-	}
+        bmu.reset();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double calculateError(final MLDataSet data) {
+        // Determine the BMU for each training element.
+        for (final MLDataPair pair : data) {
+            final MLData input = pair.getInput();
+            bmu.calculateBMU(input);
+        }
 
-		final BestMatchingUnit bmu = new BestMatchingUnit(this);
+        // update the error
+        return bmu.getWorstDistance() / 100.0;
+    }
 
-		bmu.reset();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int classify(final MLData input) {
+        if (input.size() > getInputCount()) {
+            throw new NeuralNetworkError(
+                    "Can't classify SOM with input size of " + getInputCount() +
+                    " with input data of count " + input.size());
+        }
 
-		// Determine the BMU for each training element.
-		for (final MLDataPair pair : data) {
-			final MLData input = pair.getInput();
-			bmu.calculateBMU(input);
-		}
+        double[][] m = this.weights.getData();
+        double[] inputData = input.getData();
+        double minDist = Double.POSITIVE_INFINITY;
+        int result = -1;
 
-		// update the error
-		return bmu.getWorstDistance() / 100.0;
-	}
+        for (int i = 0; i < getOutputCount(); i++) {
+            double dist = EngineArray.euclideanDistance(inputData, m[i]);
+            if (dist < minDist) {
+                minDist = dist;
+                result = i;
+            }
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int classify(final MLData input) {
-		if (input.size() > getInputCount()) {
-			throw new NeuralNetworkError(
-					"Can't classify SOM with input size of " + getInputCount()
-							+ " with input data of count " + input.size());
-		}
+        return result;
+    }
 
-		double[][] m = this.weights.getData();
-		double[] inputData = input.getData();
-		double minDist = Double.POSITIVE_INFINITY;
-		int result = -1;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInputCount() {
+        return this.weights.getCols();
+    }
 
-		for (int i = 0; i < getOutputCount(); i++) {
-			double dist = EngineArray.euclideanDistance(inputData, m[i]);
-			if (dist < minDist) {
-				minDist = dist;
-				result = i;
-			}
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getOutputCount() {
+        return this.weights.getRows();
+    }
 
-		return result;
-	}
+    /**
+     * @return the weights
+     */
+    public Matrix getWeights() {
+        return this.weights;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getInputCount() {
-		return this.weights.getCols();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() {
+        this.weights.randomize(-1, 1);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getOutputCount() {
-		return this.weights.getRows();
-	}
+    }
 
-	/**
-	 * @return the weights
-	 */
-	public Matrix getWeights() {
-		return this.weights;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset(final int seed) {
+        reset();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reset() {
-		this.weights.randomize(-1, 1);
+    /**
+     * @param weights
+     *                the weights to set
+     */
+    public void setWeights(final Matrix weights) {
+        this.weights = weights;
+    }
 
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateProperties() {
+        // unneeded
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reset(final int seed) {
-		reset();
-	}
-
-	/**
-	 * @param weights
-	 *            the weights to set
-	 */
-	public void setWeights(final Matrix weights) {
-		this.weights = weights;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateProperties() {
-		// unneeded
-	}
-
-	/**
-	 * An alias for the classify method, kept for compatibility 
-	 * with earlier versions of Encog.
-	 * 
-	 * @param input
-	 *            The input pattern.
-	 * @return The winning neuron.
-	 */
-	public int winner(final MLData input) {
-		return classify(input);
-	}
-
+    /**
+     * An alias for the classify method, kept for compatibility
+     * with earlier versions of Encog.
+     * <p/>
+     * @param input
+     *              The input pattern.
+     * <p/>
+     * @return The winning neuron.
+     */
+    public int winner(final MLData input) {
+        return classify(input);
+    }
 }

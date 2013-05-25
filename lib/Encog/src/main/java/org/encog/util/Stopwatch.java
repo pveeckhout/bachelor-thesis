@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,70 +28,67 @@ package org.encog.util;
  */
 public class Stopwatch {
 
-	/**
-	 * Is the stopwatch stopped.
-	 */
-	private boolean stopped;
+    /**
+     * Is the stopwatch stopped.
+     */
+    private boolean stopped;
+    /**
+     * What is the starting time.
+     */
+    private long startTime;
+    /**
+     * What is the stopped time.
+     */
+    private long stopTime;
 
-	/**
-	 * What is the starting time.
-	 */
-	private long startTime;
+    /**
+     * Construct a stopwatch.
+     */
+    public Stopwatch() {
+        reset();
+        this.stopped = false;
+    }
 
-	/**
-	 * What is the stopped time.
-	 */
-	private long stopTime;
+    /**
+     * @return Elapsed time in milli's.
+     */
+    public long getElapsedMilliseconds() {
+        return getElapsedTicks() / 1000;
+    }
 
-	/**
-	 * Construct a stopwatch.
-	 */
-	public Stopwatch() {
-		reset();
-		this.stopped = false;
-	}
+    /**
+     * @return Elapsed time in ticks.
+     */
+    public long getElapsedTicks() {
+        if (!this.stopped) {
+            this.stopTime = System.nanoTime();
+        }
 
-	/**
-	 * @return Elapsed time in milli's.
-	 */
-	public long getElapsedMilliseconds() {
-		return getElapsedTicks() / 1000;
-	}
+        return (this.stopTime - this.startTime) / 1000;
+    }
 
-	/**
-	 * @return Elapsed time in ticks.
-	 */
-	public long getElapsedTicks() {
-		if (!this.stopped) {
-			this.stopTime = System.nanoTime();
-		}
+    /**
+     * Reset the stop watch.
+     */
+    public void reset() {
+        this.startTime = System.nanoTime();
+        this.stopTime = System.nanoTime();
+        this.stopped = false;
+    }
 
-		return (this.stopTime - this.startTime) / 1000;
-	}
+    /**
+     * Start the stop watch.
+     */
+    public void start() {
+        this.startTime = System.nanoTime();
+        this.stopped = false;
+    }
 
-	/**
-	 * Reset the stop watch.
-	 */
-	public void reset() {
-		this.startTime = System.nanoTime();
-		this.stopTime = System.nanoTime();
-		this.stopped = false;
-	}
-
-	/**
-	 * Start the stop watch.
-	 */
-	public void start() {
-		this.startTime = System.nanoTime();
-		this.stopped = false;
-	}
-
-	/**
-	 * Stop the stopwatch.
-	 */
-	public void stop() {
-		this.stopTime = System.nanoTime();
-		this.stopped = true;
-	}
-
+    /**
+     * Stop the stopwatch.
+     */
+    public void stop() {
+        this.stopTime = System.nanoTime();
+        this.stopped = true;
+    }
 }

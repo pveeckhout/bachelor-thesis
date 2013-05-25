@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,99 +34,100 @@ import org.encog.util.Format;
  *
  */
 public class TableLine implements Serializable {
-	/**
-	 * The probability.
-	 */
-	private double probability;
-	
-	/**
-	 * The result.
-	 */
-	private final int result;
-	
-	/**
-	 * The arguments.
-	 */
-	private final int[] arguments;
 
-	/**
-	 * Construct a truth table line.
-	 * @param prob The probability.
-	 * @param result The result.
-	 * @param args The arguments.
-	 */
-	public TableLine(double prob, int result, int[] args) {
-		this.probability = prob;
-		this.result = result;
-		this.arguments = EngineArray.arrayCopy(args);
-	}
+    /**
+     * The probability.
+     */
+    private double probability;
+    /**
+     * The result.
+     */
+    private final int result;
+    /**
+     * The arguments.
+     */
+    private final int[] arguments;
 
-	/**
-	 * @return the probability
-	 */
-	public double getProbability() {
-		return probability;
-	}
+    /**
+     * Construct a truth table line.
+     * <p/>
+     * @param prob   The probability.
+     * @param result The result.
+     * @param args   The arguments.
+     */
+    public TableLine(double prob, int result, int[] args) {
+        this.probability = prob;
+        this.result = result;
+        this.arguments = EngineArray.arrayCopy(args);
+    }
 
-	/**
-	 * @return the arguments
-	 */
-	public int[] getArguments() {
-		return arguments;
-	}
+    /**
+     * @return the probability
+     */
+    public double getProbability() {
+        return probability;
+    }
 
-	/**
-	 * @return the result
-	 */
-	public int getResult() {
-		return result;
-	}
+    /**
+     * @return the arguments
+     */
+    public int[] getArguments() {
+        return arguments;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString() {
-		StringBuilder r = new StringBuilder();
-		r.append("result=");
-		r.append(result);
-		r.append(",probability=");
-		r.append(Format.formatDouble(this.probability, 2));
-		r.append("|");
-		for(int i=0;i<arguments.length;i++) {
-			r.append(Format.formatDouble(this.arguments[i], 2));
-			r.append(" ");
-		}
-		return r.toString();
-	}
+    /**
+     * @return the result
+     */
+    public int getResult() {
+        return result;
+    }
 
-	/**
-	 * Compare this truth line's arguments to others.
-	 * @param args The other arguments to compare to.
-	 * @return True if the same.
-	 */
-	public boolean compareArgs(int[] args) {
-		
-		if( args.length!=this.arguments.length) {
-			return false;
-		}
-		
-		for(int i=0;i<args.length;i++) {
-			if( Math.abs(this.arguments[i] - args[i])>Encog.DEFAULT_DOUBLE_EQUAL) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        StringBuilder r = new StringBuilder();
+        r.append("result=");
+        r.append(result);
+        r.append(",probability=");
+        r.append(Format.formatDouble(this.probability, 2));
+        r.append("|");
+        for (int i = 0; i < arguments.length; i++) {
+            r.append(Format.formatDouble(this.arguments[i], 2));
+            r.append(" ");
+        }
+        return r.toString();
+    }
 
-	/**
-	 * Set the probability of this line.
-	 * @param probability The probability of this line.
-	 */
-	public void setProbability(double probability) {
-		this.probability = probability;
-	}
-	
-	
+    /**
+     * Compare this truth line's arguments to others.
+     * <p/>
+     * @param args The other arguments to compare to.
+     * <p/>
+     * @return True if the same.
+     */
+    public boolean compareArgs(int[] args) {
 
+        if (args.length != this.arguments.length) {
+            return false;
+        }
+
+        for (int i = 0; i < args.length; i++) {
+            if (Math.abs(this.arguments[i] - args[i]) >
+                    Encog.DEFAULT_DOUBLE_EQUAL) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Set the probability of this line.
+     * <p/>
+     * @param probability The probability of this line.
+     */
+    public void setProbability(double probability) {
+        this.probability = probability;
+    }
 }

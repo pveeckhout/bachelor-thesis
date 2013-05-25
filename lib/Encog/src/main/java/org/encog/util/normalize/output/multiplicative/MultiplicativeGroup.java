@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,32 +31,31 @@ import org.encog.util.normalize.output.OutputFieldGrouped;
  */
 public class MultiplicativeGroup extends BasicOutputFieldGroup {
 
-	/**
-	 * The "length" of this field.
-	 */
-	private double length;
+    /**
+     * The "length" of this field.
+     */
+    private double length;
 
-	/**
-	 * @return The length of this field.  This is the sum of the squares of
-	 * all of the groupped fields.  The square root of this sum is the 
-	 * length. 
-	 */
-	public double getLength() {
-		return this.length;
-	}
+    /**
+     * @return The length of this field. This is the sum of the squares of
+     *         all of the groupped fields. The square root of this sum is the
+     *         length.
+     */
+    public double getLength() {
+        return this.length;
+    }
 
-	/**
-	 * Called to init this group for a new field.  This recalculates the
-	 * "length".
-	 */
-	public void rowInit() {
-		double value = 0;
+    /**
+     * Called to init this group for a new field. This recalculates the
+     * "length".
+     */
+    public void rowInit() {
+        double value = 0;
 
-		for (final OutputFieldGrouped field : getGroupedFields()) {
-			value += (field.getSourceField().getCurrentValue() * field
-					.getSourceField().getCurrentValue());
-		}
-		this.length = Math.sqrt(value);
-	}
-
+        for (final OutputFieldGrouped field : getGroupedFields()) {
+            value += (field.getSourceField().getCurrentValue() * field
+                    .getSourceField().getCurrentValue());
+        }
+        this.length = Math.sqrt(value);
+    }
 }

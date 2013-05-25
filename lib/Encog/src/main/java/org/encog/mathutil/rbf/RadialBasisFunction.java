@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -29,59 +29,66 @@ import java.io.Serializable;
  * A multi-dimension RBF.
  */
 public interface RadialBasisFunction extends Serializable {
-	
-	/**
-	 * Calculate the RBF result for the specified value.
-	 * 
-	 * @param x
-	 *            The value to be passed into the RBF.
-	 * @return The RBF value.
-	 */
-	double calculate(double[] x);
 
-	/**
-	 * Get the center of this RBD.
-	 * @param dimension The dimension to get the center for.
-	 * @return The center of the RBF.
-	 */
-	double getCenter(int dimension);
+    /**
+     * Calculate the RBF result for the specified value.
+     * <p/>
+     * @param x
+     *          The value to be passed into the RBF.
+     * <p/>
+     * @return The RBF value.
+     */
+    double calculate(double[] x);
 
-	/**
-	 * Get the center of this RBD.
-	 * @return The center of the RBF.
-	 */
-	double getPeak();
-	
-	/**
-	 * Set the peak.
-	 * @param peak The peak.
-	 */
-	void setPeak(double peak);
+    /**
+     * Get the center of this RBD.
+     * <p/>
+     * @param dimension The dimension to get the center for.
+     * <p/>
+     * @return The center of the RBF.
+     */
+    double getCenter(int dimension);
 
-	/**
-	 * @return The width of the RBF.
-	 */
-	double getWidth();
-	
-	/**
-	 * @return The dimensions in this RBF.
-	 */
-	int getDimensions();
+    /**
+     * Get the center of this RBD.
+     * <p/>
+     * @return The center of the RBF.
+     */
+    double getPeak();
 
-	/**
-	 * Set the width.
-	 * @param radius The width.
-	 */
-	void setWidth(double radius);
+    /**
+     * Set the peak.
+     * <p/>
+     * @param peak The peak.
+     */
+    void setPeak(double peak);
 
-	/**
-	 * @return Get the centers.
-	 */
-	double[] getCenters();	
-	
-	/**
-	 * Set the centers.
-	 * @param center The centers.
-	 */
-	void setCenters(double[] center);
+    /**
+     * @return The width of the RBF.
+     */
+    double getWidth();
+
+    /**
+     * @return The dimensions in this RBF.
+     */
+    int getDimensions();
+
+    /**
+     * Set the width.
+     * <p/>
+     * @param radius The width.
+     */
+    void setWidth(double radius);
+
+    /**
+     * @return Get the centers.
+     */
+    double[] getCenters();
+
+    /**
+     * Set the centers.
+     * <p/>
+     * @param center The centers.
+     */
+    void setCenters(double[] center);
 }

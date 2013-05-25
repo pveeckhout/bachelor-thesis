@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -38,125 +38,121 @@ import org.encog.util.normalize.input.InputField;
  */
 public class IntegerBalanceSegregator implements Segregator {
 
-	/**
-	 * The normalization object to use.
-	 */
-	private DataNormalization normalization;
+    /**
+     * The normalization object to use.
+     */
+    private DataNormalization normalization;
+    /**
+     * The input field.
+     */
+    private InputField target;
+    /**
+     * The count per each of the int values for the input field.
+     */
+    private int count;
+    /**
+     * The running totals.
+     */
+    private final Map<Integer, Integer> runningCounts =
+            new HashMap<Integer, Integer>();
 
-	/**
-	 * The input field.
-	 */
-	private InputField target;
+    /**
+     * Construct an integer balance segregator.
+     * <p/>
+     * @param target The input field to use.
+     * @param count  The number of each unique integer to allow.
+     */
+    public IntegerBalanceSegregator(final InputField target, final int count) {
+        this.target = target;
+        this.count = count;
+    }
 
-	/**
-	 * The count per each of the int values for the input field.
-	 */
-	private int count;
+    /**
+     * Default constructor.
+     */
+    public IntegerBalanceSegregator() {
+    }
 
-	/**
-	 * The running totals.
-	 */
-	private final Map<Integer, Integer> runningCounts = 
-		new HashMap<Integer, Integer>();
+    /**
+     * @return A string that contains the counts for each group.
+     */
+    public String dumpCounts() {
+        final StringBuilder result = new StringBuilder();
 
-	/**
-	 * Construct an integer balance segregator.
-	 * @param target The input field to use.
-	 * @param count The number of each unique integer to allow.
-	 */
-	public IntegerBalanceSegregator(final InputField target, final int count) {
-		this.target = target;
-		this.count = count;
-	}
+        for (final Entry<Integer, Integer> entry : this.runningCounts
+                .entrySet()) {
+            result.append(entry.getKey());
+            result.append(" -> ");
+            result.append(entry.getValue());
+            result.append(" count\n");
+        }
+        return result.toString();
+    }
 
-	/**
-	 * Default constructor. 
-	 */
-	public IntegerBalanceSegregator() {
+    /**
+     * @return The amout of data allowed by this segregator.
+     */
+    public int getCount() {
+        return this.count;
+    }
 
-	}
+    /**
+     * @return The normalization object used with this segregator.
+     */
+    public DataNormalization getNormalization() {
+        return this.normalization;
+    }
 
-	/**
-	 * @return A string that contains the counts for each group.
-	 */
-	public String dumpCounts() {
-		final StringBuilder result = new StringBuilder();
+    /**
+     * @return The current count for each group.
+     */
+    public Map<Integer, Integer> getRunningCounts() {
+        return this.runningCounts;
+    }
 
-		for (final Entry<Integer, Integer> entry : this.runningCounts
-				.entrySet()) {
-			result.append(entry.getKey());
-			result.append(" -> ");
-			result.append(entry.getValue());
-			result.append(" count\n");
-		}
-		return result.toString();
-	}
+    /**
+     * @return The input field being used.
+     */
+    public InputField getTarget() {
+        return this.target;
+    }
 
-	/**
-	 * @return The amout of data allowed by this segregator.
-	 */
-	public int getCount() {
-		return this.count;
-	}
+    /**
+     * Init the segregator with the owning normalization object.
+     * <p/>
+     * @param normalization
+     *                      The data normalization object to use.
+     */
+    public void init(final DataNormalization normalization) {
+        this.normalization = normalization;
 
-	/**
-	 * @return The normalization object used with this segregator.
-	 */
-	public DataNormalization getNormalization() {
-		return this.normalization;
-	}
+    }
 
-	/**
-	 * @return The current count for each group.
-	 */
-	public Map<Integer, Integer> getRunningCounts() {
-		return this.runningCounts;
-	}
+    /**
+     * Init for a new pass.
+     */
+    public void passInit() {
+        this.runningCounts.clear();
+    }
 
-	/**
-	 * @return The input field being used.
-	 */
-	public InputField getTarget() {
-		return this.target;
-	}
+    /**
+     * Determine of the current row should be included.
+     * <p/>
+     * @return True if the current row should be included.
+     */
+    public boolean shouldInclude() {
+        final int key = (int) this.target.getCurrentValue();
+        int value = 0;
+        if (this.runningCounts.containsKey(key)) {
+            value = this.runningCounts.get(key);
+        }
 
-	/**
-	 * Init the segregator with the owning normalization object.
-	 * 
-	 * @param normalization
-	 *            The data normalization object to use.
-	 */
-	public void init(final DataNormalization normalization) {
-		this.normalization = normalization;
-
-	}
-
-	/**
-	 * Init for a new pass.
-	 */
-	public void passInit() {
-		this.runningCounts.clear();
-	}
-
-	/**
-	 * Determine of the current row should be included.
-	 * 
-	 * @return True if the current row should be included.
-	 */
-	public boolean shouldInclude() {
-		final int key = (int) this.target.getCurrentValue();
-		int value = 0;
-		if (this.runningCounts.containsKey(key)) {
-			value = this.runningCounts.get(key);
-		}
-
-		if (value < this.count) {
-			value++;
-			this.runningCounts.put(key, value);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
+        if (value < this.count) {
+            value++;
+            this.runningCounts.put(key, value);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

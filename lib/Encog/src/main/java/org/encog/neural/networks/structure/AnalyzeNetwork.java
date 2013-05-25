@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,197 +37,191 @@ import org.encog.util.Format;
  */
 public class AnalyzeNetwork {
 
-	/**
-	 * The ranges of the weights.
-	 */
-	private final NumericRange weights;
+    /**
+     * The ranges of the weights.
+     */
+    private final NumericRange weights;
+    /**
+     * The ranges of the bias values.
+     */
+    private final NumericRange bias;
+    /**
+     * The ranges of both the weights and biases.
+     */
+    private final NumericRange weightsAndBias;
+    /**
+     * The number of disabled connections.
+     */
+    private final int disabledConnections;
+    /**
+     * The total number of connections.
+     */
+    private final int totalConnections;
+    /**
+     * All of the values in the neural network.
+     */
+    private final double[] allValues;
+    /**
+     * The weight values in the neural network.
+     */
+    private final double[] weightValues;
+    /**
+     * The bias values in the neural network.
+     */
+    private final double[] biasValues;
 
-	/**
-	 * The ranges of the bias values.
-	 */
-	private final NumericRange bias;
+    /**
+     * Construct a network analyze class. Analyze the specified network.
+     * <p/>
+     * @param network
+     *                The network to analyze.
+     */
+    public AnalyzeNetwork(final BasicNetwork network) {
+        int assignDisabled = 0;
+        int assignedTotal = 0;
+        final List<Double> biasList = new ArrayList<Double>();
+        final List<Double> weightList = new ArrayList<Double>();
+        final List<Double> allList = new ArrayList<Double>();
 
-	/**
-	 * The ranges of both the weights and biases.
-	 */
-	private final NumericRange weightsAndBias;
+        for (int layerNumber = 0; layerNumber < network.getLayerCount() - 1;
+                layerNumber++) {
+            final int fromCount = network.getLayerNeuronCount(layerNumber);
+            final int fromBiasCount = network
+                    .getLayerTotalNeuronCount(layerNumber);
+            final int toCount = network.getLayerNeuronCount(layerNumber + 1);
 
-	/**
-	 * The number of disabled connections.
-	 */
-	private final int disabledConnections;
+            // weights
+            for (int fromNeuron = 0; fromNeuron < fromCount; fromNeuron++) {
+                for (int toNeuron = 0; toNeuron < toCount; toNeuron++) {
+                    final double v = network.getWeight(layerNumber, fromNeuron,
+                                                       toNeuron);
 
-	/**
-	 * The total number of connections.
-	 */
-	private final int totalConnections;
+                    if (network.getStructure().isConnectionLimited()) {
+                        if (Math.abs(v) < network.getStructure()
+                                .getConnectionLimit()) {
+                            assignDisabled++;
+                        }
+                    }
 
-	/**
-	 * All of the values in the neural network.
-	 */
-	private final double[] allValues;
+                    assignedTotal++;
+                    weightList.add(v);
+                    allList.add(v);
+                }
+            }
 
-	/**
-	 * The weight values in the neural network.
-	 */
-	private final double[] weightValues;
+            // bias
+            if (fromCount != fromBiasCount) {
+                final int biasNeuron = fromCount;
+                for (int toNeuron = 0; toNeuron < toCount; toNeuron++) {
+                    final double v = network.getWeight(layerNumber, biasNeuron,
+                                                       toNeuron);
 
-	/**
-	 * The bias values in the neural network.
-	 */
-	private final double[] biasValues;
+                    if (network.getStructure().isConnectionLimited()) {
+                        if (Math.abs(v) < network.getStructure()
+                                .getConnectionLimit()) {
+                            assignDisabled++;
+                        }
+                    }
 
-	/**
-	 * Construct a network analyze class. Analyze the specified network.
-	 * 
-	 * @param network
-	 *            The network to analyze.
-	 */
-	public AnalyzeNetwork(final BasicNetwork network) {
-		int assignDisabled = 0;
-		int assignedTotal = 0;
-		final List<Double> biasList = new ArrayList<Double>();
-		final List<Double> weightList = new ArrayList<Double>();
-		final List<Double> allList = new ArrayList<Double>();
+                    assignedTotal++;
+                    biasList.add(v);
+                    allList.add(v);
+                }
+            }
+        }
 
-		for (int layerNumber = 0; layerNumber < network.getLayerCount() - 1; layerNumber++) {
-			final int fromCount = network.getLayerNeuronCount(layerNumber);
-			final int fromBiasCount = network
-					.getLayerTotalNeuronCount(layerNumber);
-			final int toCount = network.getLayerNeuronCount(layerNumber + 1);
+        for (final Layer layer : network.getStructure().getLayers()) {
+            if (layer.hasBias()) {
+                for (int i = 0; i < layer.getNeuronCount(); i++) {
+                }
+            }
+        }
 
-			// weights
-			for (int fromNeuron = 0; fromNeuron < fromCount; fromNeuron++) {
-				for (int toNeuron = 0; toNeuron < toCount; toNeuron++) {
-					final double v = network.getWeight(layerNumber, fromNeuron,
-							toNeuron);
-					
-					if( network.getStructure().isConnectionLimited() ) {
-						if( Math.abs(v)<network.getStructure().getConnectionLimit() ) {
-							assignDisabled++;
-						}
-					}
 
-					assignedTotal++;
-					weightList.add(v);
-					allList.add(v);
-				}
-			}
+        this.disabledConnections = assignDisabled;
+        this.totalConnections = assignedTotal;
+        this.weights = new NumericRange(weightList);
+        this.bias = new NumericRange(biasList);
+        this.weightsAndBias = new NumericRange(allList);
+        this.weightValues = EngineArray.listToDouble(weightList);
+        this.allValues = EngineArray.listToDouble(allList);
+        this.biasValues = EngineArray.listToDouble(biasList);
+    }
 
-			// bias
-			if (fromCount != fromBiasCount) {
-				final int biasNeuron = fromCount;
-				for (int toNeuron = 0; toNeuron < toCount; toNeuron++) {
-					final double v = network.getWeight(layerNumber, biasNeuron,
-							toNeuron);
-					
-					if( network.getStructure().isConnectionLimited() ) {
-						if( Math.abs(v)<network.getStructure().getConnectionLimit() ) {
-							assignDisabled++;
-						}
-					}
-					
-					assignedTotal++;
-					biasList.add(v);
-					allList.add(v);
-				}
-			}
-		}
+    /**
+     * @return All of the values in the neural network.
+     */
+    public final double[] getAllValues() {
+        return this.allValues;
+    }
 
-		for (final Layer layer : network.getStructure().getLayers()) {
-			if (layer.hasBias()) {
-				for (int i = 0; i < layer.getNeuronCount(); i++) {
+    /**
+     * @return The numeric range of the bias values.
+     */
+    public final NumericRange getBias() {
+        return this.bias;
+    }
 
-				}
-			}
-		}
-		
-		
-		this.disabledConnections = assignDisabled;
-		this.totalConnections = assignedTotal;
-		this.weights = new NumericRange(weightList);
-		this.bias = new NumericRange(biasList);
-		this.weightsAndBias = new NumericRange(allList);
-		this.weightValues = EngineArray.listToDouble(weightList);
-		this.allValues = EngineArray.listToDouble(allList);
-		this.biasValues = EngineArray.listToDouble(biasList);
-	}
+    /**
+     * @return The bias values in the neural network.
+     */
+    public final double[] getBiasValues() {
+        return this.biasValues;
+    }
 
-	/**
-	 * @return All of the values in the neural network.
-	 */
-	public final double[] getAllValues() {
-		return this.allValues;
-	}
+    /**
+     * @return The number of disabled connections in the network.
+     */
+    public final int getDisabledConnections() {
+        return this.disabledConnections;
+    }
 
-	/**
-	 * @return The numeric range of the bias values.
-	 */
-	public final NumericRange getBias() {
-		return this.bias;
-	}
+    /**
+     * @return The total number of connections in the network.
+     */
+    public final int getTotalConnections() {
+        return this.totalConnections;
+    }
 
-	/**
-	 * @return The bias values in the neural network.
-	 */
-	public final double[] getBiasValues() {
-		return this.biasValues;
-	}
+    /**
+     * @return The numeric range of the weights values.
+     */
+    public final NumericRange getWeights() {
+        return this.weights;
+    }
 
-	/**
-	 * @return The number of disabled connections in the network.
-	 */
-	public final int getDisabledConnections() {
-		return this.disabledConnections;
-	}
+    /**
+     * @return The numeric range of the weights and bias values.
+     */
+    public final NumericRange getWeightsAndBias() {
+        return this.weightsAndBias;
+    }
 
-	/**
-	 * @return The total number of connections in the network.
-	 */
-	public final int getTotalConnections() {
-		return this.totalConnections;
-	}
+    /**
+     * @return The weight values in the neural network.
+     */
+    public final double[] getWeightValues() {
+        return this.weightValues;
+    }
 
-	/**
-	 * @return The numeric range of the weights values.
-	 */
-	public final NumericRange getWeights() {
-		return this.weights;
-	}
-
-	/**
-	 * @return The numeric range of the weights and bias values.
-	 */
-	public final NumericRange getWeightsAndBias() {
-		return this.weightsAndBias;
-	}
-
-	/**
-	 * @return The weight values in the neural network.
-	 */
-	public final double[] getWeightValues() {
-		return this.weightValues;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final String toString() {
-		final StringBuilder result = new StringBuilder();
-		result.append("All Values : ");
-		result.append(this.weightsAndBias.toString());
-		result.append("\n");
-		result.append("Bias : ");
-		result.append(this.bias.toString());
-		result.append("\n");
-		result.append("Weights    : ");
-		result.append(this.weights.toString());
-		result.append("\n");
-		result.append("Disabled   : ");
-		result.append(Format.formatInteger(this.disabledConnections));
-		result.append("\n");
-		return result.toString();
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("All Values : ");
+        result.append(this.weightsAndBias.toString());
+        result.append("\n");
+        result.append("Bias : ");
+        result.append(this.bias.toString());
+        result.append("\n");
+        result.append("Weights    : ");
+        result.append(this.weights.toString());
+        result.append("\n");
+        result.append("Disabled   : ");
+        result.append(Format.formatInteger(this.disabledConnections));
+        result.append("\n");
+        return result.toString();
+    }
 }

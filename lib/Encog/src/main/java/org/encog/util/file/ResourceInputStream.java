@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,39 +28,38 @@ import java.io.InputStream;
 
 import org.encog.EncogError;
 
-public class ResourceInputStream  {
+public class ResourceInputStream {
 
-	/**
-	 * Construct a location to read from the specified resource.
-	 * 
-	 * An example of the format for a file stored this way is:
-	 * 
-	 * org/encog/data/classes.txt
-	 * 
-	 * @param resource
-	 *            The resource to read from.
-	 */
-	public static InputStream openResourceInputStream(final String resource) {
-		
-		final ClassLoader loader = ResourceInputStream.class.getClassLoader();
-		InputStream result = loader.getResourceAsStream(resource);
+    /**
+     * Construct a location to read from the specified resource.
+     * <p/>
+     * An example of the format for a file stored this way is:
+     * <p/>
+     * org/encog/data/classes.txt
+     * <p/>
+     * @param resource
+     *                 The resource to read from.
+     */
+    public static InputStream openResourceInputStream(final String resource) {
 
-		if (result == null) {
-			throw new EncogError("Can't open resource: " + resource);
-		}		
-		
-		return result;
-	}
+        final ClassLoader loader = ResourceInputStream.class.getClassLoader();
+        InputStream result = loader.getResourceAsStream(resource);
 
-	public static String readResourceAsString(String resource) {
-		try {
-			InputStream is = openResourceInputStream(resource);
-			String result = FileUtil.readStreamAsString(is);
-			is.close();
-			return result;
-		} catch (IOException ex) {
-			throw new EncogError(ex);
-		}
-	}
+        if (result == null) {
+            throw new EncogError("Can't open resource: " + resource);
+        }
 
+        return result;
+    }
+
+    public static String readResourceAsString(String resource) {
+        try {
+            InputStream is = openResourceInputStream(resource);
+            String result = FileUtil.readStreamAsString(is);
+            is.close();
+            return result;
+        } catch (IOException ex) {
+            throw new EncogError(ex);
+        }
+    }
 }

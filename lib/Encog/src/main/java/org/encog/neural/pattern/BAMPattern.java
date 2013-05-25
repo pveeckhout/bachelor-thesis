@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,99 +34,100 @@ import org.encog.neural.bam.BAM;
  * to each other. Though they are labeled as input and output layers to Encog,
  * they are both equal, and should simply be thought of as the two layers that
  * make up the net.
- * 
+ * <p/>
  */
 public class BAMPattern implements NeuralNetworkPattern {
 
-	/**
-	 * The number of neurons in the first layer.
-	 */
-	private int f1Neurons;
+    /**
+     * The number of neurons in the first layer.
+     */
+    private int f1Neurons;
+    /**
+     * The number of neurons in the second layer.
+     */
+    private int f2Neurons;
 
-	/**
-	 * The number of neurons in the second layer.
-	 */
-	private int f2Neurons;
+    /**
+     * Unused, a BAM has no hidden layers.
+     * <p/>
+     * @param count
+     *              Not used.
+     */
+    public void addHiddenLayer(final int count) {
+        throw new PatternError("A BAM network has no hidden layers.");
+    }
 
-	/**
-	 * Unused, a BAM has no hidden layers.
-	 * 
-	 * @param count
-	 *            Not used.
-	 */
-	public void addHiddenLayer(final int count) {
-		throw new PatternError("A BAM network has no hidden layers.");
-	}
+    /**
+     * Clear any settings on the pattern.
+     */
+    public void clear() {
+        this.f1Neurons = 0;
+        this.f2Neurons = 0;
 
-	/**
-	 * Clear any settings on the pattern.
-	 */
-	public void clear() {
-		this.f1Neurons = 0;
-		this.f2Neurons = 0;
+    }
 
-	}
+    /**
+     * @return The generated network.
+     */
+    public MLMethod generate() {
+        BAM bam = new BAM(this.f1Neurons, this.f2Neurons);
+        return bam;
+    }
 
-	/**
-	 * @return The generated network.
-	 */
-	public MLMethod generate() {
-		BAM bam = new BAM(this.f1Neurons,this.f2Neurons);
-		return bam;
-	}
+    /**
+     * Not used, the BAM uses a bipoloar activation function.
+     * <p/>
+     * @param activation
+     *                   Not used.
+     */
+    public void setActivationFunction(final ActivationFunction activation) {
+        throw new PatternError(
+                "A BAM network can't specify a custom activation function.");
+    }
 
-	/**
-	 * Not used, the BAM uses a bipoloar activation function.
-	 * 
-	 * @param activation
-	 *            Not used.
-	 */
-	public void setActivationFunction(final ActivationFunction activation) {
-		throw new PatternError("A BAM network can't specify a custom activation function.");
-	}
+    /**
+     * Set the F1 neurons. The BAM really does not have an input and output
+     * layer, so this is simply setting the number of neurons that are in the
+     * first layer.
+     * <p/>
+     * @param count
+     *              The number of neurons in the first layer.
+     */
+    public void setF1Neurons(final int count) {
+        this.f1Neurons = count;
+    }
 
-	/**
-	 * Set the F1 neurons. The BAM really does not have an input and output
-	 * layer, so this is simply setting the number of neurons that are in the
-	 * first layer.
-	 * 
-	 * @param count
-	 *            The number of neurons in the first layer.
-	 */
-	public void setF1Neurons(final int count) {
-		this.f1Neurons = count;
-	}
+    /**
+     * Set the output neurons. The BAM really does not have an input and output
+     * layer, so this is simply setting the number of neurons that are in the
+     * second layer.
+     * <p/>
+     * @param count
+     *              The number of neurons in the second layer.
+     */
+    public void setF2Neurons(final int count) {
+        this.f2Neurons = count;
+    }
 
-	/**
-	 * Set the output neurons. The BAM really does not have an input and output
-	 * layer, so this is simply setting the number of neurons that are in the
-	 * second layer.
-	 * 
-	 * @param count
-	 *            The number of neurons in the second layer.
-	 */
-	public void setF2Neurons(final int count) {
-		this.f2Neurons = count;
-	}
+    /**
+     * Set the number of input neurons.
+     * <p/>
+     * @param count
+     *              The number of input neurons.
+     */
+    public void setInputNeurons(final int count) {
+        throw new PatternError(
+                "A BAM network has no input layer, consider setting F1 layer.");
+    }
 
-	/**
-	 * Set the number of input neurons.
-	 * 
-	 * @param count
-	 *            The number of input neurons.
-	 */
-	public void setInputNeurons(final int count) {
-		throw new PatternError( "A BAM network has no input layer, consider setting F1 layer.");
-	}
-
-	/**
-	 * Set the number of output neurons.
-	 * 
-	 * @param count
-	 *            The output neuron count.
-	 */
-	public void setOutputNeurons(final int count) {
-		throw new PatternError("A BAM network has no output layer, consider setting F2 layer.");
-	}
-
+    /**
+     * Set the number of output neurons.
+     * <p/>
+     * @param count
+     *              The output neuron count.
+     */
+    public void setOutputNeurons(final int count) {
+        throw new PatternError(
+                "A BAM network has no output layer, consider setting F2 layer.");
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,29 +33,29 @@ import org.encog.bot.browse.WebPage;
  */
 public class Span extends DocumentRange {
 
-	/**
-	 * Construct a span range from the specified web page.
-	 *
-	 * @param source
-	 *            The source web page.
-	 */
-	public Span(final WebPage source) {
-		super(source);
-	}
+    /**
+     * Construct a span range from the specified web page.
+     *
+     * @param source
+     *               The source web page.
+     */
+    public Span(final WebPage source) {
+        super(source);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final String toString() {
-		final StringBuilder result = new StringBuilder();
-		result.append("[Span:class=");
-		result.append(getClassAttribute());
-		result.append(",id=");
-		result.append(getIdAttribute());
-		result.append(",elements=");
-		result.append(getElements().size());
-		result.append("]");
-		return result.toString();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("[Span:class=");
+        result.append(getClassAttribute());
+        result.append(",id=");
+        result.append(getIdAttribute());
+        result.append(",elements=");
+        result.append(getElements().size());
+        result.append("]");
+        return result.toString();
+    }
 }

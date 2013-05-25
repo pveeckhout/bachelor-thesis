@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,190 +37,191 @@ import org.encog.util.Format;
  * generator. A sample size must be specified. The higher the sample size, the
  * more accurate the probability will be. However, the higher the sampling size,
  * the longer it takes to run the query.
- * 
+ * <p/>
  * An enumeration query is more precise than the sampling query. However, the
  * enumeration query will become slow as the size of the Bayesian network grows.
  * Sampling can often be used for a quick estimation of a probability.
  */
 public class SamplingQuery extends BasicQuery implements Serializable {
 
-	/**
-	 * The default sample size.
-	 */
-	public static final int DEFAULT_SAMPLE_SIZE = 100000;
+    /**
+     * The default sample size.
+     */
+    public static final int DEFAULT_SAMPLE_SIZE = 100000;
+    /**
+     * The sample size.
+     */
+    private int sampleSize = DEFAULT_SAMPLE_SIZE;
+    /**
+     * The number of usable samples. This is the set size for the average
+     * probability.
+     */
+    private int usableSamples;
+    /**
+     * The number of samples that matched the result the query is looking for.
+     */
+    private int goodSamples;
+    /**
+     * The total number of samples generated. This should match sampleSize at
+     * the end of a query.
+     */
+    private int totalSamples;
 
-	/**
-	 * The sample size.
-	 */
-	private int sampleSize = DEFAULT_SAMPLE_SIZE;
+    /**
+     * Construct a sampling query.
+     * <p/>
+     * @param theNetwork The network that will be queried.
+     */
+    public SamplingQuery(BayesianNetwork theNetwork) {
+        super(theNetwork);
+    }
 
-	/**
-	 * The number of usable samples. This is the set size for the average
-	 * probability.
-	 */
-	private int usableSamples;
+    /**
+     * @return the sampleSize
+     */
+    public int getSampleSize() {
+        return sampleSize;
+    }
 
-	/**
-	 * The number of samples that matched the result the query is looking for.
-	 */
-	private int goodSamples;
+    /**
+     * @param sampleSize
+     *                   the sampleSize to set
+     */
+    public void setSampleSize(int sampleSize) {
+        this.sampleSize = sampleSize;
+    }
 
-	/**
-	 * The total number of samples generated. This should match sampleSize at
-	 * the end of a query.
-	 */
-	private int totalSamples;
+    /**
+     * Obtain the arguments for an event.
+     * <p/>
+     * @param event The event.
+     * <p/>
+     * @return The arguments for that event, based on the other event values.
+     */
+    private int[] obtainArgs(BayesianEvent event) {
+        int[] result = new int[event.getParents().size()];
 
-	/**
-	 * Construct a sampling query.
-	 * @param theNetwork The network that will be queried.
-	 */
-	public SamplingQuery(BayesianNetwork theNetwork) {
-		super(theNetwork);
-	}
+        int index = 0;
+        for (BayesianEvent parentEvent : event.getParents()) {
+            EventState state = this.getEventState(parentEvent);
+            if (!state.isCalculated()) {
+                return null;
+            }
+            result[index++] = state.getValue();
 
-	/**
-	 * @return the sampleSize
-	 */
-	public int getSampleSize() {
-		return sampleSize;
-	}
+        }
+        return result;
+    }
 
-	/**
-	 * @param sampleSize
-	 *            the sampleSize to set
-	 */
-	public void setSampleSize(int sampleSize) {
-		this.sampleSize = sampleSize;
-	}
+    /**
+     * Set all events to random values, based on their probabilities.
+     * <p/>
+     * @param eventState
+     */
+    private void randomizeEvents(EventState eventState) {
+        // first, has this event already been randomized
+        if (!eventState.isCalculated()) {
+            // next, see if we can randomize the event passed
+            int[] args = obtainArgs(eventState.getEvent());
+            if (args != null) {
+                eventState.randomize(args);
+            }
+        }
 
-	/**
-	 * Obtain the arguments for an event.
-	 * @param event The event.
-	 * @return The arguments for that event, based on the other event values.
-	 */
-	private int[] obtainArgs(BayesianEvent event) {
-		int[] result = new int[event.getParents().size()];
+        // randomize children
+        for (BayesianEvent childEvent : eventState.getEvent().getChildren()) {
+            randomizeEvents(getEventState(childEvent));
+        }
+    }
 
-		int index = 0;
-		for (BayesianEvent parentEvent : event.getParents()) {
-			EventState state = this.getEventState(parentEvent);
-			if (!state.isCalculated())
-				return null;
-			result[index++] = state.getValue();
+    /**
+     * @return The number of events that are still uncalculated.
+     */
+    private int countUnCalculated() {
+        int result = 0;
+        for (EventState state : getEvents().values()) {
+            if (!state.isCalculated()) {
+                result++;
+            }
+        }
+        return result;
+    }
 
-		}
-		return result;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public void execute() {
+        locateEventTypes();
+        this.usableSamples = 0;
+        this.goodSamples = 0;
+        this.totalSamples = 0;
 
-	/**
-	 * Set all events to random values, based on their probabilities.
-	 * @param eventState
-	 */
-	private void randomizeEvents(EventState eventState) {
-		// first, has this event already been randomized
-		if (!eventState.isCalculated()) {
-			// next, see if we can randomize the event passed
-			int[] args = obtainArgs(eventState.getEvent());
-			if (args != null) {
-				eventState.randomize(args);
-			}
-		}
+        for (int i = 0; i < this.sampleSize; i++) {
+            reset();
 
-		// randomize children
-		for (BayesianEvent childEvent : eventState.getEvent().getChildren()) {
-			randomizeEvents(getEventState(childEvent));
-		}
-	}
+            int lastUncalculated = Integer.MAX_VALUE;
+            int uncalculated;
+            do {
+                for (EventState state : getEvents().values()) {
+                    randomizeEvents(state);
+                }
+                uncalculated = countUnCalculated();
+                if (uncalculated == lastUncalculated) {
+                    throw new BayesianError(
+                            "Unable to calculate all nodes in the graph.");
+                }
+                lastUncalculated = uncalculated;
+            } while (uncalculated > 0);
 
-	/**
-	 * @return The number of events that are still uncalculated.
-	 */
-	private int countUnCalculated() {
-		int result = 0;
-		for (EventState state : getEvents().values()) {
-			if (!state.isCalculated())
-				result++;
-		}
-		return result;
-	}
+            // System.out.println("Sample:\n" + this.dumpCurrentState());
+            this.totalSamples++;
+            if (isNeededEvidence()) {
+                this.usableSamples++;
+                if (satisfiesDesiredOutcome()) {
+                    this.goodSamples++;
+                }
+            }
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void execute() {
-		locateEventTypes();
-		this.usableSamples = 0;
-		this.goodSamples = 0;
-		this.totalSamples = 0;
+    /**
+     * {@inheritDoc}
+     */
+    public double getProbability() {
+        return (double) this.goodSamples / (double) this.usableSamples;
+    }
 
-		for (int i = 0; i < this.sampleSize; i++) {
-			reset();
+    /**
+     * @return The current state as a string.
+     */
+    public String dumpCurrentState() {
+        StringBuilder result = new StringBuilder();
+        for (EventState state : getEvents().values()) {
+            result.append(state.toString());
+            result.append("\n");
+        }
+        return result.toString();
+    }
 
-			int lastUncalculated = Integer.MAX_VALUE;
-			int uncalculated;
-			do {
-				for (EventState state : getEvents().values()) {
-					randomizeEvents(state);
-				}
-				uncalculated = countUnCalculated();
-				if (uncalculated == lastUncalculated) {
-					throw new BayesianError(
-							"Unable to calculate all nodes in the graph.");
-				}
-				lastUncalculated = uncalculated;
-			} while (uncalculated > 0);
+    public SamplingQuery clone() {
+        return new SamplingQuery(this.getNetwork());
+    }
 
-			// System.out.println("Sample:\n" + this.dumpCurrentState());
-			this.totalSamples++;
-			if (isNeededEvidence()) {
-				this.usableSamples++;
-				if (satisfiesDesiredOutcome()) {
-					this.goodSamples++;
-				}
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public double getProbability() {
-		return (double) this.goodSamples / (double) this.usableSamples;
-	}
-
-	/**
-	 * @return The current state as a string.
-	 */
-	public String dumpCurrentState() {
-		StringBuilder result = new StringBuilder();
-		for (EventState state : getEvents().values()) {
-			result.append(state.toString());
-			result.append("\n");
-		}
-		return result.toString();
-	}
-	
-	public SamplingQuery clone() {
-		return new SamplingQuery(this.getNetwork());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append("[SamplingQuery: ");
-		result.append(getProblem());
-		result.append("=");
-		result.append(Format.formatPercent(getProbability()));
-		result.append(" ;good/usable=");
-		result.append(Format.formatInteger(this.goodSamples));
-		result.append("/");
-		result.append(Format.formatInteger(this.usableSamples));
-		result.append(";totalSamples=");
-		result.append(Format.formatInteger(this.totalSamples));
-		return result.toString();
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("[SamplingQuery: ");
+        result.append(getProblem());
+        result.append("=");
+        result.append(Format.formatPercent(getProbability()));
+        result.append(" ;good/usable=");
+        result.append(Format.formatInteger(this.goodSamples));
+        result.append("/");
+        result.append(Format.formatInteger(this.usableSamples));
+        result.append(";totalSamples=");
+        result.append(Format.formatInteger(this.totalSamples));
+        return result.toString();
+    }
 }

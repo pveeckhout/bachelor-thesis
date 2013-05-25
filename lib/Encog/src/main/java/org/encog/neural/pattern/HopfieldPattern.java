@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,81 +32,82 @@ import org.encog.neural.thermal.HopfieldNetwork;
  * functions both as the input and output layers. There are no hidden layers.
  * Hopfield networks are used for basic pattern recognition. When a Hopfield
  * network recognizes a pattern, it "echos" that pattern on the output.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class HopfieldPattern implements NeuralNetworkPattern {
 
-	/**
-	 * How many neurons in the Hopfield network. Default to -1, which is
-	 * invalid. Therefore this value must be set.
-	 */
-	private int neuronCount = -1;
+    /**
+     * How many neurons in the Hopfield network. Default to -1, which is
+     * invalid. Therefore this value must be set.
+     */
+    private int neuronCount = -1;
 
-	/**
-	 * Add a hidden layer. This will throw an error, because the Hopfield neural
-	 * network has no hidden layers.
-	 * 
-	 * @param count
-	 *            The number of neurons.
-	 */
-	public void addHiddenLayer(final int count) {
-		throw new PatternError("A Hopfield network has no hidden layers.");
-	}
+    /**
+     * Add a hidden layer. This will throw an error, because the Hopfield neural
+     * network has no hidden layers.
+     * <p/>
+     * @param count
+     *              The number of neurons.
+     */
+    public void addHiddenLayer(final int count) {
+        throw new PatternError("A Hopfield network has no hidden layers.");
+    }
 
-	/**
-	 * Nothing to clear.
-	 */
-	public void clear() {
-	}
+    /**
+     * Nothing to clear.
+     */
+    public void clear() {
+    }
 
-	/**
-	 * Generate the Hopfield neural network.
-	 * 
-	 * @return The generated network.
-	 */
-	public MLMethod generate() {
-		HopfieldNetwork logic = new HopfieldNetwork(this.neuronCount);
-		return logic;
-	}
+    /**
+     * Generate the Hopfield neural network.
+     * <p/>
+     * @return The generated network.
+     */
+    public MLMethod generate() {
+        HopfieldNetwork logic = new HopfieldNetwork(this.neuronCount);
+        return logic;
+    }
 
-	/**
-	 * Set the activation function to use. This function will throw an error,
-	 * because the Hopfield network must use the BiPolar activation function.
-	 * 
-	 * @param activation
-	 *            The activation function to use.
-	 */
-	public void setActivationFunction(final ActivationFunction activation) {
-		throw new PatternError( "A Hopfield network will use the BiPolar activation "
-				+ "function, no activation function needs to be specified.");
+    /**
+     * Set the activation function to use. This function will throw an error,
+     * because the Hopfield network must use the BiPolar activation function.
+     * <p/>
+     * @param activation
+     *                   The activation function to use.
+     */
+    public void setActivationFunction(final ActivationFunction activation) {
+        throw new PatternError(
+                "A Hopfield network will use the BiPolar activation " +
+                "function, no activation function needs to be specified.");
 
-	}
+    }
 
-	/**
-	 * Set the number of input neurons, this must match the output neurons.
-	 * 
-	 * @param count
-	 *            The number of neurons.
-	 */
-	public void setInputNeurons(final int count) {
-		this.neuronCount = count;
+    /**
+     * Set the number of input neurons, this must match the output neurons.
+     * <p/>
+     * @param count
+     *              The number of neurons.
+     */
+    public void setInputNeurons(final int count) {
+        this.neuronCount = count;
 
-	}
+    }
 
-	/**
-	 * Set the number of output neurons, should not be used with a hopfield
-	 * neural network, because the number of input neurons defines the number of
-	 * output neurons.
-	 * 
-	 * @param count
-	 *            The number of neurons.
-	 */
-	public void setOutputNeurons(final int count) {
-		throw new PatternError( "A Hopfield network has a single layer, so no need "
-				+ "to specify the output count.");
+    /**
+     * Set the number of output neurons, should not be used with a hopfield
+     * neural network, because the number of input neurons defines the number of
+     * output neurons.
+     * <p/>
+     * @param count
+     *              The number of neurons.
+     */
+    public void setOutputNeurons(final int count) {
+        throw new PatternError(
+                "A Hopfield network has a single layer, so no need " +
+                "to specify the output count.");
 
-	}
-
+    }
 }

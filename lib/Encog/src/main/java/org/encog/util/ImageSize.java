@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,88 +31,87 @@ import org.encog.EncogError;
 
 /**
  * Simple class to determine the size of an image.
- * 
+ * <p/>
  * @author jheaton
  */
 public class ImageSize implements ImageObserver {
 
-	/**
-	 * The width of the image.
-	 */
-	private int width;
+    /**
+     * The width of the image.
+     */
+    private int width;
+    /**
+     * The height of the image.
+     */
+    private int height;
+    /**
+     * Wait for the values to be set.
+     */
+    private final Semaphore wait;
 
-	/**
-	 * The height of the image.
-	 */
-	private int height;
+    /**
+     * Determine the size of an image.
+     * <p/>
+     * @param image
+     *              The image to be sized.
+     */
+    public ImageSize(final Image image) {
+        this.wait = new Semaphore(0);
+        this.width = image.getWidth(this);
+        this.height = image.getHeight(this);
+        if ((this.width == -1) || (this.height == -1)) {
+            try {
+                this.wait.acquire();
+            } catch (final InterruptedException e) {
+                throw new EncogError(e);
+            }
+        }
 
-	/**
-	 * Wait for the values to be set.
-	 */
-	private final Semaphore wait;
+    }
 
-	/**
-	 * Determine the size of an image.
-	 * 
-	 * @param image
-	 *            The image to be sized.
-	 */
-	public ImageSize(final Image image) {
-		this.wait = new Semaphore(0);
-		this.width = image.getWidth(this);
-		this.height = image.getHeight(this);
-		if ((this.width == -1) || (this.height == -1)) {
-			try {
-				this.wait.acquire();
-			} catch (final InterruptedException e) {
-				throw new EncogError(e);
-			}
-		}
+    /**
+     * @return the height
+     */
+    public int getHeight() {
+        return this.height;
+    }
 
-	}
+    /**
+     * @return the width
+     */
+    public int getWidth() {
+        return this.width;
+    }
 
-	/**
-	 * @return the height
-	 */
-	public int getHeight() {
-		return this.height;
-	}
+    /**
+     * The image has been updated.
+     * <p/>
+     * @param img
+     *                  The image.
+     * @param infoflags
+     *                  Which data has been loaded.
+     * @param x
+     *                  Not used.
+     * @param y
+     *                  Not used.
+     * @param width
+     *                  The width of the image.
+     * @param height
+     *                  The height of the image.
+     * <p/>
+     * @return True if more data is still needed.
+     */
+    public boolean imageUpdate(final Image img, final int infoflags,
+                               final int x, final int y, final int width,
+                               final int height) {
+        final int c = ImageObserver.HEIGHT | ImageObserver.WIDTH;
 
-	/**
-	 * @return the width
-	 */
-	public int getWidth() {
-		return this.width;
-	}
+        if ((infoflags & c) != c) {
+            return true;
+        }
 
-	/**
-	 * The image has been updated.
-	 * 
-	 * @param img
-	 *            The image.
-	 * @param infoflags
-	 *            Which data has been loaded.
-	 * @param x
-	 *            Not used.
-	 * @param y
-	 *            Not used.
-	 * @param width
-	 *            The width of the image.
-	 * @param height
-	 *            The height of the image.
-	 * @return True if more data is still needed.
-	 */
-	public boolean imageUpdate(final Image img, final int infoflags,
-			final int x, final int y, final int width, final int height) {
-		final int c = ImageObserver.HEIGHT | ImageObserver.WIDTH;
-
-		if ((infoflags & c) != c) {
-			return true;
-		}
-
-		this.height = height;
-		this.width = width;
-		return false;
-	}
-
+        this.height = height;
+        this.width = width;
+        return false;
+    }
 }

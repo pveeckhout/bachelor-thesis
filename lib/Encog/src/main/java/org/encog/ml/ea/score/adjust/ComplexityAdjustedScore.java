@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,122 +32,126 @@ import org.encog.ml.ea.score.AdjustScore;
  */
 public class ComplexityAdjustedScore implements AdjustScore {
 
-	/**
-	 * The starting complexity penalty.
-	 */
-	private double complexityPenalty = .2;
+    /**
+     * The starting complexity penalty.
+     */
+    private double complexityPenalty = .2;
+    /**
+     * The full complexity penalty.
+     */
+    private double complexityFullPenalty = 2.0;
+    /**
+     * The complexity level at which a penalty begins to be applied.
+     */
+    private int complexityPenaltyThreshold = 10;
+    /**
+     * The complexity level at which a full (100%) penalty is applied.
+     */
+    private int complexityPentaltyFullThreshold = 50;
 
-	/**
-	 * The full complexity penalty.
-	 */
-	private double complexityFullPenalty = 2.0;
+    /**
+     * Construct a adjustor to penalize complexity.
+     * <p/>
+     * @param theComplexityPenaltyThreshold      The complexity level at which a
+     *                                           penalty begins to be applied.
+     * @param theComplexityPentaltyFullThreshold The complexity level at which a
+     *                                           full (100%) penalty is applied.
+     * @param theComplexityPenalty               The starting complexity
+     *                                           penalty.
+     * @param theComplexityFullPenalty           The full complexity penalty.
+     */
+    public ComplexityAdjustedScore(int theComplexityPenaltyThreshold,
+                                   int theComplexityPentaltyFullThreshold,
+                                   double theComplexityPenalty,
+                                   double theComplexityFullPenalty) {
+        this.complexityPenaltyThreshold = theComplexityPenaltyThreshold;
+        this.complexityPentaltyFullThreshold =
+                theComplexityPentaltyFullThreshold;
+        this.complexityPenalty = theComplexityPenalty;
+        this.complexityFullPenalty = theComplexityFullPenalty;
+    }
 
-	/**
-	 * The complexity level at which a penalty begins to be applied.
-	 */
-	private int complexityPenaltyThreshold = 10;
+    public ComplexityAdjustedScore() {
+        this(10, 50, 0.2, 2.0);
+    }
 
-	/**
-	 * The complexity level at which a full (100%) penalty is applied.
-	 */
-	private int complexityPentaltyFullThreshold = 50;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double calculateAdjustment(Genome genome) {
+        double score = genome.getScore();
+        double result = 0;
 
-	/**
-	 * Construct a adjustor to penalize complexity.
-	 * @param theComplexityPenaltyThreshold The complexity level at which a penalty begins to be applied.
-	 * @param theComplexityPentaltyFullThreshold The complexity level at which a full (100%) penalty is applied.
-	 * @param theComplexityPenalty The starting complexity penalty.
-	 * @param theComplexityFullPenalty The full complexity penalty.
-	 */
-	public ComplexityAdjustedScore(int theComplexityPenaltyThreshold,
-			int theComplexityPentaltyFullThreshold,
-			double theComplexityPenalty, double theComplexityFullPenalty) {
-		this.complexityPenaltyThreshold = theComplexityPenaltyThreshold;
-		this.complexityPentaltyFullThreshold = theComplexityPentaltyFullThreshold;
-		this.complexityPenalty = theComplexityPenalty;
-		this.complexityFullPenalty = theComplexityFullPenalty;
-	}
-	
-	public ComplexityAdjustedScore() {
-		this(10,50,0.2,2.0);
-	}
+        if (genome.size() > this.complexityPenaltyThreshold) {
+            int over = genome.size() - this.complexityPenaltyThreshold;
+            int range = this.complexityPentaltyFullThreshold -
+                    this.complexityPenaltyThreshold;
+            double complexityPenalty = ((this.complexityFullPenalty -
+                    this.complexityPenalty) / range) *
+                    over;
+            result = (score * complexityPenalty);
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double calculateAdjustment(Genome genome) {
-		double score = genome.getScore();
-		double result = 0;
+        return result;
+    }
 
-		if (genome.size() > this.complexityPenaltyThreshold) {
-			int over = genome.size() - this.complexityPenaltyThreshold;
-			int range = this.complexityPentaltyFullThreshold
-					- this.complexityPenaltyThreshold;
-			double complexityPenalty = ((this.complexityFullPenalty - this.complexityPenalty) / range)
-					* over;
-			result = (score * complexityPenalty);
-		}
+    /**
+     * @return the complexityPenalty
+     */
+    public double getComplexityPenalty() {
+        return complexityPenalty;
+    }
 
-		return result;
-	}
+    /**
+     * @param complexityPenalty the complexityPenalty to set
+     */
+    public void setComplexityPenalty(double complexityPenalty) {
+        this.complexityPenalty = complexityPenalty;
+    }
 
-	/**
-	 * @return the complexityPenalty
-	 */
-	public double getComplexityPenalty() {
-		return complexityPenalty;
-	}
+    /**
+     * @return the complexityFullPenalty
+     */
+    public double getComplexityFullPenalty() {
+        return complexityFullPenalty;
+    }
 
-	/**
-	 * @param complexityPenalty the complexityPenalty to set
-	 */
-	public void setComplexityPenalty(double complexityPenalty) {
-		this.complexityPenalty = complexityPenalty;
-	}
+    /**
+     * @param complexityFullPenalty the complexityFullPenalty to set
+     */
+    public void setComplexityFullPenalty(double complexityFullPenalty) {
+        this.complexityFullPenalty = complexityFullPenalty;
+    }
 
-	/**
-	 * @return the complexityFullPenalty
-	 */
-	public double getComplexityFullPenalty() {
-		return complexityFullPenalty;
-	}
+    /**
+     * @return the complexityPenaltyThreshold
+     */
+    public int getComplexityPenaltyThreshold() {
+        return complexityPenaltyThreshold;
+    }
 
-	/**
-	 * @param complexityFullPenalty the complexityFullPenalty to set
-	 */
-	public void setComplexityFullPenalty(double complexityFullPenalty) {
-		this.complexityFullPenalty = complexityFullPenalty;
-	}
+    /**
+     * @param complexityPenaltyThreshold the complexityPenaltyThreshold to set
+     */
+    public void setComplexityPenaltyThreshold(int complexityPenaltyThreshold) {
+        this.complexityPenaltyThreshold = complexityPenaltyThreshold;
+    }
 
-	/**
-	 * @return the complexityPenaltyThreshold
-	 */
-	public int getComplexityPenaltyThreshold() {
-		return complexityPenaltyThreshold;
-	}
+    /**
+     * @return the complexityPentaltyFullThreshold
+     */
+    public int getComplexityPentaltyFullThreshold() {
+        return complexityPentaltyFullThreshold;
+    }
 
-	/**
-	 * @param complexityPenaltyThreshold the complexityPenaltyThreshold to set
-	 */
-	public void setComplexityPenaltyThreshold(int complexityPenaltyThreshold) {
-		this.complexityPenaltyThreshold = complexityPenaltyThreshold;
-	}
-
-	/**
-	 * @return the complexityPentaltyFullThreshold
-	 */
-	public int getComplexityPentaltyFullThreshold() {
-		return complexityPentaltyFullThreshold;
-	}
-
-	/**
-	 * @param complexityPentaltyFullThreshold the complexityPentaltyFullThreshold to set
-	 */
-	public void setComplexityPentaltyFullThreshold(
-			int complexityPentaltyFullThreshold) {
-		this.complexityPentaltyFullThreshold = complexityPentaltyFullThreshold;
-	}
-	
-	
+    /**
+     * @param complexityPentaltyFullThreshold the
+     *                                        complexityPentaltyFullThreshold to
+     *                                        set
+     */
+    public void setComplexityPentaltyFullThreshold(
+            int complexityPentaltyFullThreshold) {
+        this.complexityPentaltyFullThreshold = complexityPentaltyFullThreshold;
+    }
 }

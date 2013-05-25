@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -39,296 +39,295 @@ import org.encog.util.obj.ObjectCloner;
  * Stores data in an ArrayList. This class is memory based, so large enough
  * datasets could cause memory issues. Many other dataset types extend this
  * class.
- * 
+ * <p/>
  * @author jheaton
  */
 public class BasicMLDataSet implements Serializable, MLDataSet {
 
-	/**
-	 * An iterator to be used with the BasicMLDataSet. This iterator does not
-	 * support removes.
-	 * 
-	 * @author jheaton
-	 */
-	public class BasicMLIterator implements Iterator<MLDataPair> {
+    /**
+     * An iterator to be used with the BasicMLDataSet. This iterator does not
+     * support removes.
+     * <p/>
+     * @author jheaton
+     */
+    public class BasicMLIterator implements Iterator<MLDataPair> {
 
-		/**
-		 * The index that the iterator is currently at.
-		 */
-		private int currentIndex = 0;
+        /**
+         * The index that the iterator is currently at.
+         */
+        private int currentIndex = 0;
 
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public final boolean hasNext() {
-			return this.currentIndex < BasicMLDataSet.this.data.size();
-		}
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public final boolean hasNext() {
+            return this.currentIndex < BasicMLDataSet.this.data.size();
+        }
 
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public final MLDataPair next() {
-			if (!hasNext()) {
-				return null;
-			}
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public final MLDataPair next() {
+            if (!hasNext()) {
+                return null;
+            }
 
-			return BasicMLDataSet.this.data.get(this.currentIndex++);
-		}
+            return BasicMLDataSet.this.data.get(this.currentIndex++);
+        }
 
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public final void remove() {
-			throw new EncogError("Called remove, unsupported operation.");
-		}
-	}
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public final void remove() {
+            throw new EncogError("Called remove, unsupported operation.");
+        }
+    }
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = -2279722928570071183L;
+    /**
+     * The data held by this object.
+     */
+    private List<MLDataPair> data = new ArrayList<MLDataPair>();
 
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = -2279722928570071183L;
+    /**
+     * Default constructor.
+     */
+    public BasicMLDataSet() {
+    }
 
-	/**
-	 * The data held by this object.
-	 */
-	private List<MLDataPair> data = new ArrayList<MLDataPair>();
+    /**
+     * Construct a data set from an input and idea array.
+     * <p/>
+     * @param input
+     *              The input into the machine learning method for training.
+     * @param ideal
+     *              The ideal output for training.
+     */
+    public BasicMLDataSet(final double[][] input, final double[][] ideal) {
+        if (ideal != null) {
+            for (int i = 0; i < input.length; i++) {
+                final BasicMLData inputData = new BasicMLData(input[i]);
+                final BasicMLData idealData = new BasicMLData(ideal[i]);
+                this.add(inputData, idealData);
+            }
+        } else {
+            for (final double[] element : input) {
+                final BasicMLData inputData = new BasicMLData(element);
+                this.add(inputData);
+            }
+        }
+    }
 
-	/**
-	 * Default constructor.
-	 */
-	public BasicMLDataSet() {
-	}
+    /**
+     * Construct a data set from an already created list. Mostly used to
+     * duplicate this class.
+     * <p/>
+     * @param theData
+     *                The data to use.
+     */
+    public BasicMLDataSet(final List<MLDataPair> theData) {
+        this.data = theData;
+    }
 
-	/**
-	 * Construct a data set from an input and idea array.
-	 * 
-	 * @param input
-	 *            The input into the machine learning method for training.
-	 * @param ideal
-	 *            The ideal output for training.
-	 */
-	public BasicMLDataSet(final double[][] input, final double[][] ideal) {
-		if (ideal != null) {
-			for (int i = 0; i < input.length; i++) {
-				final BasicMLData inputData = new BasicMLData(input[i]);
-				final BasicMLData idealData = new BasicMLData(ideal[i]);
-				this.add(inputData, idealData);
-			}
-		} else {
-			for (final double[] element : input) {
-				final BasicMLData inputData = new BasicMLData(element);
-				this.add(inputData);
-			}
-		}
-	}
+    /**
+     * Copy whatever dataset type is specified into a memory dataset.
+     * <p/>
+     * @param set
+     *            The dataset to copy.
+     */
+    public BasicMLDataSet(final MLDataSet set) {
+        final int inputCount = set.getInputSize();
+        final int idealCount = set.getIdealSize();
 
-	/**
-	 * Construct a data set from an already created list. Mostly used to
-	 * duplicate this class.
-	 * 
-	 * @param theData
-	 *            The data to use.
-	 */
-	public BasicMLDataSet(final List<MLDataPair> theData) {
-		this.data = theData;
-	}
+        for (final MLDataPair pair : set) {
 
-	/**
-	 * Copy whatever dataset type is specified into a memory dataset.
-	 * 
-	 * @param set
-	 *            The dataset to copy.
-	 */
-	public BasicMLDataSet(final MLDataSet set) {
-		final int inputCount = set.getInputSize();
-		final int idealCount = set.getIdealSize();
+            BasicMLData input = null;
+            BasicMLData ideal = null;
 
-		for (final MLDataPair pair : set) {
+            if (inputCount > 0) {
+                input = new BasicMLData(inputCount);
+                EngineArray.arrayCopy(pair.getInputArray(), input.getData());
+            }
 
-			BasicMLData input = null;
-			BasicMLData ideal = null;
+            if (idealCount > 0) {
+                ideal = new BasicMLData(idealCount);
+                EngineArray.arrayCopy(pair.getIdealArray(), ideal.getData());
+            }
 
-			if (inputCount > 0) {
-				input = new BasicMLData(inputCount);
-				EngineArray.arrayCopy(pair.getInputArray(), input.getData());
-			}
+            add(new BasicMLDataPair(input, ideal));
+        }
+    }
 
-			if (idealCount > 0) {
-				ideal = new BasicMLData(idealCount);
-				EngineArray.arrayCopy(pair.getIdealArray(), ideal.getData());
-			}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void add(final MLData theData) {
+        this.data.add(new BasicMLDataPair(theData));
+    }
 
-			add(new BasicMLDataPair(input, ideal));
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void add(final MLData inputData, final MLData idealData) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void add(final MLData theData) {
-		this.data.add(new BasicMLDataPair(theData));
-	}
+        final MLDataPair pair = new BasicMLDataPair(inputData, idealData);
+        this.data.add(pair);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void add(final MLData inputData, final MLData idealData) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void add(final MLDataPair inputData) {
+        this.data.add(inputData);
+    }
 
-		final MLDataPair pair = new BasicMLDataPair(inputData, idealData);
-		this.data.add(pair);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object clone() {
+        return ObjectCloner.deepCopy(this);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void add(final MLDataPair inputData) {
-		this.data.add(inputData);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        // nothing to close
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object clone() {
-		return ObjectCloner.deepCopy(this);
-	}
+    /**
+     * Get the data held by this container.
+     * <p/>
+     * @return the data
+     */
+    public List<MLDataPair> getData() {
+        return this.data;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void close() {
-		// nothing to close
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getIdealSize() {
+        if (this.data.isEmpty()) {
+            return 0;
+        }
+        final MLDataPair first = this.data.get(0);
+        if (first.getIdeal() == null) {
+            return 0;
+        }
 
-	/**
-	 * Get the data held by this container.
-	 * 
-	 * @return the data
-	 */
-	public List<MLDataPair> getData() {
-		return this.data;
-	}
+        return first.getIdeal().size();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getIdealSize() {
-		if (this.data.isEmpty()) {
-			return 0;
-		}
-		final MLDataPair first = this.data.get(0);
-		if (first.getIdeal() == null) {
-			return 0;
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInputSize() {
+        if (this.data.isEmpty()) {
+            return 0;
+        }
+        final MLDataPair first = this.data.get(0);
+        return first.getInput().size();
+    }
 
-		return first.getIdeal().size();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void getRecord(final long index, final MLDataPair pair) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getInputSize() {
-		if (this.data.isEmpty()) {
-			return 0;
-		}
-		final MLDataPair first = this.data.get(0);
-		return first.getInput().size();
-	}
+        final MLDataPair source = this.data.get((int) index);
+        pair.setInputArray(source.getInputArray());
+        if (pair.getIdealArray() != null) {
+            pair.setIdealArray(source.getIdealArray());
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void getRecord(final long index, final MLDataPair pair) {
+    }
 
-		final MLDataPair source = this.data.get((int) index);
-		pair.setInputArray(source.getInputArray());
-		if (pair.getIdealArray() != null) {
-			pair.setIdealArray(source.getIdealArray());
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getRecordCount() {
+        return this.data.size();
+    }
 
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isSupervised() {
+        if (this.data.size() == 0) {
+            return false;
+        }
+        return this.data.get(0).isSupervised();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public long getRecordCount() {
-		return this.data.size();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<MLDataPair> iterator() {
+        final BasicMLIterator result = new BasicMLIterator();
+        return result;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isSupervised() {
-		if (this.data.size() == 0) {
-			return false;
-		}
-		return this.data.get(0).isSupervised();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MLDataSet openAdditional() {
+        return new BasicMLDataSet(this.data);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Iterator<MLDataPair> iterator() {
-		final BasicMLIterator result = new BasicMLIterator();
-		return result;
-	}
+    /**
+     * @param theData
+     *                the data to set
+     */
+    public void setData(final List<MLDataPair> theData) {
+        this.data = theData;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MLDataSet openAdditional() {
-		return new BasicMLDataSet(this.data);
-	}
+    /**
+     * Concert the data set to a list.
+     * <p/>
+     * @param theSet The data set to convert.
+     * <p/>
+     * @return The list.
+     */
+    public static List<MLDataPair> toList(MLDataSet theSet) {
+        List<MLDataPair> list = new ArrayList<MLDataPair>();
+        for (MLDataPair pair : theSet) {
+            list.add(pair);
+        }
+        return list;
+    }
 
-	/**
-	 * @param theData
-	 *            the data to set
-	 */
-	public void setData(final List<MLDataPair> theData) {
-		this.data = theData;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int size() {
+        return (int) getRecordCount();
+    }
 
-	/**
-	 * Concert the data set to a list.
-	 * @param theSet The data set to convert.
-	 * @return The list.
-	 */
-	public static List<MLDataPair> toList(MLDataSet theSet) {
-		List<MLDataPair> list = new ArrayList<MLDataPair>();
-		for(MLDataPair pair: theSet) {
-			list.add(pair);
-		}
-		return list;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int size() {
-		return (int)getRecordCount();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MLDataPair get(int index) {
-		return this.data.get(index);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MLDataPair get(int index) {
+        return this.data.get(index);
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,169 +32,165 @@ import org.encog.engine.network.activation.ActivationFunction;
  */
 public class FlatLayer {
 
-	/**
-	 * The activation function.
-	 */
-	private ActivationFunction activation;
+    /**
+     * The activation function.
+     */
+    private ActivationFunction activation;
+    /**
+     * The neuron count.
+     */
+    private final int count;
+    /**
+     * The bias activation, usually 1 for bias or 0 for no bias.
+     */
+    private double biasActivation;
+    /**
+     * The layer that feeds this layer's context.
+     */
+    private FlatLayer contextFedBy;
 
-	/**
-	 * The neuron count.
-	 */
-	private final int count;
+    /**
+     * Do not use this constructor. This was added to support serialization.
+     */
+    public FlatLayer() {
+        count = 0;
+    }
 
-	/**
-	 * The bias activation, usually 1 for bias or 0 for no bias.
-	 */
-	private double biasActivation;
+    /**
+     * Construct a flat layer.
+     * <p/>
+     * @param activation
+     *                       The activation function.
+     * @param count
+     *                       The neuron count.
+     * @param biasActivation
+     *                       The bias activation.
+     */
+    public FlatLayer(final ActivationFunction activation, final int count,
+                     final double biasActivation) {
+        this.activation = activation;
+        this.count = count;
+        this.biasActivation = biasActivation;
+        this.contextFedBy = null;
+    }
 
-	/**
-	 * The layer that feeds this layer's context.
-	 */
-	private FlatLayer contextFedBy;
+    /**
+     * @return the activation
+     */
+    public ActivationFunction getActivation() {
+        return this.activation;
+    }
 
-	/**
-	 * Do not use this constructor.  This was added to support serialization.
-	 */
-	public FlatLayer() {
-		count = 0;
-	}
-	
-	/**
-	 * Construct a flat layer.
-	 * 
-	 * @param activation
-	 *            The activation function.
-	 * @param count
-	 *            The neuron count.
-	 * @param biasActivation
-	 *            The bias activation.
-	 */
-	public FlatLayer(final ActivationFunction activation, final int count,
-			final double biasActivation) {
-		this.activation = activation;
-		this.count = count;
-		this.biasActivation = biasActivation;
-		this.contextFedBy = null;
-	}
+    /**
+     * @return Get the bias activation.
+     */
+    public double getBiasActivation() {
+        if (hasBias()) {
+            return this.biasActivation;
+        } else {
+            return 0;
+        }
+    }
 
-	/**
-	 * @return the activation
-	 */
-	public ActivationFunction getActivation() {
-		return this.activation;
-	}
+    /**
+     * @return The number of neurons our context is fed by.
+     */
+    public int getContextCount() {
+        if (this.contextFedBy == null) {
+            return 0;
+        } else {
+            return this.contextFedBy.getCount();
+        }
+    }
 
-	/**
-	 * @return Get the bias activation.
-	 */
-	public double getBiasActivation() {
-		if (hasBias()) {
-			return this.biasActivation;
-		} else {
-			return 0;
-		}
-	}
+    /**
+     * @return The layer that feeds this layer's context.
+     */
+    public FlatLayer getContextFedBy() {
+        return this.contextFedBy;
+    }
 
-	/**
-	 * @return The number of neurons our context is fed by.
-	 */
-	public int getContextCount() {
-		if (this.contextFedBy == null) {
-			return 0;
-		} else {
-			return this.contextFedBy.getCount();
-		}
-	}
+    /**
+     * @return the count
+     */
+    public int getCount() {
+        return this.count;
+    }
 
-	/**
-	 * @return The layer that feeds this layer's context.
-	 */
-	public FlatLayer getContextFedBy() {
-		return this.contextFedBy;
-	}
+    /**
+     * @return The total number of neurons on this layer, includes context, bias
+     *         and regular.
+     */
+    public int getTotalCount() {
+        if (this.contextFedBy == null) {
+            return getCount() + (hasBias() ? 1 : 0);
+        } else {
+            return getCount() + (hasBias() ? 1 : 0) +
+                    this.contextFedBy.getCount();
+        }
+    }
 
-	/**
-	 * @return the count
-	 */
-	public int getCount() {
-		return this.count;
-	}
+    /**
+     * @return the bias
+     */
+    public boolean hasBias() {
+        return Math.abs(this.biasActivation) > Encog.DEFAULT_DOUBLE_EQUAL;
+    }
 
-	/**
-	 * @return The total number of neurons on this layer, includes context, bias
-	 *         and regular.
-	 */
-	public int getTotalCount() {
-		if (this.contextFedBy == null) {
-			return getCount() + (hasBias() ? 1 : 0);
-		} else {
-			return getCount() + (hasBias() ? 1 : 0)
-					+ this.contextFedBy.getCount();
-		}
-	}
+    /**
+     * @param activation
+     *                   the activation to set
+     */
+    public void setActivation(final ActivationFunction activation) {
+        this.activation = activation;
+    }
 
-	/**
-	 * @return the bias
-	 */
-	public boolean hasBias() {
-		return Math.abs(this.biasActivation) > Encog.DEFAULT_DOUBLE_EQUAL;
-	}
+    /**
+     * Set the bias activation.
+     * <p/>
+     * @param a
+     *          The bias activation.
+     */
+    public void setBiasActivation(final double a) {
+        this.biasActivation = a;
+    }
 
-	/**
-	 * @param activation
-	 *            the activation to set
-	 */
-	public void setActivation(final ActivationFunction activation) {
-		this.activation = activation;
-	}
+    /**
+     * Set the layer that this layer's context is fed by.
+     * <p/>
+     * @param from
+     *             The layer feeding.
+     */
+    public void setContextFedBy(final FlatLayer from) {
+        this.contextFedBy = from;
+    }
 
-	/**
-	 * Set the bias activation.
-	 * 
-	 * @param a
-	 *            The bias activation.
-	 */
-	public void setBiasActivation(final double a) {
-		this.biasActivation = a;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("[");
+        result.append(this.getClass().getSimpleName());
+        result.append(": count=");
+        result.append(this.count);
+        result.append(",bias=");
 
-	/**
-	 * Set the layer that this layer's context is fed by.
-	 * 
-	 * @param from
-	 *            The layer feeding.
-	 */
-	public void setContextFedBy(final FlatLayer from) {
-		this.contextFedBy = from;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder result = new StringBuilder();
-		result.append("[");
-		result.append(this.getClass().getSimpleName());
-		result.append(": count=");
-		result.append(this.count);
-		result.append(",bias=");
-
-		if (hasBias()) {
-			result.append(this.biasActivation);
-		} else {
-			result.append("false");
-		}
-		if (this.contextFedBy != null) {
-			result.append(",contextFed=");
-			if (this.contextFedBy == this) {
-				result.append("itself");
-			} else {
-				result.append(this.contextFedBy);
-			}
-		}
-		result.append("]");
-		return result.toString();
-	}
-
+        if (hasBias()) {
+            result.append(this.biasActivation);
+        } else {
+            result.append("false");
+        }
+        if (this.contextFedBy != null) {
+            result.append(",contextFed=");
+            if (this.contextFedBy == this) {
+                result.append("itself");
+            } else {
+                result.append(this.contextFedBy);
+            }
+        }
+        result.append("]");
+        return result.toString();
+    }
 }

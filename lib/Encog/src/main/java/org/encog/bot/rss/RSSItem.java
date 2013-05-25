@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,144 +34,141 @@ import org.w3c.dom.NodeList;
  */
 public class RSSItem {
 
-	/**
-	 * The title of this item.
-	 */
-	private String title;
+    /**
+     * The title of this item.
+     */
+    private String title;
+    /**
+     * The hyperlink to this item.
+     */
+    private String link;
+    /**
+     * The description of this item.
+     */
+    private String description;
+    /**
+     * The date this item was published.
+     */
+    private Date date;
 
-	/**
-	 * The hyperlink to this item.
-	 */
-	private String link;
+    /**
+     * Get the publication date.
+     *
+     * @return The publication date.
+     */
+    public final Date getDate() {
+        return this.date;
+    }
 
-	/**
-	 * The description of this item.
-	 */
-	private String description;
+    /**
+     * Get the description.
+     *
+     * @return The description.
+     */
+    public final String getDescription() {
+        return this.description;
+    }
 
-	/**
-	 * The date this item was published.
-	 */
-	private Date date;
+    /**
+     * Get the hyperlink.
+     *
+     * @return The hyperlink.
+     */
+    public final String getLink() {
+        return this.link;
+    }
 
-	/**
-	 * Get the publication date.
-	 *
-	 * @return The publication date.
-	 */
-	public final Date getDate() {
-		return this.date;
-	}
+    /**
+     * Get the item title.
+     *
+     * @return The item title.
+     */
+    public final String getTitle() {
+        return this.title;
+    }
 
-	/**
-	 * Get the description.
-	 *
-	 * @return The description.
-	 */
-	public final String getDescription() {
-		return this.description;
-	}
+    /**
+     * Load an item from the specified node.
+     *
+     * @param node
+     *             The Node to load the item from.
+     */
+    public final void load(final Node node) {
+        final NodeList nl = node.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            final Node n = nl.item(i);
+            final String name = n.getNodeName();
 
-	/**
-	 * Get the hyperlink.
-	 *
-	 * @return The hyperlink.
-	 */
-	public final String getLink() {
-		return this.link;
-	}
+            if (name.equalsIgnoreCase("title")) {
+                this.title = RSS.getXMLText(n);
+            } else if (name.equalsIgnoreCase("link")) {
+                this.link = RSS.getXMLText(n);
+            } else if (name.equalsIgnoreCase("description")) {
+                this.description = RSS.getXMLText(n);
+            } else if (name.equalsIgnoreCase("pubDate")) {
+                final String str = RSS.getXMLText(n);
+                if (str != null) {
+                    this.date = RSS.parseDate(str);
+                }
+            }
 
-	/**
-	 * Get the item title.
-	 *
-	 * @return The item title.
-	 */
-	public final String getTitle() {
-		return this.title;
-	}
+        }
+    }
 
-	/**
-	 * Load an item from the specified node.
-	 *
-	 * @param node
-	 *            The Node to load the item from.
-	 */
-	public final void load(final Node node) {
-		final NodeList nl = node.getChildNodes();
-		for (int i = 0; i < nl.getLength(); i++) {
-			final Node n = nl.item(i);
-			final String name = n.getNodeName();
+    /**
+     * Set the publication date.
+     *
+     * @param theDate
+     *                The new publication date.
+     */
+    public final void setDate(final Date theDate) {
+        this.date = theDate;
+    }
 
-			if (name.equalsIgnoreCase("title")) {
-				this.title = RSS.getXMLText(n);
-			} else if (name.equalsIgnoreCase("link")) {
-				this.link = RSS.getXMLText(n);
-			} else if (name.equalsIgnoreCase("description")) {
-				this.description = RSS.getXMLText(n);
-			} else if (name.equalsIgnoreCase("pubDate")) {
-				final String str = RSS.getXMLText(n);
-				if (str != null) {
-					this.date = RSS.parseDate(str);
-				}
-			}
+    /**
+     * Get the description.
+     *
+     * @param theDescription
+     *                       The new description.
+     */
+    public final void setDescription(final String theDescription) {
+        this.description = theDescription;
+    }
 
-		}
-	}
+    /**
+     * Set the hyperlink.
+     *
+     * @param theLink
+     *                The new hyperlink.
+     */
+    public final void setLink(final String theLink) {
+        this.link = theLink;
+    }
 
-	/**
-	 * Set the publication date.
-	 *
-	 * @param theDate
-	 *            The new publication date.
-	 */
-	public final void setDate(final Date theDate) {
-		this.date = theDate;
-	}
+    /**
+     * Set the item title.
+     *
+     * @param theTitle
+     *                 The new item title.
+     */
+    public final void setTitle(final String theTitle) {
+        this.title = theTitle;
+    }
 
-	/**
-	 * Get the description.
-	 *
-	 * @param theDescription
-	 *            The new description.
-	 */
-	public final void setDescription(final String theDescription) {
-		this.description = theDescription;
-	}
-
-	/**
-	 * Set the hyperlink.
-	 *
-	 * @param theLink
-	 *            The new hyperlink.
-	 */
-	public final void setLink(final String theLink) {
-		this.link = theLink;
-	}
-
-	/**
-	 * Set the item title.
-	 *
-	 * @param theTitle
-	 *            The new item title.
-	 */
-	public final void setTitle(final String theTitle) {
-		this.title = theTitle;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append('[');
-		builder.append("title=\"");
-		builder.append(this.title);
-		builder.append("\",link=\"");
-		builder.append(this.link);
-		builder.append("\",date=\"");
-		builder.append(this.date);
-		builder.append("\"]");
-		return builder.toString();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append('[');
+        builder.append("title=\"");
+        builder.append(this.title);
+        builder.append("\",link=\"");
+        builder.append(this.link);
+        builder.append("\",date=\"");
+        builder.append(this.date);
+        builder.append("\"]");
+        return builder.toString();
+    }
 }

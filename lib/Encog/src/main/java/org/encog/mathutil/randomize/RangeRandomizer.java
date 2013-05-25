@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,87 +28,89 @@ import java.util.Random;
 /**
  * A randomizer that will create random weight and bias values that are between
  * a specified range.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class RangeRandomizer extends BasicRandomizer {
 
-	/**
-	 * Returns a random number in the range between min and max.
-	 * @param min The minimum desired random number.
-	 * @param max The maximum desired random number.
-	 * @return The random number.
-	 */
-	public static int randomInt(final int min, final int max) {
-		return (int) RangeRandomizer.randomize(min, max + 1);
-	}
+    /**
+     * Returns a random number in the range between min and max.
+     * <p/>
+     * @param min The minimum desired random number.
+     * @param max The maximum desired random number.
+     * <p/>
+     * @return The random number.
+     */
+    public static int randomInt(final int min, final int max) {
+        return (int) RangeRandomizer.randomize(min, max + 1);
+    }
 
-	/**
-	 * Generate a random number in the specified range.
-	 * 
-	 * @param min
-	 *            The minimum value.
-	 * @param max
-	 *            The maximum value.
-	 * @return A random number.
-	 */
-	public static double randomize(final double min, final double max) {
-		final double range = max - min;
-		return (range * Math.random()) + min;
-	}
-	
-	public static double randomize(final Random r, final double min, final double max) {
-		final double range = max - min;
-		return (range * r.nextDouble()) + min;
-	}
+    /**
+     * Generate a random number in the specified range.
+     * <p/>
+     * @param min
+     *            The minimum value.
+     * @param max
+     *            The maximum value.
+     * <p/>
+     * @return A random number.
+     */
+    public static double randomize(final double min, final double max) {
+        final double range = max - min;
+        return (range * Math.random()) + min;
+    }
 
-	/**
-	 * The minimum value for the random range.
-	 */
-	private final double min;
+    public static double randomize(final Random r, final double min,
+                                   final double max) {
+        final double range = max - min;
+        return (range * r.nextDouble()) + min;
+    }
+    /**
+     * The minimum value for the random range.
+     */
+    private final double min;
+    /**
+     * The maximum value for the random range.
+     */
+    private final double max;
 
-	/**
-	 * The maximum value for the random range.
-	 */
-	private final double max;
+    /**
+     * Construct a range randomizer.
+     * <p/>
+     * @param min
+     *            The minimum random value.
+     * @param max
+     *            The maximum random value.
+     */
+    public RangeRandomizer(final double min, final double max) {
+        this.max = max;
+        this.min = min;
+    }
 
-	/**
-	 * Construct a range randomizer.
-	 * 
-	 * @param min
-	 *            The minimum random value.
-	 * @param max
-	 *            The maximum random value.
-	 */
-	public RangeRandomizer(final double min, final double max) {
-		this.max = max;
-		this.min = min;
-	}
+    /**
+     * Generate a random number based on the range specified in the constructor.
+     * <p/>
+     * @param d
+     *          The range randomizer ignores this value.
+     * <p/>
+     * @return The random number.
+     */
+    public double randomize(final double d) {
+        return nextDouble(this.min, this.max);
+    }
 
-	/**
-	 * Generate a random number based on the range specified in the constructor.
-	 * 
-	 * @param d
-	 *            The range randomizer ignores this value.
-	 * @return The random number.
-	 */
-	public double randomize(final double d) {
-		return nextDouble(this.min, this.max);
-	}
+    /**
+     * @return the min
+     */
+    public double getMin() {
+        return min;
+    }
 
-	/**
-	 * @return the min
-	 */
-	public double getMin() {
-		return min;
-	}
-
-	/**
-	 * @return the max
-	 */
-	public double getMax() {
-		return max;
-	}
-	
+    /**
+     * @return the max
+     */
+    public double getMax() {
+        return max;
+    }
 }

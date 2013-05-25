@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,33 +28,34 @@ package org.encog.neural.som.training.basic.neighborhood;
  * is most often used in the training process for a self-organizing map. This
  * function determines to what degree the training should take place on a
  * neuron, based on its proximity to the "winning" neuron.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public interface NeighborhoodFunction {
 
-	/**
-	 * Determine how much the current neuron should be affected by training
-	 * based on its proximity to the winning neuron.
-	 * 
-	 * @param currentNeuron
-	 *            THe current neuron being evaluated.
-	 * @param bestNeuron
-	 *            The winning neuron.
-	 * @return The ratio for this neuron's adjustment.
-	 */
-	double function(int currentNeuron, int bestNeuron);
+    /**
+     * Determine how much the current neuron should be affected by training
+     * based on its proximity to the winning neuron.
+     * <p/>
+     * @param currentNeuron
+     *                      THe current neuron being evaluated.
+     * @param bestNeuron
+     *                      The winning neuron.
+     * <p/>
+     * @return The ratio for this neuron's adjustment.
+     */
+    double function(int currentNeuron, int bestNeuron);
 
-	/**
-	 * @return The radius.
-	 */
-	double getRadius();
+    /**
+     * @return The radius.
+     */
+    double getRadius();
 
-	/**
-	 * Set the radius.
-	 * @param radius The new radius.
-	 */
-	void setRadius(double radius);
-
+    /**
+     * Set the radius.
+     * <p/>
+     * @param radius The new radius.
+     */
+    void setRadius(double radius);
 }

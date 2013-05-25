@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,104 +36,106 @@ import org.encog.ml.hmm.HiddenMarkovModel;
  * models which computes the posterior marginals of all hidden state variables
  * given a sequence of observations. This version makes use of scaling, and will
  * not generate underflows with long sequences.
- * 
+ * <p/>
  */
 public class ForwardBackwardScaledCalculator extends ForwardBackwardCalculator {
-	private final double[] ctFactors;
-	private double lnProbability;
 
-	public ForwardBackwardScaledCalculator(final MLDataSet oseq,
-			final HiddenMarkovModel hmm) {
-		this(oseq, hmm, EnumSet.of(Computation.ALPHA));
-	}
+    private final double[] ctFactors;
+    private double lnProbability;
 
-	public ForwardBackwardScaledCalculator(
-			final MLDataSet oseq, final HiddenMarkovModel hmm,
-			final EnumSet<Computation> flags) {
-		if (oseq.size() < 1) {
-			throw new IllegalArgumentException();
-		}
+    public ForwardBackwardScaledCalculator(final MLDataSet oseq,
+                                           final HiddenMarkovModel hmm) {
+        this(oseq, hmm, EnumSet.of(Computation.ALPHA));
+    }
 
-		this.ctFactors = new double[oseq.size()];
-		Arrays.fill(this.ctFactors, 0.);
+    public ForwardBackwardScaledCalculator(
+            final MLDataSet oseq, final HiddenMarkovModel hmm,
+            final EnumSet<Computation> flags) {
+        if (oseq.size() < 1) {
+            throw new IllegalArgumentException();
+        }
 
-		computeAlpha(hmm, oseq);
+        this.ctFactors = new double[oseq.size()];
+        Arrays.fill(this.ctFactors, 0.);
 
-		if (flags.contains(Computation.BETA)) {
-			computeBeta(hmm, oseq);
-		}
+        computeAlpha(hmm, oseq);
 
-		computeProbability(oseq, hmm, flags);
-	}
+        if (flags.contains(Computation.BETA)) {
+            computeBeta(hmm, oseq);
+        }
 
-	@Override
-	protected void computeAlpha(final HiddenMarkovModel hmm,
-			final MLDataSet oseq) {
-		this.alpha = new double[oseq.size()][hmm.getStateCount()];
+        computeProbability(oseq, hmm, flags);
+    }
 
-		for (int i = 0; i < hmm.getStateCount(); i++) {
-			computeAlphaInit(hmm, oseq.get(0), i);
-		}
-		scale(this.ctFactors, this.alpha, 0);
+    @Override
+    protected void computeAlpha(final HiddenMarkovModel hmm,
+                                final MLDataSet oseq) {
+        this.alpha = new double[oseq.size()][hmm.getStateCount()];
 
-		final Iterator<MLDataPair> seqIterator = oseq.iterator();
-		if (seqIterator.hasNext()) {
-			seqIterator.next();
-		}
+        for (int i = 0; i < hmm.getStateCount(); i++) {
+            computeAlphaInit(hmm, oseq.get(0), i);
+        }
+        scale(this.ctFactors, this.alpha, 0);
 
-		for (int t = 1; t < oseq.size(); t++) {
-			final MLDataPair observation = seqIterator.next();
+        final Iterator<MLDataPair> seqIterator = oseq.iterator();
+        if (seqIterator.hasNext()) {
+            seqIterator.next();
+        }
 
-			for (int i = 0; i < hmm.getStateCount(); i++) {
-				computeAlphaStep(hmm, observation, t, i);
-			}
-			scale(this.ctFactors, this.alpha, t);
-		}
-	}
+        for (int t = 1; t < oseq.size(); t++) {
+            final MLDataPair observation = seqIterator.next();
 
-	@Override
-	protected void computeBeta(final HiddenMarkovModel hmm, final MLDataSet oseq) {
-		this.beta = new double[oseq.size()][hmm.getStateCount()];
+            for (int i = 0; i < hmm.getStateCount(); i++) {
+                computeAlphaStep(hmm, observation, t, i);
+            }
+            scale(this.ctFactors, this.alpha, t);
+        }
+    }
 
-		for (int i = 0; i < hmm.getStateCount(); i++) {
-			this.beta[oseq.size() - 1][i] = 1. / this.ctFactors[oseq.size() - 1];
-		}
+    @Override
+    protected void computeBeta(final HiddenMarkovModel hmm, final MLDataSet oseq) {
+        this.beta = new double[oseq.size()][hmm.getStateCount()];
 
-		for (int t = oseq.size() - 2; t >= 0; t--) {
-			for (int i = 0; i < hmm.getStateCount(); i++) {
-				computeBetaStep(hmm, oseq.get(t + 1), t, i);
-				this.beta[t][i] /= this.ctFactors[t];
-			}
-		}
-	}
+        for (int i = 0; i < hmm.getStateCount(); i++) {
+            this.beta[oseq.size() - 1][i] = 1. / this.ctFactors[oseq.size() - 1];
+        }
 
-	private void computeProbability(final MLDataSet oseq,
-			final HiddenMarkovModel hmm, final EnumSet<Computation> flags) {
-		this.lnProbability = 0.;
+        for (int t = oseq.size() - 2; t >= 0; t--) {
+            for (int i = 0; i < hmm.getStateCount(); i++) {
+                computeBetaStep(hmm, oseq.get(t + 1), t, i);
+                this.beta[t][i] /= this.ctFactors[t];
+            }
+        }
+    }
 
-		for (int t = 0; t < oseq.size(); t++) {
-			this.lnProbability += Math.log(this.ctFactors[t]);
-		}
+    private void computeProbability(final MLDataSet oseq,
+                                    final HiddenMarkovModel hmm,
+                                    final EnumSet<Computation> flags) {
+        this.lnProbability = 0.;
 
-		this.probability = Math.exp(this.lnProbability);
-	}
+        for (int t = 0; t < oseq.size(); t++) {
+            this.lnProbability += Math.log(this.ctFactors[t]);
+        }
 
-	public double lnProbability() {
-		return this.lnProbability;
-	}
+        this.probability = Math.exp(this.lnProbability);
+    }
 
-	private void scale(final double[] ctFactors, final double[][] array,
-			final int t) {
-		final double[] table = array[t];
-		double sum = 0.;
+    public double lnProbability() {
+        return this.lnProbability;
+    }
 
-		for (final double element : table) {
-			sum += element;
-		}
+    private void scale(final double[] ctFactors, final double[][] array,
+                       final int t) {
+        final double[] table = array[t];
+        double sum = 0.;
 
-		ctFactors[t] = sum;
-		for (int i = 0; i < table.length; i++) {
-			table[i] /= sum;
-		}
-	}
+        for (final double element : table) {
+            sum += element;
+        }
+
+        ctFactors[t] = sum;
+        for (int i = 0; i < table.length; i++) {
+            table[i] /= sum;
+        }
+    }
 }

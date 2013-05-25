@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -43,39 +43,36 @@ import org.encog.util.downsample.SimpleIntensityDownsample;
 
 public class TestImageDataSet extends TestCase {
 
-	public void testImageDataSet()
-	{
-		try {
-		JFrame frame = new JFrame();
-		frame.setVisible(true);
-		Image image = frame.createImage(10, 10);
-		Graphics g = image.getGraphics();
-		g.setColor(Color.BLACK);
-		g.fillRect(0,0,10,10);
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, 5, 5);
-		g.dispose();
-		
-		Downsample downsample = new SimpleIntensityDownsample();
-		ImageMLDataSet set = new ImageMLDataSet(downsample,true,-1,1);
-		BasicMLData ideal = new BasicMLData(1);
-		ImageMLData input = new ImageMLData(image);
-		set.add(input,ideal);
-		set.downsample(2,2);
-		Iterator<MLDataPair> itr = set.iterator();
-		MLDataPair pair = (MLDataPair)itr.next();
-		MLData data = pair.getInput();
-		double[] d = data.getData();
-		//Assert.assertEquals(d[0],-1.0, 0.1);
-		//Assert.assertEquals(d[5],1, 0.1);
-		
-		// just "flex" these for no exceptions
-		input.toString();
-		input.setImage(input.getImage());
-		}
-		catch( HeadlessException ex) {
-			// ignore if we are running headless (i.e. the build server)
-		}
-	}
-	
+    public void testImageDataSet() {
+        try {
+            JFrame frame = new JFrame();
+            frame.setVisible(true);
+            Image image = frame.createImage(10, 10);
+            Graphics g = image.getGraphics();
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, 10, 10);
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, 5, 5);
+            g.dispose();
+
+            Downsample downsample = new SimpleIntensityDownsample();
+            ImageMLDataSet set = new ImageMLDataSet(downsample, true, -1, 1);
+            BasicMLData ideal = new BasicMLData(1);
+            ImageMLData input = new ImageMLData(image);
+            set.add(input, ideal);
+            set.downsample(2, 2);
+            Iterator<MLDataPair> itr = set.iterator();
+            MLDataPair pair = (MLDataPair) itr.next();
+            MLData data = pair.getInput();
+            double[] d = data.getData();
+            //Assert.assertEquals(d[0],-1.0, 0.1);
+            //Assert.assertEquals(d[5],1, 0.1);
+
+            // just "flex" these for no exceptions
+            input.toString();
+            input.setImage(input.getImage());
+        } catch (HeadlessException ex) {
+            // ignore if we are running headless (i.e. the build server)
+        }
+    }
 }

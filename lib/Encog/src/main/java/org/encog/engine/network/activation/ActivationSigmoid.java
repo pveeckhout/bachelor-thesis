@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,88 +34,88 @@ import org.encog.util.obj.ActivationUtil;
  */
 public class ActivationSigmoid implements ActivationFunction {
 
-	/**
-	 * Serial id for this class.
-	 */
-	private static final long serialVersionUID = 5622349801036468572L;
+    /**
+     * Serial id for this class.
+     */
+    private static final long serialVersionUID = 5622349801036468572L;
+    /**
+     * The parameters.
+     */
+    private final double[] params;
 
-	/**
-	 * The parameters.
-	 */
-	private final double[] params;
+    /**
+     * Construct a basic sigmoid function, with a slope of 1.
+     */
+    public ActivationSigmoid() {
+        this.params = new double[0];
+    }
 
-	/**
-	 * Construct a basic sigmoid function, with a slope of 1.
-	 */
-	public ActivationSigmoid() {
-		this.params = new double[0];
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void activationFunction(final double[] x, final int start,
+                                         final int size) {
+        for (int i = start; i < start + size; i++) {
+            x[i] = 1.0 / (1.0 + BoundMath.exp(-1 * x[i]));
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final void activationFunction(final double[] x, final int start,
-			final int size) {
-		for (int i = start; i < start + size; i++) {
-			x[i] = 1.0 / (1.0 + BoundMath.exp(-1 * x[i]));
-		}
-	}
+    /**
+     * @return The object cloned;
+     */
+    @Override
+    public final ActivationFunction clone() {
+        return new ActivationSigmoid();
+    }
 
-	/**
-	 * @return The object cloned;
-	 */
-	@Override
-	public final ActivationFunction clone() {
-		return new ActivationSigmoid();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final double derivativeFunction(final double b, final double a) {
+        return a * (1.0 - a);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final double derivativeFunction(final double b, final double a) {
-		return a * (1.0 - a);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String[] getParamNames() {
+        final String[] results = {};
+        return results;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final String[] getParamNames() {
-		final String[] results = {};
-		return results;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final double[] getParams() {
+        return this.params;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final double[] getParams() {
-		return this.params;
-	}
+    /**
+     * @return True, sigmoid has a derivative.
+     */
+    @Override
+    public final boolean hasDerivative() {
+        return true;
+    }
 
-	/**
-	 * @return True, sigmoid has a derivative.
-	 */
-	@Override
-	public final boolean hasDerivative() {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void setParam(final int index, final double value) {
+        this.params[index] = value;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final void setParam(final int index, final double value) {
-		this.params[index] = value;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getFactoryCode() {
-		return ActivationUtil.generateActivationFactory(MLActivationFactory.AF_SIGMOID, this);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFactoryCode() {
+        return ActivationUtil.generateActivationFactory(
+                MLActivationFactory.AF_SIGMOID, this);
+    }
 }

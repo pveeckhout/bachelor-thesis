@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,9 +35,9 @@ import org.encog.util.csv.ReadCSV;
 
 /**
  * A simple class that shows how to convert financial data into the
- * form that NinjaTrader can recognize.  The input data must have CSV
+ * form that NinjaTrader can recognize. The input data must have CSV
  * headers that indicate the following fields:
- * 
+ * <p/>
  * date
  * time
  * high
@@ -45,68 +45,74 @@ import org.encog.util.csv.ReadCSV;
  * open
  * close
  * volume
- * 
+ * <p/>
  * This data will be rearranged to fit the NinjaTrader format, which is
  * documented here:
- * 
- *  http://www.ninjatrader.com/support/helpGuides/nt7/index.html?importing.htm
+ * <p/>
+ * http://www.ninjatrader.com/support/helpGuides/nt7/index.html?importing.htm
  *
  */
 public class NinjaFileConvert extends BasicCachedFile {
-	
-	/**
-	 * Process the file and output to the target file.
-	 * @param target The target file to write to.
-	 */
-	public final void process(final File target) {
-		PrintWriter tw = null;
-		
-		try {
-			ReadCSV csv = new ReadCSV(this.getInputFilename().toString(),
-					this.isExpectInputHeaders(), this.getFormat());
 
-			tw = new PrintWriter(new FileWriter(target));
+    /**
+     * Process the file and output to the target file.
+     * <p/>
+     * @param target The target file to write to.
+     */
+    public final void process(final File target) {
+        PrintWriter tw = null;
 
-			resetStatus();
-			while (csv.next() && !this.shouldStop()) {
-				StringBuilder line = new StringBuilder();
-				updateStatus(false);
-				line.append(this.getColumnData(FileData.DATE, csv));
-				line.append(" ");
-				line.append(this.getColumnData(FileData.TIME, csv));
-				line.append(";");
-				line.append(getFormat().format(
-						Double.parseDouble(this.getColumnData(FileData.OPEN,
-								csv)), this.getPrecision()));
-				line.append(";");
-				line.append(getFormat().format(
-						Double.parseDouble(this.getColumnData(FileData.HIGH,
-								csv)), this.getPrecision()));
-				line.append(";");
-				line.append(getFormat().format(
-						Double.parseDouble(this
-								.getColumnData(FileData.LOW, csv)),
-						this.getPrecision()));
-				line.append(";");
-				line.append(getFormat().format(
-						Double.parseDouble(this.getColumnData(FileData.CLOSE,
-								csv)), this.getPrecision()));
-				line.append(";");
-				line.append(getFormat().format(
-						Double.parseDouble(this.getColumnData(FileData.VOLUME,
-								csv)), this.getPrecision()));
+        try {
+            ReadCSV csv = new ReadCSV(this.getInputFilename().toString(),
+                                      this.isExpectInputHeaders(), this
+                    .getFormat());
 
-				tw.println(line.toString());
-			}
-			reportDone(false);
-			csv.close();
-			tw.close();
-		} catch (IOException ex) {
-			throw new QuantError(ex);
-		} finally {
-			if( tw!=null ) {
-				tw.close();
-			}
-		}
-	}
+            tw = new PrintWriter(new FileWriter(target));
+
+            resetStatus();
+            while (csv.next() && !this.shouldStop()) {
+                StringBuilder line = new StringBuilder();
+                updateStatus(false);
+                line.append(this.getColumnData(FileData.DATE, csv));
+                line.append(" ");
+                line.append(this.getColumnData(FileData.TIME, csv));
+                line.append(";");
+                line.append(getFormat().format(
+                        Double.parseDouble(this.getColumnData(FileData.OPEN,
+                                                              csv)), this
+                        .getPrecision()));
+                line.append(";");
+                line.append(getFormat().format(
+                        Double.parseDouble(this.getColumnData(FileData.HIGH,
+                                                              csv)), this
+                        .getPrecision()));
+                line.append(";");
+                line.append(getFormat().format(
+                        Double.parseDouble(this
+                        .getColumnData(FileData.LOW, csv)),
+                        this.getPrecision()));
+                line.append(";");
+                line.append(getFormat().format(
+                        Double.parseDouble(this.getColumnData(FileData.CLOSE,
+                                                              csv)), this
+                        .getPrecision()));
+                line.append(";");
+                line.append(getFormat().format(
+                        Double.parseDouble(this.getColumnData(FileData.VOLUME,
+                                                              csv)), this
+                        .getPrecision()));
+
+                tw.println(line.toString());
+            }
+            reportDone(false);
+            csv.close();
+            tw.close();
+        } catch (IOException ex) {
+            throw new QuantError(ex);
+        } finally {
+            if (tw != null) {
+                tw.close();
+            }
+        }
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,53 +34,53 @@ import org.encog.EncogError;
  * A simple Object cloner that uses serialization. Actually works really well
  * for the somewhat complex nature of BasicNetwork. Performs a deep copy without
  * all the headache of programming a custom clone.
- * 
+ * <p/>
  * Original by Dave Miller here:
  * http://www.javaworld.com/javaworld/javatips/jw-javatip76.html?page=2
  */
 public final class ObjectCloner {
 
-	/**
-	 * Perform a deep copy.
-	 * 
-	 * @param oldObj
-	 *            The old object.
-	 * @return The new object.
-	 */
-	public static Object deepCopy(final Object oldObj) {
-		ObjectOutputStream oos = null;
-		ObjectInputStream ois = null;
-		try {
-			final ByteArrayOutputStream bos = new ByteArrayOutputStream(); // A
-			oos = new ObjectOutputStream(bos); // B
-			// serialize and pass the object
-			oos.writeObject(oldObj); // C
-			oos.flush(); // D
-			final ByteArrayInputStream bin = new ByteArrayInputStream(bos
-					.toByteArray()); // E
-			ois = new ObjectInputStream(bin); // F
-			// return the new object
-			return ois.readObject(); // G
-		} catch (final Exception e) {
-			throw new EncogError(e);
-		} finally {
-			try {
-				if (oos != null) {
-					oos.close();
-				}
-				if (ois != null) {
-					ois.close();
-				}
-			} catch (final Exception e) {
-				throw new EncogError(e);
-			}
-		}
-	}
+    /**
+     * Perform a deep copy.
+     * <p/>
+     * @param oldObj
+     *               The old object.
+     * <p/>
+     * @return The new object.
+     */
+    public static Object deepCopy(final Object oldObj) {
+        ObjectOutputStream oos = null;
+        ObjectInputStream ois = null;
+        try {
+            final ByteArrayOutputStream bos = new ByteArrayOutputStream(); // A
+            oos = new ObjectOutputStream(bos); // B
+            // serialize and pass the object
+            oos.writeObject(oldObj); // C
+            oos.flush(); // D
+            final ByteArrayInputStream bin = new ByteArrayInputStream(bos
+                    .toByteArray()); // E
+            ois = new ObjectInputStream(bin); // F
+            // return the new object
+            return ois.readObject(); // G
+        } catch (final Exception e) {
+            throw new EncogError(e);
+        } finally {
+            try {
+                if (oos != null) {
+                    oos.close();
+                }
+                if (ois != null) {
+                    ois.close();
+                }
+            } catch (final Exception e) {
+                throw new EncogError(e);
+            }
+        }
+    }
 
-	/**
-	 * Private constructor.
-	 */
-	private ObjectCloner() {
-	}
-
+    /**
+     * Private constructor.
+     */
+    private ObjectCloner() {
+    }
 }

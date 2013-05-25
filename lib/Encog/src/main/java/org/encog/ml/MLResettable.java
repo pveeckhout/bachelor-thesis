@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,28 +16,29 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
 package org.encog.ml;
 
 /**
- * Defines a Machine Learning Method that can be reset to an untrained 
- * starting point.  Most weight based machine learning methods, such
- * as neural networks support this.  Support vector machines do not.
+ * Defines a Machine Learning Method that can be reset to an untrained
+ * starting point. Most weight based machine learning methods, such
+ * as neural networks support this. Support vector machines do not.
  */
 public interface MLResettable extends MLMethod {
-	
-	/**
-	 * Reset the weights.
-	 */
-	void reset();
-	
-	/**
-	 * Reset the weights with a seed.
-	 * @param seed The seed value.
-	 */
-	void reset(int seed);
+
+    /**
+     * Reset the weights.
+     */
+    void reset();
+
+    /**
+     * Reset the weights with a seed.
+     * <p/>
+     * @param seed The seed value.
+     */
+    void reset(int seed);
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,142 +34,142 @@ import org.encog.ml.svm.SVMType;
  *
  */
 public class SVMPattern implements NeuralNetworkPattern {
-	/**
-	 * The number of neurons in the first layer.
-	 */
-	private int inputNeurons;
 
-	/**
-	 * The number of neurons in the second layer.
-	 */
-	private int outputNeurons;
+    /**
+     * The number of neurons in the first layer.
+     */
+    private int inputNeurons;
+    /**
+     * The number of neurons in the second layer.
+     */
+    private int outputNeurons;
+    /**
+     * True, if using regression.
+     */
+    private boolean regression = true;
+    /**
+     * The kernel type.
+     */
+    private KernelType kernelType = KernelType.RadialBasisFunction;
+    /**
+     * The SVM type.
+     */
+    private SVMType svmType = SVMType.EpsilonSupportVectorRegression;
 
-	/**
-	 * True, if using regression.
-	 */
-	private boolean regression = true;
+    /**
+     * Unused, a BAM has no hidden layers.
+     * <p/>
+     * @param count
+     *              Not used.
+     */
+    @Override
+    public void addHiddenLayer(final int count) {
+        throw new PatternError("A SVM network has no hidden layers.");
+    }
 
-	/**
-	 * The kernel type.
-	 */
-	private KernelType kernelType = KernelType.RadialBasisFunction;
-	
-	/**
-	 * The SVM type.
-	 */
-	private SVMType svmType = SVMType.EpsilonSupportVectorRegression;
+    /**
+     * Clear any settings on the pattern.
+     */
+    @Override
+    public void clear() {
+        this.inputNeurons = 0;
+        this.outputNeurons = 0;
 
-	/**
-	 * Unused, a BAM has no hidden layers.
-	 * 
-	 * @param count
-	 *            Not used.
-	 */
-	@Override
-	public void addHiddenLayer(final int count) {
-		throw new PatternError("A SVM network has no hidden layers.");
-	}
+    }
 
-	/**
-	 * Clear any settings on the pattern.
-	 */
-	@Override
-	public void clear() {
-		this.inputNeurons = 0;
-		this.outputNeurons = 0;
+    /**
+     * @return The generated network.
+     */
+    @Override
+    public MLMethod generate() {
+        if (this.outputNeurons != 1) {
+            throw new PatternError("A SVM may only have one output.");
+        }
+        final SVM network = new SVM(this.inputNeurons, this.svmType,
+                                    this.kernelType);
+        return network;
+    }
 
-	}
+    /**
+     * @return The input neuron count.
+     */
+    public int getInputNeurons() {
+        return this.inputNeurons;
+    }
 
-	/**
-	 * @return The generated network.
-	 */
-	@Override
-	public MLMethod generate() {
-		if (this.outputNeurons != 1) {
-			throw new PatternError("A SVM may only have one output.");
-		}
-		final SVM network = new SVM(this.inputNeurons, this.svmType,
-				this.kernelType);
-		return network;
-	}
+    /**
+     * @return The input output count.
+     */
+    public int getOutputNeurons() {
+        return this.outputNeurons;
+    }
 
-	/**
-	 * @return The input neuron count.
-	 */
-	public int getInputNeurons() {
-		return this.inputNeurons;
-	}
+    /**
+     * @return True, if this is regression.
+     */
+    public boolean isRegression() {
+        return this.regression;
+    }
 
-	/**
-	 * @return The input output count.
-	 */
-	public int getOutputNeurons() {
-		return this.outputNeurons;
-	}
+    /**
+     * Not used, the BAM uses a bipoloar activation function.
+     * <p/>
+     * @param activation
+     *                   Not used.
+     */
+    @Override
+    public void setActivationFunction(
+            final ActivationFunction activation) {
+        throw new PatternError(
+                "A SVM network can't specify a custom activation function.");
+    }
 
-	/**
-	 * @return True, if this is regression.
-	 */
-	public boolean isRegression() {
-		return this.regression;
-	}
+    /**
+     * Set the number of input neurons.
+     * <p/>
+     * @param count
+     *              The number of input neurons.
+     */
+    @Override
+    public void setInputNeurons(final int count) {
+        this.inputNeurons = count;
+    }
 
-	/**
-	 * Not used, the BAM uses a bipoloar activation function.
-	 * 
-	 * @param activation
-	 *            Not used.
-	 */
-	@Override
-	public void setActivationFunction(
-			final ActivationFunction activation) {
-		throw new PatternError(
-				"A SVM network can't specify a custom activation function.");
-	}
+    /**
+     * Set the kernel type.
+     * <p/>
+     * @param kernelType The kernel type.
+     */
+    public void setKernelType(final KernelType kernelType) {
+        this.kernelType = kernelType;
+    }
 
-	/**
-	 * Set the number of input neurons.
-	 * 
-	 * @param count
-	 *            The number of input neurons.
-	 */
-	@Override
-	public void setInputNeurons(final int count) {
-		this.inputNeurons = count;
-	}
+    /**
+     * Set the number of output neurons.
+     * <p/>
+     * @param count
+     *              The output neuron count.
+     */
+    @Override
+    public void setOutputNeurons(final int count) {
+        this.outputNeurons = count;
+    }
 
-	/**
-	 * Set the kernel type.
-	 * @param kernelType The kernel type.
-	 */
-	public void setKernelType(final KernelType kernelType) {
-		this.kernelType = kernelType;
-	}
+    /**
+     * Set if regression is used.
+     * <p/>
+     * @param regression True if regression is used.
+     */
+    public void setRegression(final boolean regression) {
+        this.regression = regression;
+    }
 
-	/**
-	 * Set the number of output neurons.
-	 * 
-	 * @param count
-	 *            The output neuron count.
-	 */
-	@Override
-	public void setOutputNeurons(final int count) {
-		this.outputNeurons = count;
-	}
-
-	/**
-	 * Set if regression is used.
-	 * @param regression True if regression is used.
-	 */
-	public void setRegression(final boolean regression) {
-		this.regression = regression;
-	}
-
-	/**
-	 * Set the SVM type.
-	 * @param svmType The SVM type.
-	 */
-	public void setSVMType(final SVMType svmType) {
-		this.svmType = svmType;
-	}
+    /**
+     * Set the SVM type.
+     * <p/>
+     * @param svmType The SVM type.
+     */
+    public void setSVMType(final SVMType svmType) {
+        this.svmType = svmType;
+    }
 }

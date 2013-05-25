@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -25,35 +25,38 @@ package org.encog.util.time;
 
 /**
  * Get the name or code for a time unit.
- * 
+ * <p/>
  * @author jheaton
  */
 public interface TimeUnitNames {
 
-	/**
-	 * Get the code for the specified time unit.
-	 * 
-	 * @param unit
-	 *            The time unit.
-	 * @return Return the code for the specified time unit.
-	 */
-	String code(TimeUnit unit);
+    /**
+     * Get the code for the specified time unit.
+     * <p/>
+     * @param unit
+     *             The time unit.
+     * <p/>
+     * @return Return the code for the specified time unit.
+     */
+    String code(TimeUnit unit);
 
-	/**
-	 * Get the plural name for the specified time unit.
-	 * 
-	 * @param unit
-	 *            The time unit.
-	 * @return Return the plural name for the specified unit.
-	 */
-	String plural(TimeUnit unit);
+    /**
+     * Get the plural name for the specified time unit.
+     * <p/>
+     * @param unit
+     *             The time unit.
+     * <p/>
+     * @return Return the plural name for the specified unit.
+     */
+    String plural(TimeUnit unit);
 
-	/**
-	 * Get the singular form of the specified time unit.
-	 * 
-	 * @param unit
-	 *            The time unit.
-	 * @return The singular form of the specified time unit.
-	 */
-	String singular(TimeUnit unit);
+    /**
+     * Get the singular form of the specified time unit.
+     * <p/>
+     * @param unit
+     *             The time unit.
+     * <p/>
+     * @return The singular form of the specified time unit.
+     */
+    String singular(TimeUnit unit);
 }

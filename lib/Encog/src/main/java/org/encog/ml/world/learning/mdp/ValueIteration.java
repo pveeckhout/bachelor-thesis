@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,39 +30,38 @@ import org.encog.ml.world.World;
 
 public class ValueIteration extends MarkovDecisionProcess {
 
-	private double discountFactor;
-	
-	public ValueIteration(World theWorld, double theDiscountFactor) {
-		super(theWorld);	
-		this.discountFactor = theDiscountFactor;
-	}
-	
-	public void calculateValue(State state) {
-		double result = Double.NEGATIVE_INFINITY;
-		if (!getWorld().isGoalState(state) ) {
-			for (Action action : getWorld().getActions()) {
-				double sum = 0;
-				for (SuccessorState statePrime : this.getWorld()
-						.getProbability()
-						.determineSuccessorStates(state, action)) {
-					sum += statePrime.getProbability()
-							* statePrime.getState().getPolicyValue()[0];
-				}
-				sum *= this.discountFactor;
+    private double discountFactor;
 
-				result = Math.max(result, sum);
-			}
+    public ValueIteration(World theWorld, double theDiscountFactor) {
+        super(theWorld);
+        this.discountFactor = theDiscountFactor;
+    }
 
-			state.getPolicyValue()[0] = result+state.getReward();
-		} else {
-			state.getPolicyValue()[0] = state.getReward();
-		}
-	}
+    public void calculateValue(State state) {
+        double result = Double.NEGATIVE_INFINITY;
+        if (!getWorld().isGoalState(state)) {
+            for (Action action : getWorld().getActions()) {
+                double sum = 0;
+                for (SuccessorState statePrime : this.getWorld()
+                        .getProbability()
+                        .determineSuccessorStates(state, action)) {
+                    sum += statePrime.getProbability() *
+                            statePrime.getState().getPolicyValue()[0];
+                }
+                sum *= this.discountFactor;
 
-	public void iteration() {
-		for(State state: getWorld().getStates() ) {
-			calculateValue(state);
-		}
-	}
+                result = Math.max(result, sum);
+            }
 
+            state.getPolicyValue()[0] = result + state.getReward();
+        } else {
+            state.getPolicyValue()[0] = state.getReward();
+        }
+    }
+
+    public void iteration() {
+        for (State state : getWorld().getStates()) {
+            calculateValue(state);
+        }
+    }
 }

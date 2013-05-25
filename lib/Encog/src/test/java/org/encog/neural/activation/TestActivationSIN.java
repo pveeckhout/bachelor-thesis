@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,24 +31,23 @@ import org.junit.Test;
 
 public class TestActivationSIN extends TestCase {
 
-	@Test
-	public void testSIN() throws Throwable {
-		ActivationSIN activation = new ActivationSIN();
-		Assert.assertTrue(activation.hasDerivative());
+    @Test
+    public void testSIN() throws Throwable {
+        ActivationSIN activation = new ActivationSIN();
+        Assert.assertTrue(activation.hasDerivative());
 
-		ActivationSIN clone = (ActivationSIN) activation.clone();
-		Assert.assertNotNull(clone);
+        ActivationSIN clone = (ActivationSIN) activation.clone();
+        Assert.assertNotNull(clone);
 
-		double[] input = { 0.0  };
+        double[] input = {0.0};
 
-		activation.activationFunction(input,0,input.length);
+        activation.activationFunction(input, 0, input.length);
 
-		Assert.assertEquals(0.0, input[0], 0.1);		
+        Assert.assertEquals(0.0, input[0], 0.1);
 
-		// test derivative, should throw an error
-		input[0] = activation.derivativeFunction(input[0],input[0]);
-		Assert.assertEquals(1.0, input[0], 0.1);
+        // test derivative, should throw an error
+        input[0] = activation.derivativeFunction(input[0], input[0]);
+        Assert.assertEquals(1.0, input[0], 0.1);
 
-	}
-	
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,93 +36,93 @@ import org.encog.util.csv.CSVFormat;
  * file to the neural network. This implementation uses the BasicNeuralData to
  * hold the data being read. This class has no ability to write CSV files. The
  * columns of the CSV file will specify both the input and ideal columns.
- * 
+ * <p/>
  * Because this class loads the CSV file to memory, it is quite fast, once the
  * data has been loaded.
  */
 public class CSVNeuralDataSet extends BasicMLDataSet {
 
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * Serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The CSV filename to read from.
+     */
+    private final String filename;
+    /**
+     * The format of this CSV file.
+     */
+    private final CSVFormat format;
 
-	/**
-	 * The CSV filename to read from.
-	 */
-	private final String filename;
+    /**
+     * Construct this data set using a comma as a delimiter.
+     * <p/>
+     * @param theFilename
+     *                     The CSV filename to read.
+     * @param theInputSize
+     *                     The number of columns that make up the input set.
+     *
+     * @param theIdealSize
+     *                     The number of columns that make up the ideal set.
+     * @param theHeaders
+     *                     True if headers are present on the first line.
+     */
+    public CSVNeuralDataSet(
+            final String theFilename,
+            final int theInputSize,
+            final int theIdealSize,
+            final boolean theHeaders) {
+        this(theFilename, theInputSize, theIdealSize, theHeaders,
+             CSVFormat.ENGLISH, false);
+    }
 
-	/**
-	 * The format of this CSV file.
-	 */
-	private final CSVFormat format;
+    /**
+     * Construct this data set using a comma as a delimiter.
+     * <p/>
+     * @param theFilename
+     *                     The CSV filename to read.
+     * @param theInputSize
+     *                     The number of columns that make up the input set.
+     *
+     * @param theIdealSize
+     *                     The number of columns that make up the ideal set.
+     * @param theHeaders
+     *                     True if headers are present on the first line.
+     * @param theFormat
+     *                     What CSV format to use.
+     * @param significance
+     *                     True, if there is a significance column.
+     */
+    public CSVNeuralDataSet(
+            final String theFilename,
+            final int theInputSize,
+            final int theIdealSize,
+            final boolean theHeaders,
+            final CSVFormat theFormat,
+            final boolean significance) {
+        this.filename = theFilename;
+        this.format = theFormat;
 
-	/**
-	 * Construct this data set using a comma as a delimiter.
-	 * 
-	 * @param theFilename
-	 *            The CSV filename to read.
-	 * @param theInputSize
-	 *            The number of columns that make up the input set. *
-	 * @param theIdealSize
-	 *            The number of columns that make up the ideal set.
-	 * @param theHeaders
-	 *            True if headers are present on the first line.
-	 */
-	public CSVNeuralDataSet(
-			final String theFilename, 
-			final int theInputSize,
-			final int theIdealSize, 
-			final boolean theHeaders) {
-		this(theFilename, theInputSize, theIdealSize, theHeaders, 
-				CSVFormat.ENGLISH,false);
-	}
+        final DataSetCODEC codec = new CSVDataCODEC(new File(filename), format,
+                                                    theHeaders, theInputSize,
+                                                    theIdealSize, significance);
+        final MemoryDataLoader load = new MemoryDataLoader(codec);
+        load.setResult(this);
+        load.external2Memory();
+    }
 
-	/**
-	 * Construct this data set using a comma as a delimiter.
-	 * 
-	 * @param theFilename
-	 *            The CSV filename to read.
-	 * @param theInputSize
-	 *            The number of columns that make up the input set. *
-	 * @param theIdealSize
-	 *            The number of columns that make up the ideal set.
-	 * @param theHeaders
-	 *            True if headers are present on the first line.
-	 * @param theFormat
-	 *            What CSV format to use.
-	 * @param significance
-	 *            True, if there is a significance column.
-	 */
-	public CSVNeuralDataSet(
-			final String theFilename, 
-			final int theInputSize,
-			final int theIdealSize, 
-			final boolean theHeaders, 
-			final CSVFormat theFormat,
-			final boolean significance) {
-		this.filename = theFilename;
-		this.format = theFormat;
+    /**
+     * @return the filename
+     */
+    public String getFilename() {
+        return this.filename;
+    }
 
-		final DataSetCODEC codec = new CSVDataCODEC(new File(filename), format,
-				theHeaders, theInputSize, theIdealSize, significance);
-		final MemoryDataLoader load = new MemoryDataLoader(codec);
-		load.setResult(this);
-		load.external2Memory();
-	}
-
-	/**
-	 * @return the filename
-	 */
-	public String getFilename() {
-		return this.filename;
-	}
-
-	/**
-	 * @return the delimiter
-	 */
-	public CSVFormat getFormat() {
-		return this.format;
-	}
-
+    /**
+     * @return the delimiter
+     */
+    public CSVFormat getFormat() {
+        return this.format;
+    }
 }

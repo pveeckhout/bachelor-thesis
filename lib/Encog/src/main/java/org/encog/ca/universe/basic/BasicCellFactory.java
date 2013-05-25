@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,64 +30,59 @@ import org.encog.ca.universe.UniverseCellFactory;
 
 public class BasicCellFactory implements UniverseCellFactory, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final int size;
-	private final double min;
-	private final double max;
-	private final int elementCount;
-	
-	public BasicCellFactory(int theSize, double theMin, double theMax)
-	{
-		this.size = theSize;
-		this.min = theMin;
-		this.max = theMax;
-		this.elementCount = -1;
-	}
-	
-	public BasicCellFactory(int theSize, int theCount)
-	{
-		this.size = theSize;
-		this.min = 0;
-		this.max = 0;
-		this.elementCount = theCount;
-	}
-	
-	public boolean isContinuous() {
-		return this.elementCount == -1;
-	}
-	
-	public boolean isDiscrete() {
-		return this.elementCount != -1;
-	}
-	
-	@Override
-	public UniverseCell factor() {
-		if( isDiscrete() ) {
-			return new BasicDiscreteCell(this.size, this.elementCount);
-		} else {
-			return new BasicContinuousCell(this.size, this.min, this.max);
-		}		
-	}
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private final int size;
+    private final double min;
+    private final double max;
+    private final int elementCount;
 
-	public int size() {
-		return size;
-	}
+    public BasicCellFactory(int theSize, double theMin, double theMax) {
+        this.size = theSize;
+        this.min = theMin;
+        this.max = theMax;
+        this.elementCount = -1;
+    }
 
-	public double getMin() {
-		return min;
-	}
+    public BasicCellFactory(int theSize, int theCount) {
+        this.size = theSize;
+        this.min = 0;
+        this.max = 0;
+        this.elementCount = theCount;
+    }
 
-	public double getMax() {
-		return max;
-	}
+    public boolean isContinuous() {
+        return this.elementCount == -1;
+    }
 
-	public int getElementCount() {
-		return elementCount;
-	}
-	
-	
+    public boolean isDiscrete() {
+        return this.elementCount != -1;
+    }
 
+    @Override
+    public UniverseCell factor() {
+        if (isDiscrete()) {
+            return new BasicDiscreteCell(this.size, this.elementCount);
+        } else {
+            return new BasicContinuousCell(this.size, this.min, this.max);
+        }
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public double getMin() {
+        return min;
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public int getElementCount() {
+        return elementCount;
+    }
 }

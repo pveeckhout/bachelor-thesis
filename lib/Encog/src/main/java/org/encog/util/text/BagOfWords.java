@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -29,186 +29,184 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class BagOfWords {
-	private final Map<String, Integer> words = new HashMap<String, Integer>();
-	private boolean breakSpaces = true;
-	private boolean ignoreCase = true;
-	private int totalWords;
-	private final int k;
-	private int laplaceClasses; 
-	
-	public BagOfWords(int laplace) {
-		this.k = laplace;
-	}
-	
-	public BagOfWords() {
-		this(0);
-	}
 
-	public void process(String str) {
-		if (breakSpaces) {
-			processSpaces(str);
-		} else {
-			increase(str);
-		}
-	}
+    private final Map<String, Integer> words = new HashMap<String, Integer>();
+    private boolean breakSpaces = true;
+    private boolean ignoreCase = true;
+    private int totalWords;
+    private final int k;
+    private int laplaceClasses;
 
-	private void processSpaces(String str) {
-		StringBuilder word = new StringBuilder();
+    public BagOfWords(int laplace) {
+        this.k = laplace;
+    }
 
-		for (int i = 0; i < str.length(); i++) {
-			char ch = str.charAt(i);
-			if (ch != '\'' && !Character.isLetterOrDigit(ch)) {
-				if (word.length() > 0) {
-					increase(word.toString());
-					word.setLength(0);
-				}
-			} else {
-				word.append(ch);
-			}
-		}
+    public BagOfWords() {
+        this(0);
+    }
 
-		if (word.length() > 0) {
-			increase(word.toString());
-		}
-	}
+    public void process(String str) {
+        if (breakSpaces) {
+            processSpaces(str);
+        } else {
+            increase(str);
+        }
+    }
 
-	public void increase(String word) {
-		String word2;
-		this.totalWords++;
-		this.laplaceClasses++;
+    private void processSpaces(String str) {
+        StringBuilder word = new StringBuilder();
 
-		if (this.ignoreCase) {
-			word2 = word.toLowerCase();
-		} else {
-			word2 = word;
-		}
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (ch != '\'' && !Character.isLetterOrDigit(ch)) {
+                if (word.length() > 0) {
+                    increase(word.toString());
+                    word.setLength(0);
+                }
+            } else {
+                word.append(ch);
+            }
+        }
 
-		if (this.words.containsKey(word2)) {
-			int i = this.words.get(word2);
-			i++;
-			this.words.put(word2, i);
-		} else {
-			this.words.put(word2, 1);
-		}
-	}
+        if (word.length() > 0) {
+            increase(word.toString());
+        }
+    }
 
-	/**
-	 * @return the breakSpaces
-	 */
-	public boolean isBreakSpaces() {
-		return breakSpaces;
-	}
+    public void increase(String word) {
+        String word2;
+        this.totalWords++;
+        this.laplaceClasses++;
 
-	/**
-	 * @param breakSpaces the breakSpaces to set
-	 */
-	public void setBreakSpaces(boolean breakSpaces) {
-		this.breakSpaces = breakSpaces;
-	}
+        if (this.ignoreCase) {
+            word2 = word.toLowerCase();
+        } else {
+            word2 = word;
+        }
 
-	/**
-	 * @return the ignoreCase
-	 */
-	public boolean isIgnoreCase() {
-		return ignoreCase;
-	}
+        if (this.words.containsKey(word2)) {
+            int i = this.words.get(word2);
+            i++;
+            this.words.put(word2, i);
+        } else {
+            this.words.put(word2, 1);
+        }
+    }
 
-	/**
-	 * @param ignoreCase the ignoreCase to set
-	 */
-	public void setIgnoreCase(boolean ignoreCase) {
-		this.ignoreCase = ignoreCase;
-	}
+    /**
+     * @return the breakSpaces
+     */
+    public boolean isBreakSpaces() {
+        return breakSpaces;
+    }
 
-	/**
-	 * @return the words
-	 */
-	public Map<String, Integer> getWords() {
-		return words;
-	}
+    /**
+     * @param breakSpaces the breakSpaces to set
+     */
+    public void setBreakSpaces(boolean breakSpaces) {
+        this.breakSpaces = breakSpaces;
+    }
 
-	public void clear() {
-		this.words.clear();
-	}
+    /**
+     * @return the ignoreCase
+     */
+    public boolean isIgnoreCase() {
+        return ignoreCase;
+    }
 
-	public String toString() {
-		StringBuilder result = new StringBuilder();
+    /**
+     * @param ignoreCase the ignoreCase to set
+     */
+    public void setIgnoreCase(boolean ignoreCase) {
+        this.ignoreCase = ignoreCase;
+    }
 
-		// sort
-		Set<String> set = new TreeSet<String>();
-		set.addAll(this.words.keySet());
+    /**
+     * @return the words
+     */
+    public Map<String, Integer> getWords() {
+        return words;
+    }
 
-		// display
-		for (String key : set) {
-			int i = this.words.get(key);
-			result.append(key);
-			result.append(",");
-			result.append(i);
-			result.append("\n");
-		}
+    public void clear() {
+        this.words.clear();
+    }
 
-		return result.toString();
-	}
+    public String toString() {
+        StringBuilder result = new StringBuilder();
 
-	public boolean contains(String word) {
-		return this.words.containsKey(word);
-	}
-	
-	public int getK() {
-		return this.k;
-	}
+        // sort
+        Set<String> set = new TreeSet<String>();
+        set.addAll(this.words.keySet());
 
-	/**
-	 * @return the totalWords
-	 */
-	public int getTotalWords() {
-		return totalWords;
-	}
-	
-	public int getCount(String word) {
-		String word2;
-		if( this.ignoreCase ) {
-			word2 = word.toLowerCase();
-		} else {
-			word2 = word;
-		}
-		if( !this.words.containsKey(word2) ) {
-			return 0;
-		}
-		return this.words.get(word2);
-	}
+        // display
+        for (String key : set) {
+            int i = this.words.get(key);
+            result.append(key);
+            result.append(",");
+            result.append(i);
+            result.append("\n");
+        }
 
-	public double probability(String word) {
-		double n = ((double)getCount(word))+((double)this.k);
-		double d = ((double)getTotalWords())+(k*this.laplaceClasses);
-		return n/d;
-	}
+        return result.toString();
+    }
 
-	/**
-	 * @return the laplaceClasses
-	 */
-	public int getLaplaceClasses() {
-		return laplaceClasses;
-	}
+    public boolean contains(String word) {
+        return this.words.containsKey(word);
+    }
 
-	/**
-	 * @param laplaceClasses the laplaceClasses to set
-	 */
-	public void setLaplaceClasses(int laplaceClasses) {
-		this.laplaceClasses = laplaceClasses;
-	}
+    public int getK() {
+        return this.k;
+    }
 
-	/**
-	 * @param totalWords the totalWords to set
-	 */
-	public void setTotalWords(int totalWords) {
-		this.totalWords = totalWords;
-	}
+    /**
+     * @return the totalWords
+     */
+    public int getTotalWords() {
+        return totalWords;
+    }
 
-	public int getUniqueWords() {
-		return this.words.size();
-	}
-	
-	
+    public int getCount(String word) {
+        String word2;
+        if (this.ignoreCase) {
+            word2 = word.toLowerCase();
+        } else {
+            word2 = word;
+        }
+        if (!this.words.containsKey(word2)) {
+            return 0;
+        }
+        return this.words.get(word2);
+    }
 
+    public double probability(String word) {
+        double n = ((double) getCount(word)) + ((double) this.k);
+        double d = ((double) getTotalWords()) + (k * this.laplaceClasses);
+        return n / d;
+    }
+
+    /**
+     * @return the laplaceClasses
+     */
+    public int getLaplaceClasses() {
+        return laplaceClasses;
+    }
+
+    /**
+     * @param laplaceClasses the laplaceClasses to set
+     */
+    public void setLaplaceClasses(int laplaceClasses) {
+        this.laplaceClasses = laplaceClasses;
+    }
+
+    /**
+     * @param totalWords the totalWords to set
+     */
+    public void setTotalWords(int totalWords) {
+        this.totalWords = totalWords;
+    }
+
+    public int getUniqueWords() {
+        return this.words.size();
+    }
 }

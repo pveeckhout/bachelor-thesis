@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -27,33 +27,32 @@ import org.encog.util.concurrency.EngineTask;
 
 /**
  * A task to be performed.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class PerformerTask implements EngineTask {
 
-	/**
-	 * The owner.
-	 */
-	private final ConcurrentTrainingPerformer owner;
+    /**
+     * The owner.
+     */
+    private final ConcurrentTrainingPerformer owner;
 
-	/**
-	 * Construct the object.
-	 * 
-	 * @param owner
-	 *            The owner.
-	 */
-	public PerformerTask(final ConcurrentTrainingPerformer owner) {
-		this.owner = owner;
-	}
+    /**
+     * Construct the object.
+     * <p/>
+     * @param owner
+     *              The owner.
+     */
+    public PerformerTask(final ConcurrentTrainingPerformer owner) {
+        this.owner = owner;
+    }
 
-	/**
-	 * Run the task.
-	 */
-	@Override
-	public final void run() {
-		this.owner.run();
-	}
-
+    /**
+     * Run the task.
+     */
+    @Override
+    public final void run() {
+        this.owner.run();
+    }
 }

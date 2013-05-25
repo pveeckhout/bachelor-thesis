@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,41 +28,40 @@ package org.encog.util.concurrency;
  */
 public class PoolItem implements Runnable {
 
-	/**
-	 * The task to execute.
-	 */
-	private final EngineTask task;
+    /**
+     * The task to execute.
+     */
+    private final EngineTask task;
+    /**
+     * The task group.
+     */
+    private final TaskGroup group;
 
-	/**
-	 * The task group.
-	 */
-	private final TaskGroup group;
+    /**
+     * Create a pool item.
+     * <p/>
+     * @param task
+     *              The task to execute.
+     * @param group
+     *              The group this task belongs to.
+     */
+    public PoolItem(final EngineTask task, final TaskGroup group) {
+        this.task = task;
+        this.group = group;
+    }
 
-	/**
-	 * Create a pool item.
-	 * 
-	 * @param task
-	 *            The task to execute.
-	 * @param group
-	 *            The group this task belongs to.
-	 */
-	public PoolItem(final EngineTask task, final TaskGroup group) {
-		this.task = task;
-		this.group = group;
-	}
-
-	/**
-	 * Run the task.
-	 */
-	public void run() {
-		try {
-			this.task.run();
-		} catch (final Throwable t) {
-			EngineConcurrency.getInstance().registerError(t);
-		} finally {
-			if (this.group != null) {
-				this.group.taskStopping();
-			}
-		}
-	}
+    /**
+     * Run the task.
+     */
+    public void run() {
+        try {
+            this.task.run();
+        } catch (final Throwable t) {
+            EngineConcurrency.getInstance().registerError(t);
+        } finally {
+            if (this.group != null) {
+                this.group.taskStopping();
+            }
+        }
+    }
 }

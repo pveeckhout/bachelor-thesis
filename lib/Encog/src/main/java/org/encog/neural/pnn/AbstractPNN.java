@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -29,203 +29,194 @@ import org.encog.ml.data.MLData;
 /**
  * Abstract class to build PNN networks upon.
  */
-public abstract class AbstractPNN  extends BasicML {
+public abstract class AbstractPNN extends BasicML {
 
-	/**
-	 * Input neuron count.
-	 */
-	private final int inputCount;
+    /**
+     * Input neuron count.
+     */
+    private final int inputCount;
+    /**
+     * Output neuron count.
+     */
+    private final int outputCount;
+    /**
+     * Kernel type.
+     */
+    private final PNNKernelType kernel;
+    /**
+     * Output mode.
+     */
+    private final PNNOutputMode outputMode;
+    /**
+     * Is trained.
+     */
+    private boolean trained;
+    /**
+     * Network error. (MSE)
+     */
+    private double error;
+    /**
+     * Confusion work area.
+     */
+    private int[] confusion;
+    /**
+     * First derivative.
+     */
+    private final double[] deriv;
+    /**
+     * Second derivative.
+     */
+    private final double[] deriv2;
+    /**
+     * Index of a sample to exclude.
+     */
+    private int exclude;
+    /**
+     * True, if we are using separate sigmas for each class.
+     */
+    private boolean separateClass;
 
-	/**
-	 * Output neuron count. 
-	 */
-	private final int outputCount;
+    /**
+     * Constructor.
+     * <p/>
+     * @param kernel      The kernel type to use.
+     * @param outputMode  The output mode to use.
+     * @param inputCount  The input count.
+     * @param outputCount The output count.
+     */
+    public AbstractPNN(final PNNKernelType kernel,
+                       final PNNOutputMode outputMode,
+                       final int inputCount, final int outputCount) {
+        this.kernel = kernel;
+        this.outputMode = outputMode;
+        this.inputCount = inputCount;
+        this.outputCount = outputCount;
+        this.trained = false;
+        this.error = Double.MIN_VALUE;
+        this.confusion = null;
+        this.exclude = -1;
 
-	/**
-	 * Kernel type. 
-	 */
-	private final PNNKernelType kernel;
+        this.deriv = new double[inputCount];
+        this.deriv2 = new double[inputCount];
 
-	/**
-	 *  Output mode.
-	 */
-	private final PNNOutputMode outputMode; 
+        if (this.outputMode == PNNOutputMode.Classification) {
+            this.confusion = new int[this.outputCount + 1];
+        }
+    }
 
-	/**
-	 * Is trained. 
-	 */
-	private boolean trained;
+    /**
+     * Compute the output from the network.
+     * <p/>
+     * @param input The input to the network.
+     * <p/>
+     * @return The output from the network.
+     */
+    public abstract MLData compute(MLData input);
 
-	/**
-	 * Network error. (MSE)
-	 */
-	private double error;
+    /**
+     * @return the deriv
+     */
+    public double[] getDeriv() {
+        return this.deriv;
+    }
 
-	/**
-	 * Confusion work area.
-	 */
-	private int[] confusion;
+    /**
+     * @return the deriv2
+     */
+    public double[] getDeriv2() {
+        return this.deriv2;
+    }
 
-	/**
-	 * First derivative. 
-	 */
-	private final double[] deriv;
+    /**
+     * @return the error
+     */
+    public double getError() {
+        return this.error;
+    }
 
-	/**
-	 * Second derivative.
-	 */
-	private final double[] deriv2;
+    /**
+     * @return the exclude
+     */
+    public int getExclude() {
+        return this.exclude;
+    }
 
-	/**
-	 * Index of a sample to exclude. 
-	 */
-	private int exclude;
+    /**
+     * @return the inputCount
+     */
+    public int getInputCount() {
+        return this.inputCount;
+    }
 
-	/**
-	 * True, if we are using separate sigmas for each class.
-	 */
-	private boolean separateClass;
+    /**
+     * @return the kernel
+     */
+    public PNNKernelType getKernel() {
+        return this.kernel;
+    }
 
-	/**
-	 * Constructor.
-	 * @param kernel The kernel type to use.
-	 * @param outputMode The output mode to use.
-	 * @param inputCount The input count.
-	 * @param outputCount The output count.
-	 */
-	public AbstractPNN(final PNNKernelType kernel, final PNNOutputMode outputMode,
-			final int inputCount, final int outputCount) {
-		this.kernel = kernel;
-		this.outputMode = outputMode;
-		this.inputCount = inputCount;
-		this.outputCount = outputCount;
-		this.trained = false;
-		this.error = Double.MIN_VALUE;
-		this.confusion = null;
-		this.exclude = -1;
+    /**
+     * @return the outputCount
+     */
+    public int getOutputCount() {
+        return this.outputCount;
+    }
 
-		this.deriv = new double[inputCount];
-		this.deriv2 = new double[inputCount];
+    /**
+     * @return the outputMode
+     */
+    public PNNOutputMode getOutputMode() {
+        return this.outputMode;
+    }
 
-		if (this.outputMode == PNNOutputMode.Classification) {
-			this.confusion = new int[this.outputCount + 1];
-		}
-	}
+    /**
+     * @return the trained
+     */
+    public boolean isTrained() {
+        return this.trained;
+    }
 
-	/**
-	 * Compute the output from the network.
-	 * @param input The input to the network.
-	 * @return The output from the network.
-	 */
-	public abstract MLData compute(MLData input);
+    /**
+     * Reset the confusion.
+     */
+    public void resetConfusion() {
+    }
 
-	/**
-	 * @return the deriv
-	 */
-	public double[] getDeriv() {
-		return this.deriv;
-	}
+    /**
+     * @param error
+     *              the error to set
+     */
+    public void setError(final double error) {
+        this.error = error;
+    }
 
-	/**
-	 * @return the deriv2
-	 */
-	public double[] getDeriv2() {
-		return this.deriv2;
-	}
+    /**
+     * @param exclude
+     *                the exclude to set
+     */
+    public void setExclude(final int exclude) {
+        this.exclude = exclude;
+    }
 
-	/**
-	 * @return the error
-	 */
-	public double getError() {
-		return this.error;
-	}
+    /**
+     * @param trained
+     *                the trained to set
+     */
+    public void setTrained(final boolean trained) {
+        this.trained = trained;
+    }
 
-	/**
-	 * @return the exclude
-	 */
-	public int getExclude() {
-		return this.exclude;
-	}
+    /**
+     * @return the separateClass
+     */
+    public boolean isSeparateClass() {
+        return separateClass;
+    }
 
-	/**
-	 * @return the inputCount
-	 */
-	public int getInputCount() {
-		return this.inputCount;
-	}
-
-	/**
-	 * @return the kernel
-	 */
-	public PNNKernelType getKernel() {
-		return this.kernel;
-	}
-
-	/**
-	 * @return the outputCount
-	 */
-	public int getOutputCount() {
-		return this.outputCount;
-	}
-
-	/**
-	 * @return the outputMode
-	 */
-	public PNNOutputMode getOutputMode() {
-		return this.outputMode;
-	}
-
-	/**
-	 * @return the trained
-	 */
-	public boolean isTrained() {
-		return this.trained;
-	}
-
-	/**
-	 * Reset the confusion.
-	 */
-	public void resetConfusion() {
-
-	}
-
-	/**
-	 * @param error
-	 *            the error to set
-	 */
-	public void setError(final double error) {
-		this.error = error;
-	}
-
-	/**
-	 * @param exclude
-	 *            the exclude to set
-	 */
-	public void setExclude(final int exclude) {
-		this.exclude = exclude;
-	}
-
-	/**
-	 * @param trained
-	 *            the trained to set
-	 */
-	public void setTrained(final boolean trained) {
-		this.trained = trained;
-	}
-
-	
-	/**
-	 * @return the separateClass
-	 */
-	public boolean isSeparateClass() {
-		return separateClass;
-	}
-
-	/**
-	 * @param separateClass the separateClass to set
-	 */
-	public void setSeparateClass(boolean separateClass) {
-		this.separateClass = separateClass;
-	}
-	
+    /**
+     * @param separateClass the separateClass to set
+     */
+    public void setSeparateClass(boolean separateClass) {
+        this.separateClass = separateClass;
+    }
 }

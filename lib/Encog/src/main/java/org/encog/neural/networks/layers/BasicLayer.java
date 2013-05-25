@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -70,67 +70,67 @@ import org.encog.neural.networks.BasicNetwork;
  * @author jheaton
  */
 public class BasicLayer extends FlatLayer implements Layer, Serializable {
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = -5682296868750703898L;
 
-	/**
-	 * The network that this layer belongs to.
-	 */
-	private BasicNetwork network;
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = -5682296868750703898L;
+    /**
+     * The network that this layer belongs to.
+     */
+    private BasicNetwork network;
 
-	/**
-	 * Construct this layer with a non-default activation function, also
-	 * determine if a bias is desired or not.
-	 *
-	 * @param activationFunction
-	 *            The activation function to use.
-	 * @param neuronCount
-	 *            How many neurons in this layer.
-	 * @param hasBias
-	 *            True if this layer has a bias.
-	 */
-	public BasicLayer(final ActivationFunction activationFunction,
-			final boolean hasBias, final int neuronCount) {
-		
-		super(activationFunction, neuronCount,
-				hasBias?1.0:0.0);
-	}
+    /**
+     * Construct this layer with a non-default activation function, also
+     * determine if a bias is desired or not.
+     *
+     * @param activationFunction
+     *                           The activation function to use.
+     * @param neuronCount
+     *                           How many neurons in this layer.
+     * @param hasBias
+     *                           True if this layer has a bias.
+     */
+    public BasicLayer(final ActivationFunction activationFunction,
+                      final boolean hasBias, final int neuronCount) {
 
-	/**
-	 * Construct this layer with a sigmoid activation function.
-	 *
-	 * @param neuronCount
-	 *            How many neurons in this layer.
-	 */
-	public BasicLayer(final int neuronCount) {
-		this(new ActivationTANH(), true, neuronCount);
-	}
+        super(activationFunction, neuronCount,
+              hasBias ? 1.0 : 0.0);
+    }
 
-	/**
-	 * @return The network that owns this layer.
-	 */
-	public BasicNetwork getNetwork() {
-		return this.network;
-	}
+    /**
+     * Construct this layer with a sigmoid activation function.
+     *
+     * @param neuronCount
+     *                    How many neurons in this layer.
+     */
+    public BasicLayer(final int neuronCount) {
+        this(new ActivationTANH(), true, neuronCount);
+    }
 
-	/**
-	 * Set the network for this layer.
-	 *
-	 * @param network
-	 *            The network for this layer.
-	 */
-	public void setNetwork(final BasicNetwork network) {
-		this.network = network;
-	}
-	
-	public int getNeuronCount() {
-		return this.getCount();
-	}
+    /**
+     * @return The network that owns this layer.
+     */
+    public BasicNetwork getNetwork() {
+        return this.network;
+    }
 
-	@Override
-	public ActivationFunction getActivationFunction() {
-		return super.getActivation();
-	}
+    /**
+     * Set the network for this layer.
+     *
+     * @param network
+     *                The network for this layer.
+     */
+    public void setNetwork(final BasicNetwork network) {
+        this.network = network;
+    }
+
+    public int getNeuronCount() {
+        return this.getCount();
+    }
+
+    @Override
+    public ActivationFunction getActivationFunction() {
+        return super.getActivation();
+    }
 }

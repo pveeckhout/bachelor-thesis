@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -29,44 +29,45 @@ import org.encog.ml.ea.exception.EARuntimeError;
  * A division by zero.
  */
 public class DivisionByZeroError extends EARuntimeError {
-	/**
-	 * The serial ID.
-	 */
-	private static final long serialVersionUID = 1L;
 
-	public DivisionByZeroError() {
-		this("Division by zero");
-	}
+    /**
+     * The serial ID.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Just a message.
-	 * 
-	 * @param msg
-	 *            The message.
-	 */
-	public DivisionByZeroError(final String msg) {
-		super(msg);
-	}
+    public DivisionByZeroError() {
+        this("Division by zero");
+    }
 
-	/**
-	 * Message with a throwable.
-	 * 
-	 * @param msg
-	 *            The message.
-	 * @param t
-	 *            The throwable.
-	 */
-	public DivisionByZeroError(final String msg, final Throwable t) {
-		super(msg, t);
-	}
+    /**
+     * Just a message.
+     * <p/>
+     * @param msg
+     *            The message.
+     */
+    public DivisionByZeroError(final String msg) {
+        super(msg);
+    }
 
-	/**
-	 * Just a throwable.
-	 * 
-	 * @param t
-	 *            The throwable.
-	 */
-	public DivisionByZeroError(final Throwable t) {
-		super(t);
-	}
+    /**
+     * Message with a throwable.
+     * <p/>
+     * @param msg
+     *            The message.
+     * @param t
+     *            The throwable.
+     */
+    public DivisionByZeroError(final String msg, final Throwable t) {
+        super(msg, t);
+    }
+
+    /**
+     * Just a throwable.
+     * <p/>
+     * @param t
+     *          The throwable.
+     */
+    public DivisionByZeroError(final Throwable t) {
+        super(t);
+    }
 }

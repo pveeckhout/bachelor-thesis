@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,95 +28,94 @@ package org.encog.app.analyst.csv.sort;
  */
 public class SortedField {
 
-	/**
-	 * The index of the field.
-	 */
-	private int index;
+    /**
+     * The index of the field.
+     */
+    private int index;
+    /**
+     * True, if the field is to be sorted ascending.
+     */
+    private boolean ascending;
+    /**
+     * The type of sort.
+     */
+    private SortType sortType;
 
-	/**
-	 * True, if the field is to be sorted ascending.
-	 */
-	private boolean ascending;
+    /**
+     * Construct the object.
+     * <p/>
+     * @param theIndexindex
+     *                      The index of the sorted field.
+     * @param t
+     *                      The type of sort, the type of object.
+     * @param theAscending
+     *                      True, if this is an ascending sort.
+     */
+    public SortedField(final int theIndexindex, final SortType t,
+                       final boolean theAscending) {
+        this.index = theIndexindex;
+        this.ascending = theAscending;
+        this.sortType = t;
+    }
 
-	/**
-	 * The type of sort.
-	 */
-	private SortType sortType;
+    /**
+     * @return the index
+     */
+    public int getIndex() {
+        return this.index;
+    }
 
-	/**
-	 * Construct the object.
-	 * 
-	 * @param theIndexindex
-	 *            The index of the sorted field.
-	 * @param t
-	 *            The type of sort, the type of object.
-	 * @param theAscending
-	 *            True, if this is an ascending sort.
-	 */
-	public SortedField(final int theIndexindex, final SortType t,
-			final boolean theAscending) {
-		this.index = theIndexindex;
-		this.ascending = theAscending;
-		this.sortType = t;
-	}
+    /**
+     * @return the sortType
+     */
+    public SortType getSortType() {
+        return this.sortType;
+    }
 
-	/**
-	 * @return the index
-	 */
-	public int getIndex() {
-		return this.index;
-	}
+    /**
+     * @return the ascending
+     */
+    public boolean isAscending() {
+        return this.ascending;
+    }
 
-	/**
-	 * @return the sortType
-	 */
-	public SortType getSortType() {
-		return this.sortType;
-	}
+    /**
+     * @param theAscending
+     *                     the ascending to set
+     */
+    public void setAscending(final boolean theAscending) {
+        this.ascending = theAscending;
+    }
 
-	/**
-	 * @return the ascending
-	 */
-	public boolean isAscending() {
-		return this.ascending;
-	}
+    /**
+     * @param theIndex
+     *                 the index to set
+     */
+    public void setIndex(final int theIndex) {
+        this.index = theIndex;
+    }
 
-	/**
-	 * @param theAscending
-	 *            the ascending to set
-	 */
-	public void setAscending(final boolean theAscending) {
-		this.ascending = theAscending;
-	}
+    /**
+     * @param theSortType
+     *                    the sortType to set
+     */
+    public void setSortType(final SortType theSortType) {
+        this.sortType = theSortType;
+    }
 
-	/**
-	 * @param theIndex
-	 *            the index to set
-	 */
-	public void setIndex(final int theIndex) {
-		this.index = theIndex;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder("[");
+        result.append(getClass().getSimpleName());
+        result.append(" index=");
+        result.append(this.index);
+        result.append(", type=");
+        result.append(this.sortType);
 
-	/**
-	 * @param theSortType
-	 *            the sortType to set
-	 */
-	public void setSortType(final SortType theSortType) {
-		this.sortType = theSortType;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		final StringBuilder result = new StringBuilder("[");
-		result.append(getClass().getSimpleName());
-		result.append(" index=");
-		result.append(this.index);
-		result.append(", type=");
-		result.append(this.sortType);
-
-		result.append("]");
-		return result.toString();
-	}
-
+        result.append("]");
+        return result.toString();
+    }
 }

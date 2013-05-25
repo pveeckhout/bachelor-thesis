@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,23 +40,20 @@ import org.junit.Assert;
 
 public class TestSort extends TestCase {
 
-	public static final File INPUT_NAME = new File("test.csv");
+    public static final File INPUT_NAME = new File("test.csv");
     public static final File OUTPUT_NAME = new File("test2.csv");
 
+    public void generateTestFileHeadings(boolean header) throws IOException {
+        PrintWriter tw = new PrintWriter(new FileWriter(INPUT_NAME));
 
-    public void generateTestFileHeadings(boolean header) throws IOException
-    {
-    	PrintWriter tw = new PrintWriter(new FileWriter(INPUT_NAME));
-
-        if (header)
-        {
+        if (header) {
             tw.println("a,b");
         }
 
         tw.println("five,5");
         tw.println("four,4");
         tw.println("two,2");
-        tw.println("three,3");                      
+        tw.println("three,3");
         tw.println("six,6");
         tw.println("one,1");
 
@@ -64,12 +61,11 @@ public class TestSort extends TestCase {
         tw.close();
     }
 
-    public void testSortHeaders() throws IOException
-    {
+    public void testSortHeaders() throws IOException {
         generateTestFileHeadings(true);
         SortCSV norm = new SortCSV();
-        norm.getSortOrder().add(new SortedField(1,SortType.SortString,true));
-        norm.process(INPUT_NAME,OUTPUT_NAME,true,CSVFormat.ENGLISH);
+        norm.getSortOrder().add(new SortedField(1, SortType.SortString, true));
+        norm.process(INPUT_NAME, OUTPUT_NAME, true, CSVFormat.ENGLISH);
 
         BufferedReader tr = new BufferedReader(new FileReader(OUTPUT_NAME));
 
@@ -88,14 +84,13 @@ public class TestSort extends TestCase {
         (new File("test.csv")).delete();
         (new File("test2.csv")).delete();
     }
-    
-    public void testSortNoHeaders() throws IOException
-    {
+
+    public void testSortNoHeaders() throws IOException {
         generateTestFileHeadings(false);
         SortCSV norm = new SortCSV();
-        norm.getSortOrder().add(new SortedField(1,SortType.SortInteger,true));
+        norm.getSortOrder().add(new SortedField(1, SortType.SortInteger, true));
         norm.setProduceOutputHeaders(false);
-        norm.process(INPUT_NAME,OUTPUT_NAME,false,CSVFormat.ENGLISH);
+        norm.process(INPUT_NAME, OUTPUT_NAME, false, CSVFormat.ENGLISH);
 
         BufferedReader tr = new BufferedReader(new FileReader(OUTPUT_NAME));
 
@@ -113,8 +108,4 @@ public class TestSort extends TestCase {
         (new File("test.csv")).delete();
         (new File("test2.csv")).delete();
     }
-
-
-	
-	
 }

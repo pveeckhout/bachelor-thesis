@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -29,41 +29,46 @@ import org.encog.ml.data.MLDataSet;
 import org.encog.ml.train.MLTrain;
 
 /**
- * A service plugin provides services, such as the creation of activation 
+ * A service plugin provides services, such as the creation of activation
  * functions, machine learning methods and training methods.
  *
  */
 public interface EncogPluginService1 extends EncogPluginBase {
-	
-	/**
-	 * Create an activation function.
-	 * @param name The name of the activation function.
-	 * @return The newly created activation function.
-	 */
-	ActivationFunction createActivationFunction(String name);
-	
-	/**
-	 * Create a new machine learning method.
-	 * @param methodType The method to create.
-	 * @param architecture The architecture string.
-	 * @param input The input count.
-	 * @param output The output count.
-	 * @return The newly created machine learning method.
-	 */
-	MLMethod createMethod(final String methodType, 
-			final String architecture,
-			final int input, final int output);
-	
-	/**
-	 * Create a trainer.
-	 * @param method The method to train.
-	 * @param training The training data.
-	 * @param type Type type of trainer.
-	 * @param args The training args.
-	 * @return The new training method.
-	 */
-	MLTrain createTraining(final MLMethod method, 
-			final MLDataSet training,
-			final String type, final String args);
-	
+
+    /**
+     * Create an activation function.
+     * <p/>
+     * @param name The name of the activation function.
+     * <p/>
+     * @return The newly created activation function.
+     */
+    ActivationFunction createActivationFunction(String name);
+
+    /**
+     * Create a new machine learning method.
+     * <p/>
+     * @param methodType   The method to create.
+     * @param architecture The architecture string.
+     * @param input        The input count.
+     * @param output       The output count.
+     * <p/>
+     * @return The newly created machine learning method.
+     */
+    MLMethod createMethod(final String methodType,
+                          final String architecture,
+                          final int input, final int output);
+
+    /**
+     * Create a trainer.
+     * <p/>
+     * @param method   The method to train.
+     * @param training The training data.
+     * @param type     Type type of trainer.
+     * @param args     The training args.
+     * <p/>
+     * @return The new training method.
+     */
+    MLTrain createTraining(final MLMethod method,
+                           final MLDataSet training,
+                           final String type, final String args);
 }

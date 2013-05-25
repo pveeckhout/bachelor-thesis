@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,77 +37,81 @@ import org.encog.ml.MLMethod;
  */
 public interface Randomizer {
 
-	/**
-	 * Randomize the synapses and bias values in the basic network based on an
-	 * array, modify the array. Previous values may be used, or they may be
-	 * discarded, depending on the randomizer.
-	 *
-	 * @param network
-	 *            A network to randomize.
-	 */
-	void randomize(MLMethod network);
+    /**
+     * Randomize the synapses and bias values in the basic network based on an
+     * array, modify the array. Previous values may be used, or they may be
+     * discarded, depending on the randomizer.
+     *
+     * @param network
+     *                A network to randomize.
+     */
+    void randomize(MLMethod network);
 
-	/**
-	 * Starting with the specified number, randomize it to the degree specified
-	 * by this randomizer. This could be a totally new random number, or it
-	 * could be based on the specified number.
-	 *
-	 * @param d
-	 *            The number to randomize.
-	 * @return A randomized number.
-	 */
-	double randomize(double d);
+    /**
+     * Starting with the specified number, randomize it to the degree specified
+     * by this randomizer. This could be a totally new random number, or it
+     * could be based on the specified number.
+     *
+     * @param d
+     *          The number to randomize.
+     * <p/>
+     * @return A randomized number.
+     */
+    double randomize(double d);
 
-	/**
-	 * Randomize the array based on an array, modify the array. Previous values
-	 * may be used, or they may be discarded, depending on the randomizer.
-	 *
-	 * @param d
-	 *            An array to randomize.
-	 */
-	void randomize(double[] d);
+    /**
+     * Randomize the array based on an array, modify the array. Previous values
+     * may be used, or they may be discarded, depending on the randomizer.
+     *
+     * @param d
+     *          An array to randomize.
+     */
+    void randomize(double[] d);
 
-	/**
-	 * Randomize the 2d array based on an array, modify the array. Previous
-	 * values may be used, or they may be discarded, depending on the
-	 * randomizer.
-	 *
-	 * @param d
-	 *            An array to randomize.
-	 */
-	void randomize(double[][] d);
+    /**
+     * Randomize the 2d array based on an array, modify the array. Previous
+     * values may be used, or they may be discarded, depending on the
+     * randomizer.
+     *
+     * @param d
+     *          An array to randomize.
+     */
+    void randomize(double[][] d);
 
-	/**
-	 * Randomize the matrix based on an array, modify the array. Previous values
-	 * may be used, or they may be discarded, depending on the randomizer.
-	 *
-	 * @param m
-	 *            A matrix to randomize.
-	 */
-	void randomize(Matrix m);
-	
-	/**
-	 * Randomize an array.
-	 * @param d The array to randomize.
-	 * @param begin The beginning element.
-	 * @param size The size of the array.
-	 */
-	void randomize(final double[] d, int begin, int size);
-	
-	/**
-	 * Explicitly set the Random source
-	 * @param theRandom
-	 */
-	void setRandom(Random theRandom);
-	/**
-	 * @return Retrieve the Random generator.
-	 */
-	Random getRandom();
+    /**
+     * Randomize the matrix based on an array, modify the array. Previous values
+     * may be used, or they may be discarded, depending on the randomizer.
+     *
+     * @param m
+     *          A matrix to randomize.
+     */
+    void randomize(Matrix m);
 
-	/**
-	 * Explicitly set the seed used for randomization
-	 * @param seed
-	 */
-	void setSeed(long seed);
-	
+    /**
+     * Randomize an array.
+     * <p/>
+     * @param d     The array to randomize.
+     * @param begin The beginning element.
+     * @param size  The size of the array.
+     */
+    void randomize(final double[] d, int begin, int size);
+
+    /**
+     * Explicitly set the Random source
+     * <p/>
+     * @param theRandom
+     */
+    void setRandom(Random theRandom);
+
+    /**
+     * @return Retrieve the Random generator.
+     */
+    Random getRandom();
+
+    /**
+     * Explicitly set the seed used for randomization
+     * <p/>
+     * @param seed
+     */
+    void setSeed(long seed);
 }

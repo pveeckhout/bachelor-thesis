@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,163 +37,161 @@ import java.io.Serializable;
  * http://www.cs.ucf.edu/~kstanley/ Encog's NEAT implementation was drawn from
  * the following three Journal Articles. For more complete BibTeX sources, see
  * NEATNetwork.java.
- * 
+ * <p/>
  * Evolving Neural Networks Through Augmenting Topologies
- * 
+ * <p/>
  * Generating Large-Scale Neural Networks Through Discovering Geometric
  * Regularities
- * 
+ * <p/>
  * Automatic feature selection in neuroevolution
  *
  */
 public class NEATLinkGene extends NEATBaseGene implements Serializable {
 
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * The from neuron id.
-	 */
-	private long fromNeuronID;
+    /**
+     * Serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The from neuron id.
+     */
+    private long fromNeuronID;
+    /**
+     * The to neuron id.
+     */
+    private long toNeuronID;
+    /**
+     * The weight of this link.
+     */
+    private double weight;
+    /**
+     * Is this gene enabled?
+     */
+    private boolean enabled = true;
 
-	/**
-	 * The to neuron id.
-	 */	
-	private long toNeuronID;
+    /**
+     * Default constructor, used mainly for persistence.
+     */
+    public NEATLinkGene() {
+    }
 
-	/**
-	 * The weight of this link.
-	 */
-	private double weight;
-	
-	/**
-	 * Is this gene enabled?
-	 */
-	private boolean enabled = true;
+    /**
+     * Construct a NEAT link gene.
+     * <p/>
+     * @param fromNeuronID The source neuron.
+     * @param toNeuronID   The target neuron.
+     * @param enabled      Is this link enabled.
+     * @param innovationID The innovation id.
+     * @param weight       The weight.
+     */
+    public NEATLinkGene(final long fromNeuronID, final long toNeuronID,
+                        final boolean enabled, final long innovationID,
+                        final double weight) {
+        this.fromNeuronID = fromNeuronID;
+        this.toNeuronID = toNeuronID;
+        setEnabled(enabled);
+        setInnovationId(innovationID);
+        this.weight = weight;
+    }
 
-	/**
-	 * Default constructor, used mainly for persistence.
-	 */
-	public NEATLinkGene() {
+    public NEATLinkGene(NEATLinkGene other) {
+        copy(other);
+    }
 
-	}
+    /**
+     * Copy from another gene.
+     *
+     * @param gene
+     *             The other gene.
+     */
+    public void copy(final NEATLinkGene gene) {
+        final NEATLinkGene other = gene;
+        setEnabled(other.isEnabled());
+        this.fromNeuronID = other.fromNeuronID;
+        this.toNeuronID = other.toNeuronID;
+        setInnovationId(other.getInnovationId());
+        this.weight = other.weight;
+    }
 
-	/**
-	 * Construct a NEAT link gene.
-	 * @param fromNeuronID The source neuron.
-	 * @param toNeuronID The target neuron.
-	 * @param enabled Is this link enabled.
-	 * @param innovationID The innovation id.
-	 * @param weight The weight.
-	 */
-	public NEATLinkGene(final long fromNeuronID, final long toNeuronID,
-			final boolean enabled, final long innovationID,
-			final double weight) {
-		this.fromNeuronID = fromNeuronID;
-		this.toNeuronID = toNeuronID;
-		setEnabled(enabled);
-		setInnovationId(innovationID);
-		this.weight = weight;
-	}
-	
-	public NEATLinkGene(NEATLinkGene other) {
-		copy(other);
-	}
+    /**
+     * @return The from neuron id.
+     */
+    public long getFromNeuronID() {
+        return this.fromNeuronID;
+    }
 
-	/**
-	 * Copy from another gene.
-	 *
-	 * @param gene
-	 *            The other gene.
-	 */
-	public void copy(final NEATLinkGene gene) {
-		final NEATLinkGene other = gene;
-		setEnabled(other.isEnabled());
-		this.fromNeuronID = other.fromNeuronID;
-		this.toNeuronID = other.toNeuronID;
-		setInnovationId(other.getInnovationId());
-		this.weight = other.weight;
-	}
+    /**
+     * @return The to neuron id.
+     */
+    public long getToNeuronID() {
+        return this.toNeuronID;
+    }
 
-	/**
-	 * @return The from neuron id.
-	 */
-	public long getFromNeuronID() {
-		return this.fromNeuronID;
-	}
+    /**
+     * @return The weight of this connection.
+     */
+    public double getWeight() {
+        return this.weight;
+    }
 
-	/**
-	 * @return The to neuron id.
-	 */
-	public long getToNeuronID() {
-		return this.toNeuronID;
-	}
+    /**
+     * Set the weight of this connection.
+     *
+     * @param weight
+     *               The connection weight.
+     */
+    public void setWeight(final double weight) {
+        this.weight = weight;
+    }
 
-	/**
-	 * @return The weight of this connection.
-	 */
-	public double getWeight() {
-		return this.weight;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder();
+        result.append("[NEATLinkGene:innov=");
+        result.append(getInnovationId());
+        result.append(",enabled=");
+        result.append(isEnabled());
+        result.append(",from=");
+        result.append(this.fromNeuronID);
+        result.append(",to=");
+        result.append(this.toNeuronID);
+        result.append("]");
+        return result.toString();
+    }
 
-	/**
-	 * Set the weight of this connection.
-	 *
-	 * @param weight
-	 *            The connection weight.
-	 */
-	public void setWeight(final double weight) {
-		this.weight = weight;
-	}
+    /**
+     * Set the from neuron id.
+     * <p/>
+     * @param i The from neuron id.
+     */
+    public void setFromNeuronID(int i) {
+        this.fromNeuronID = i;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder result = new StringBuilder();
-		result.append("[NEATLinkGene:innov=");
-		result.append(getInnovationId());
-		result.append(",enabled=");
-		result.append(isEnabled());
-		result.append(",from=");
-		result.append(this.fromNeuronID);
-		result.append(",to=");
-		result.append(this.toNeuronID);
-		result.append("]");
-		return result.toString();
-	}
+    /**
+     * Set the to neuron id.
+     * <p/>
+     * @param i The to neuron id.
+     */
+    public void setToNeuronID(int i) {
+        this.toNeuronID = i;
+    }
 
-	/**
-	 * Set the from neuron id.
-	 * @param i The from neuron id.
-	 */
-	public void setFromNeuronID(int i) {
-		this.fromNeuronID = i;
-	}
-	
-	/**
-	 * Set the to neuron id.
-	 * @param i The to neuron id.
-	 */
-	public void setToNeuronID(int i) {
-		this.toNeuronID = i;
-	}
-	
-	/**
-	 * @return True, if this gene is enabled.
-	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
+    /**
+     * @return True, if this gene is enabled.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	/**
-	 * @param e
-	 *            True, if this gene is enabled.
-	 */
-	public void setEnabled(final boolean e) {
-		enabled = e;
-	}
+    /**
+     * @param e
+     *          True, if this gene is enabled.
+     */
+    public void setEnabled(final boolean e) {
+        enabled = e;
+    }
 }

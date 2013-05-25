@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,29 +30,28 @@ import org.encog.EncogError;
  */
 public class MatrixError extends EncogError {
 
-	/**
-	 * Serial id for this class.
-	 */
-	private static final long serialVersionUID = -8961386981267748942L;
+    /**
+     * Serial id for this class.
+     */
+    private static final long serialVersionUID = -8961386981267748942L;
 
-	/**
-	 * Construct this exception with a message.
-	 * 
-	 * @param message
-	 *            The message for this exception.
-	 */
-	public MatrixError(final String message) {		
-		super(message);
-	}
+    /**
+     * Construct this exception with a message.
+     * <p/>
+     * @param message
+     *                The message for this exception.
+     */
+    public MatrixError(final String message) {
+        super(message);
+    }
 
-	/**
-	 * Construct this exception with another exception.
-	 * 
-	 * @param t
-	 *            The other exception.
-	 */
-	public MatrixError(final Throwable t) {
-		super(t);
-	}
-
+    /**
+     * Construct this exception with another exception.
+     * <p/>
+     * @param t
+     *          The other exception.
+     */
+    public MatrixError(final Throwable t) {
+        super(t);
+    }
 }

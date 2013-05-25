@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,73 +34,74 @@ import org.encog.ml.hmm.HiddenMarkovModel;
  * This class is used to generate random sequences based on a Hidden Markov
  * Model. These sequences represent the random probabilities that the HMM
  * models.
- * 
+ * <p/>
  */
 public class MarkovGenerator {
-	private final HiddenMarkovModel hmm;
-	private int currentState;
 
-	public MarkovGenerator(final HiddenMarkovModel hmm) {
-		this.hmm = hmm;
-		newSequence();
-	}
+    private final HiddenMarkovModel hmm;
+    private int currentState;
 
-	public MLSequenceSet generateSequences(final int observationCount,
-			final int observationLength) {
-		final MLSequenceSet result = new BasicMLSequenceSet();
+    public MarkovGenerator(final HiddenMarkovModel hmm) {
+        this.hmm = hmm;
+        newSequence();
+    }
 
-		for (int i = 0; i < observationCount; i++) {
-			result.startNewSequence();
-			result.add(observationSequence(observationLength));
-		}
+    public MLSequenceSet generateSequences(final int observationCount,
+                                           final int observationLength) {
+        final MLSequenceSet result = new BasicMLSequenceSet();
 
-		return result;
-	}
+        for (int i = 0; i < observationCount; i++) {
+            result.startNewSequence();
+            result.add(observationSequence(observationLength));
+        }
 
-	public int getCurrentState() {
-		return this.currentState;
-	}
+        return result;
+    }
 
-	public void newSequence() {
-		final double rand = Math.random();
-		double current = 0.0;
+    public int getCurrentState() {
+        return this.currentState;
+    }
 
-		for (int i = 0; i < (this.hmm.getStateCount() - 1); i++) {
-			current += this.hmm.getPi(i);
+    public void newSequence() {
+        final double rand = Math.random();
+        double current = 0.0;
 
-			if (current > rand) {
-				this.currentState = i;
-				return;
-			}
-		}
+        for (int i = 0; i < (this.hmm.getStateCount() - 1); i++) {
+            current += this.hmm.getPi(i);
 
-		this.currentState = this.hmm.getStateCount() - 1;
-	}
+            if (current > rand) {
+                this.currentState = i;
+                return;
+            }
+        }
 
-	public MLDataPair observation() {
-		final MLDataPair o = this.hmm.getStateDistribution(this.currentState)
-				.generate();
-		double rand = Math.random();
+        this.currentState = this.hmm.getStateCount() - 1;
+    }
 
-		for (int j = 0; j < (this.hmm.getStateCount() - 1); j++) {
-			if ((rand -= this.hmm
-					.getTransitionProbability(this.currentState, j)) < 0) {
-				this.currentState = j;
-				return o;
-			}
-		}
+    public MLDataPair observation() {
+        final MLDataPair o = this.hmm.getStateDistribution(this.currentState)
+                .generate();
+        double rand = Math.random();
 
-		this.currentState = this.hmm.getStateCount() - 1;
-		return o;
-	}
+        for (int j = 0; j < (this.hmm.getStateCount() - 1); j++) {
+            if ((rand -= this.hmm
+                    .getTransitionProbability(this.currentState, j)) < 0) {
+                this.currentState = j;
+                return o;
+            }
+        }
 
-	public MLDataSet observationSequence(int length) {
-		final MLDataSet sequence = new BasicMLDataSet();
-		while (length-- > 0) {
-			sequence.add(observation());
-		}
-		newSequence();
+        this.currentState = this.hmm.getStateCount() - 1;
+        return o;
+    }
 
-		return sequence;
-	}
+    public MLDataSet observationSequence(int length) {
+        final MLDataSet sequence = new BasicMLDataSet();
+        while (length-- > 0) {
+            sequence.add(observation());
+        }
+        newSequence();
+
+        return sequence;
+    }
 }

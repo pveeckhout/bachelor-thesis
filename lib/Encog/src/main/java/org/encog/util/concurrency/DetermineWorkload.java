@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,99 +34,97 @@ import org.encog.mathutil.IntRange;
  * used to determine the number of threads to use. If zero threads are
  * specified, Encog will query the processor count and determine the best number
  * of threads to use.
- * 
+ * <p/>
  */
 public class DetermineWorkload {
 
-	/**
-	 * What is the minimum number of workload entries for a thread to be
-	 * worthwhile.
-	 */
-	public static final int MIN_WORTHWHILE = 100;
+    /**
+     * What is the minimum number of workload entries for a thread to be
+     * worthwhile.
+     */
+    public static final int MIN_WORTHWHILE = 100;
+    /**
+     * How many threads to use.
+     */
+    private int threadCount;
+    /**
+     * What is the total workload size?
+     */
+    private int workloadSize;
 
-	/**
-	 * How many threads to use.
-	 */
-	private int threadCount;
+    /**
+     * Determine the workload.
+     * <p/>
+     * @param threads
+     *                     Threads to use, or zero to allow Encog to pick.
+     * @param workloadSize
+     *                     Total workload size.
+     */
+    public DetermineWorkload(final int threads, final int workloadSize) {
 
-	/**
-	 * What is the total workload size?
-	 */
-	private int workloadSize;
+        if (workloadSize == 0) {
+            throw new EncogError("Workload is of size zero.");
+        }
 
-	/**
-	 * Determine the workload.
-	 * 
-	 * @param threads
-	 *            Threads to use, or zero to allow Encog to pick.
-	 * @param workloadSize
-	 *            Total workload size.
-	 */
-	public DetermineWorkload(final int threads, final int workloadSize) {
+        this.workloadSize = workloadSize;
+        if (threads == 0) {
+            int num = Runtime.getRuntime().availableProcessors();
 
-		if( workloadSize==0) {
-			throw new EncogError("Workload is of size zero.");
-		}
-		
-		this.workloadSize = workloadSize;
-		if (threads == 0) {
-			int num = Runtime.getRuntime().availableProcessors();
+            // if there is more than one processor, use processor count +1
+            if (num != 1) {
+                num++;
+            }
+            // if there is a single processor, just use one thread
 
-			// if there is more than one processor, use processor count +1
-			if (num != 1) {
-				num++;
-			}
-			// if there is a single processor, just use one thread
+            // Now see how big the training sets are going to be.
+            // We want at least 100 training elements in each.
+            // This method will likely be further "tuned" in future versions.
 
-			// Now see how big the training sets are going to be.
-			// We want at least 100 training elements in each.
-			// This method will likely be further "tuned" in future versions.
+            final long recordCount = this.workloadSize;
+            final long workPerThread = recordCount / num;
 
-			final long recordCount = this.workloadSize;
-			final long workPerThread = recordCount / num;
+            if (workPerThread < 100) {
+                num = Math.max(1, (int) (recordCount / 100));
+            }
 
-			if (workPerThread < 100) {
-				num = Math.max(1, (int) (recordCount / 100));
-			}
+            this.threadCount = num;
+        } else {
+            this.threadCount = Math.min(threads, workloadSize);
+        }
+    }
 
-			this.threadCount = num;
-		} else {
-			this.threadCount = Math.min(threads, workloadSize);
-		}
-	}
+    /**
+     * Calculate the high and low ranges for each worker.
+     * <p/>
+     * @return A list of IntRange objects.
+     */
+    public List<IntRange> calculateWorkers() {
+        final List<IntRange> result = new ArrayList<IntRange>();
+        final int sizePerThread = this.workloadSize / this.threadCount;
 
-	/**
-	 * Calculate the high and low ranges for each worker.
-	 * 
-	 * @return A list of IntRange objects.
-	 */
-	public List<IntRange> calculateWorkers() {
-		final List<IntRange> result = new ArrayList<IntRange>();
-		final int sizePerThread = this.workloadSize / this.threadCount;
+        // create the workers
+        for (int i = 0; i < this.threadCount; i++) {
+            final int low = i * sizePerThread;
+            int high;
 
-		// create the workers
-		for (int i = 0; i < this.threadCount; i++) {
-			final int low = i * sizePerThread;
-			int high;
+            // if this is the last record, then high to be the last item
+            // in the training set.
+            if (i == (this.threadCount - 1)) {
+                high = this.workloadSize - 1;
+            } else {
+                high = ((i + 1) * sizePerThread) - 1;
+            }
 
-			// if this is the last record, then high to be the last item
-			// in the training set.
-			if (i == (this.threadCount - 1)) {
-				high = this.workloadSize - 1;
-			} else {
-				high = ((i + 1) * sizePerThread) - 1;
-			}
+            result.add(new IntRange(high, low));
+        }
 
-			result.add(new IntRange(high, low));
-		}
+        return result;
+    }
 
-		return result;
-	}
-
-	/**
-	 * @return The thread count.
-	 */
-	public int getThreadCount() {
-		return this.threadCount;
-	}
+    /**
+     * @return The thread count.
+     */
+    public int getThreadCount() {
+        return this.threadCount;
+    }
 }

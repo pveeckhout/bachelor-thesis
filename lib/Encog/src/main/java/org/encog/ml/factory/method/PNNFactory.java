@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -39,68 +39,70 @@ import org.encog.util.ParamsHolder;
  * A factory to create PNN networks.
  */
 public class PNNFactory {
-	
-	/**
-	 * The max layer count.
-	 */
-	public static final int MAX_LAYERS = 3;
-	
-	/**
-	 * Create a PNN network.
-	 * @param architecture THe architecture string to use.
-	 * @param input The input count. 
-	 * @param output The output count.
-	 * @return The RBF network.
-	 */
-	public MLMethod create(final String architecture, final int input,
-			final int output) {
 
-		final List<String> layers = ArchitectureParse.parseLayers(architecture);
-		if (layers.size() != MAX_LAYERS) {
-			throw new EncogError(
-					"PNN Networks must have exactly three elements, " 
-					+ "separated by ->.");
-		}
+    /**
+     * The max layer count.
+     */
+    public static final int MAX_LAYERS = 3;
 
-		final ArchitectureLayer inputLayer = ArchitectureParse.parseLayer(
-				layers.get(0), input);
-		final ArchitectureLayer pnnLayer = ArchitectureParse.parseLayer(
-				layers.get(1), -1);
-		final ArchitectureLayer outputLayer = ArchitectureParse.parseLayer(
-				layers.get(2), output);
+    /**
+     * Create a PNN network.
+     * <p/>
+     * @param architecture THe architecture string to use.
+     * @param input        The input count.
+     * @param output       The output count.
+     * <p/>
+     * @return The RBF network.
+     */
+    public MLMethod create(final String architecture, final int input,
+                           final int output) {
 
-		final int inputCount = inputLayer.getCount();
-		final int outputCount = outputLayer.getCount();
+        final List<String> layers = ArchitectureParse.parseLayers(architecture);
+        if (layers.size() != MAX_LAYERS) {
+            throw new EncogError(
+                    "PNN Networks must have exactly three elements, " +
+                    "separated by ->.");
+        }
 
-		PNNKernelType kernel;
-		PNNOutputMode outmodel;
+        final ArchitectureLayer inputLayer = ArchitectureParse.parseLayer(
+                layers.get(0), input);
+        final ArchitectureLayer pnnLayer = ArchitectureParse.parseLayer(
+                layers.get(1), -1);
+        final ArchitectureLayer outputLayer = ArchitectureParse.parseLayer(
+                layers.get(2), output);
 
-		if (pnnLayer.getName().equalsIgnoreCase("c")) {
-			outmodel = PNNOutputMode.Classification;
-		} else if (pnnLayer.getName().equalsIgnoreCase("r")) {
-			outmodel = PNNOutputMode.Regression;
-		} else if (pnnLayer.getName().equalsIgnoreCase("u")) {
-			outmodel = PNNOutputMode.Unsupervised;
-		} else {
-			throw new NeuralNetworkError("Unknown model: " 
-					+ pnnLayer.getName());
-		}
+        final int inputCount = inputLayer.getCount();
+        final int outputCount = outputLayer.getCount();
 
-		final ParamsHolder holder = new ParamsHolder(pnnLayer.getParams());
+        PNNKernelType kernel;
+        PNNOutputMode outmodel;
 
-		final String kernelStr = holder.getString("KERNEL", false, "gaussian");
-		
-		if (kernelStr.equalsIgnoreCase("gaussian")) {
-			kernel = PNNKernelType.Gaussian;
-		} else if (kernelStr.equalsIgnoreCase("reciprocal")) {
-			kernel = PNNKernelType.Reciprocal;
-		} else {
-			throw new NeuralNetworkError("Unknown kernel: " + kernelStr);
-		}
-			
-		final BasicPNN result = new BasicPNN(kernel, outmodel,
-				inputCount, outputCount);
+        if (pnnLayer.getName().equalsIgnoreCase("c")) {
+            outmodel = PNNOutputMode.Classification;
+        } else if (pnnLayer.getName().equalsIgnoreCase("r")) {
+            outmodel = PNNOutputMode.Regression;
+        } else if (pnnLayer.getName().equalsIgnoreCase("u")) {
+            outmodel = PNNOutputMode.Unsupervised;
+        } else {
+            throw new NeuralNetworkError("Unknown model: " +
+                    pnnLayer.getName());
+        }
 
-		return result;
-	}
+        final ParamsHolder holder = new ParamsHolder(pnnLayer.getParams());
+
+        final String kernelStr = holder.getString("KERNEL", false, "gaussian");
+
+        if (kernelStr.equalsIgnoreCase("gaussian")) {
+            kernel = PNNKernelType.Gaussian;
+        } else if (kernelStr.equalsIgnoreCase("reciprocal")) {
+            kernel = PNNKernelType.Reciprocal;
+        } else {
+            throw new NeuralNetworkError("Unknown kernel: " + kernelStr);
+        }
+
+        final BasicPNN result = new BasicPNN(kernel, outmodel,
+                                             inputCount, outputCount);
+
+        return result;
+    }
 }

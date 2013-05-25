@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,222 +40,221 @@ import org.encog.util.file.FileUtil;
 
 public class GenerateNinjaScript extends AbstractTemplateGenerator {
 
-	@Override
-	public String getTemplatePath() {
-		return "org/encog/data/ninja.cs";
-	}
+    @Override
+    public String getTemplatePath() {
+        return "org/encog/data/ninja.cs";
+    }
 
+    private void addCols() {
+        StringBuilder line = new StringBuilder();
+        line.append("public readonly string[] ENCOG_COLS = {");
 
+        boolean first = true;
 
-	private void addCols() {
-		StringBuilder line = new StringBuilder();
-		line.append("public readonly string[] ENCOG_COLS = {");
+        for (DataField df : this.getAnalyst().getScript().getFields()) {
 
-		boolean first = true;
+            if (!df.getName().equalsIgnoreCase("time") && !df.getName()
+                    .equalsIgnoreCase("prediction")) {
+                if (!first) {
+                    line.append(",");
+                }
 
-		for (DataField df : this.getAnalyst().getScript().getFields()) {
+                line.append("\"");
+                line.append(df.getName());
+                line.append("\"");
+                first = false;
+            }
+        }
 
-			if (!df.getName().equalsIgnoreCase("time") && !df.getName().equalsIgnoreCase("prediction")) {
-				if (!first) {
-					line.append(",");
-				}
+        line.append("};");
+        addLine(line.toString());
+    }
 
-				line.append("\"");
-				line.append(df.getName());
-				line.append("\"");
-				first = false;
-			}
-		}
+    private void processMainBlock() {
+        EncogAnalyst analyst = getAnalyst();
 
-		line.append("};");
-		addLine(line.toString());
-	}
+        final String processID = analyst.getScript().getProperties()
+                .getPropertyString(ScriptProperties.PROCESS_CONFIG_SOURCE_FILE);
 
-	private void processMainBlock() {
-		EncogAnalyst analyst = getAnalyst();
+        final String methodID = analyst
+                .getScript()
+                .getProperties()
+                .getPropertyString(
+                ScriptProperties.ML_CONFIG_MACHINE_LEARNING_FILE);
 
-		final String processID = analyst.getScript().getProperties()
-				.getPropertyString(ScriptProperties.PROCESS_CONFIG_SOURCE_FILE);
+        final File methodFile = analyst.getScript().resolveFilename(methodID);
 
-		final String methodID = analyst
-				.getScript()
-				.getProperties()
-				.getPropertyString(
-						ScriptProperties.ML_CONFIG_MACHINE_LEARNING_FILE);
+        final File processFile = analyst.getScript().resolveFilename(processID);
 
-		final File methodFile = analyst.getScript().resolveFilename(methodID);
+        MLMethod method = null;
+        int[] contextTargetOffset = null;
+        int[] contextTargetSize = null;
+        boolean hasContext = false;
+        int inputCount = 0;
+        int[] layerContextCount = null;
+        int[] layerCounts = null;
+        int[] layerFeedCounts = null;
+        int[] layerIndex = null;
+        double[] layerOutput = null;
+        double[] layerSums = null;
+        int outputCount = 0;
+        int[] weightIndex = null;
+        double[] weights = null;
+        ;
+        int[] activation = null;
+        double[] p = null;
 
-		final File processFile = analyst.getScript().resolveFilename(processID);
+        if (methodFile.exists()) {
+            method = (MLMethod) EncogDirectoryPersistence
+                    .loadObject(methodFile);
+            FlatNetwork flat = ((BasicNetwork) method).getFlat();
 
-		MLMethod method = null;
-		int[] contextTargetOffset = null;
-		int[] contextTargetSize = null;
-		boolean hasContext = false;
-		int inputCount = 0;
-		int[] layerContextCount = null;
-		int[] layerCounts = null;
-		int[] layerFeedCounts = null;
-		int[] layerIndex = null;
-		double[] layerOutput = null;
-		double[] layerSums = null;
-		int outputCount = 0;
-		int[] weightIndex = null;
-		double[] weights = null;
-		;
-		int[] activation = null;
-		double[] p = null;
+            contextTargetOffset = flat.getContextTargetOffset();
+            contextTargetSize = flat.getContextTargetSize();
+            hasContext = flat.getHasContext();
+            inputCount = flat.getInputCount();
+            layerContextCount = flat.getLayerContextCount();
+            layerCounts = flat.getLayerCounts();
+            layerFeedCounts = flat.getLayerFeedCounts();
+            layerIndex = flat.getLayerIndex();
+            layerOutput = flat.getLayerOutput();
+            layerSums = flat.getLayerSums();
+            outputCount = flat.getOutputCount();
+            weightIndex = flat.getWeightIndex();
+            weights = flat.getWeights();
+            activation = createActivations(flat);
+            p = createParams(flat);
+        }
 
-		if (methodFile.exists()) {
-			method = (MLMethod) EncogDirectoryPersistence
-					.loadObject(methodFile);
-			FlatNetwork flat = ((BasicNetwork) method).getFlat();
+        setIndentLevel(2);
+        addLine("#region Encog Data");
+        indentIn();
+        addNameValue("public const string EXPORT_FILENAME", "\"" +
+                FileUtil.toStringLiteral(processFile) + "\"");
+        addCols();
 
-			contextTargetOffset = flat.getContextTargetOffset();
-			contextTargetSize = flat.getContextTargetSize();
-			hasContext = flat.getHasContext();
-			inputCount = flat.getInputCount();
-			layerContextCount = flat.getLayerContextCount();
-			layerCounts = flat.getLayerCounts();
-			layerFeedCounts = flat.getLayerFeedCounts();
-			layerIndex = flat.getLayerIndex();
-			layerOutput = flat.getLayerOutput();
-			layerSums = flat.getLayerSums();
-			outputCount = flat.getOutputCount();
-			weightIndex = flat.getWeightIndex();
-			weights = flat.getWeights();
-			activation = createActivations(flat);
-			p = createParams(flat);
-		}
+        addNameValue("private readonly int[] _contextTargetOffset",
+                     contextTargetOffset);
+        addNameValue("private readonly int[] _contextTargetSize",
+                     contextTargetSize);
+        addNameValue("private const bool _hasContext", hasContext ? "true"
+                : "false");
+        addNameValue("private const int _inputCount", inputCount);
+        addNameValue("private readonly int[] _layerContextCount",
+                     layerContextCount);
+        addNameValue("private readonly int[] _layerCounts", layerCounts);
+        addNameValue("private readonly int[] _layerFeedCounts",
+                     layerFeedCounts);
+        addNameValue("private readonly int[] _layerIndex", layerIndex);
+        addNameValue("private readonly double[] _layerOutput", layerOutput);
+        addNameValue("private readonly double[] _layerSums", layerSums);
+        addNameValue("private const int _outputCount", outputCount);
+        addNameValue("private readonly int[] _weightIndex", weightIndex);
+        addNameValue("private readonly double[] _weights", weights);
+        addNameValue("private readonly int[] _activation", activation);
+        addNameValue("private readonly double[] _p", p);
+        indentOut();
+        addLine("#endregion");
+        setIndentLevel(0);
+    }
 
-		setIndentLevel(2);
-		addLine("#region Encog Data");
-		indentIn();
-		addNameValue("public const string EXPORT_FILENAME", "\""
-				+ FileUtil.toStringLiteral(processFile) + "\"");
-		addCols();
+    private void processCalc() {
+        AnalystField firstOutputField = null;
+        int barsNeeded = Math.abs(this.getAnalyst().determineMinTimeSlice());
 
-		addNameValue("private readonly int[] _contextTargetOffset",
-				contextTargetOffset);
-		addNameValue("private readonly int[] _contextTargetSize",
-				contextTargetSize);
-		addNameValue("private const bool _hasContext", hasContext ? "true"
-				: "false");
-		addNameValue("private const int _inputCount", inputCount);
-		addNameValue("private readonly int[] _layerContextCount",
-				layerContextCount);
-		addNameValue("private readonly int[] _layerCounts", layerCounts);
-		addNameValue("private readonly int[] _layerFeedCounts",
-				layerFeedCounts);
-		addNameValue("private readonly int[] _layerIndex", layerIndex);
-		addNameValue("private readonly double[] _layerOutput", layerOutput);
-		addNameValue("private readonly double[] _layerSums", layerSums);
-		addNameValue("private const int _outputCount", outputCount);
-		addNameValue("private readonly int[] _weightIndex", weightIndex);
-		addNameValue("private readonly double[] _weights", weights);
-		addNameValue("private readonly int[] _activation", activation);
-		addNameValue("private readonly double[] _p", p);
-		indentOut();
-		addLine("#endregion");
-		setIndentLevel(0);
-	}
+        setIndentLevel(2);
+        addLine("if( _inputCount>0 && CurrentBar>=" + barsNeeded + " )");
+        addLine("{");
+        indentIn();
+        addLine("double[] input = new double[_inputCount];");
+        addLine("double[] output = new double[_outputCount];");
 
-	private void processCalc() {
-		AnalystField firstOutputField = null;
-		int barsNeeded = Math.abs(this.getAnalyst().determineMinTimeSlice());
+        int idx = 0;
+        for (AnalystField field : this.getAnalyst().getScript().getNormalize()
+                .getNormalizedFields()) {
+            if (field.isInput()) {
+                String str;
+                DataField df = this.getAnalyst().getScript()
+                        .findDataField(field.getName());
 
-		setIndentLevel(2);
-		addLine("if( _inputCount>0 && CurrentBar>=" + barsNeeded + " )");
-		addLine("{");
-		indentIn();
-		addLine("double[] input = new double[_inputCount];");
-		addLine("double[] output = new double[_outputCount];");
+                switch (field.getAction()) {
+                    case PassThrough:
+                        str = EngineArray.replace(df.getSource(), "##", "" +
+                                (-field.getTimeSlice()));
+                        addLine("input[" + idx + "]=" + str + ";");
+                        idx++;
+                        break;
+                    case Normalize:
+                        str = EngineArray.replace(df.getSource(), "##", "" +
+                                (-field.getTimeSlice()));
+                        addLine("input[" + idx + "]=Norm(" + str + "," +
+                                field.getNormalizedHigh() + "," +
+                                field.getNormalizedLow() + "," +
+                                field.getActualHigh() + "," +
+                                field.getActualLow() + ");");
+                        idx++;
+                        break;
+                    case Ignore:
+                        break;
+                    default:
+                        throw new AnalystCodeGenerationError(
+                                "Can't generate Ninjascript code, unsupported normalizatoin action: " +
+                                field.getAction().toString());
+                }
+            }
+            if (field.isOutput()) {
+                if (firstOutputField == null) {
+                    firstOutputField = field;
+                }
+            }
+        }
 
-		int idx = 0;
-		for (AnalystField field : this.getAnalyst().getScript().getNormalize()
-				.getNormalizedFields()) {
-			if (field.isInput()) {
-				String str;
-				DataField df = this.getAnalyst().getScript()
-						.findDataField(field.getName());
+        if (firstOutputField != null) {
+            addLine("Compute(input,output);");
+            addLine("Output.Set(DeNorm(output[0]" + "," +
+                    firstOutputField.getNormalizedHigh() + "," +
+                    firstOutputField.getNormalizedLow() + "," +
+                    firstOutputField.getActualHigh() + "," +
+                    firstOutputField.getActualLow() + "));");
+            indentOut();
+        }
 
-				switch (field.getAction()) {
-				case PassThrough:
-					str = EngineArray.replace(df.getSource(),"##", ""+ (-field.getTimeSlice()));
-					addLine("input[" + idx + "]=" + str + ";");
-					idx++;
-					break;
-				case Normalize:
-					str = EngineArray.replace(df.getSource(),"##",""+ (-field.getTimeSlice()));
-					addLine("input[" + idx + "]=Norm(" + str + ","
-							+ field.getNormalizedHigh() + ","
-							+ field.getNormalizedLow() + ","
-							+ field.getActualHigh() + ","
-							+ field.getActualLow() + ");");
-					idx++;
-					break;
-				case Ignore:
-					break;
-				default:
-					throw new AnalystCodeGenerationError(
-							"Can't generate Ninjascript code, unsupported normalizatoin action: "
-									+ field.getAction().toString());
-				}
-			}
-			if (field.isOutput()) {
-				if (firstOutputField == null) {
-					firstOutputField = field;
-				}
-			}
-		}
+        addLine("}");
+        setIndentLevel(2);
+    }
 
-		if (firstOutputField != null) {
-			addLine("Compute(input,output);");
-			addLine("Output.Set(DeNorm(output[0]" + ","
-					+ firstOutputField.getNormalizedHigh() + ","
-					+ firstOutputField.getNormalizedLow() + ","
-					+ firstOutputField.getActualHigh() + ","
-					+ firstOutputField.getActualLow() + "));");
-			indentOut();
-		}
+    private void processObtain() {
+        setIndentLevel(3);
+        addLine("double[] result = new double[ENCOG_COLS.Length];");
 
-		addLine("}");
-		setIndentLevel(2);
-	}
+        int idx = 0;
+        for (DataField df : this.getAnalyst().getScript().getFields()) {
+            if (!df.getName().equalsIgnoreCase("time") && !df.getName()
+                    .equalsIgnoreCase("prediction")) {
+                String str = EngineArray.replace(df.getSource(), "##", "0");
+                addLine("result[" + idx + "]=" + str + ";");
+                idx++;
+            }
+        }
+        addLine("return result;");
+        setIndentLevel(0);
+    }
 
-	private void processObtain() {
-		setIndentLevel(3);
-		addLine("double[] result = new double[ENCOG_COLS.Length];");
+    @Override
+    public void processToken(String command) {
+        if (command.equalsIgnoreCase("MAIN-BLOCK")) {
+            processMainBlock();
+        } else if (command.equals("CALC")) {
+            processCalc();
+        } else if (command.equals("OBTAIN")) {
+            processObtain();
+        }
+        setIndentLevel(0);
 
-		int idx = 0;
-		for (DataField df : this.getAnalyst().getScript().getFields()) {
-			if (!df.getName().equalsIgnoreCase("time") && !df.getName().equalsIgnoreCase("prediction")) {
-				String str = EngineArray.replace(df.getSource(),"##","0");
-				addLine("result[" + idx + "]=" + str + ";");
-				idx++;
-			}
-		}
-		addLine("return result;");
-		setIndentLevel(0);
-	}
+    }
 
-	@Override
-	public void processToken(String command) {
-		if (command.equalsIgnoreCase("MAIN-BLOCK")) {
-			processMainBlock();
-		} else if (command.equals("CALC")) {
-			processCalc();
-		} else if (command.equals("OBTAIN")) {
-			processObtain();
-		}
-		setIndentLevel(0);
-
-	}
-
-
-
-	@Override
-	public String getNullArray() {
-		return "null";
-	}
-
+    @Override
+    public String getNullArray() {
+        return "null";
+    }
 }

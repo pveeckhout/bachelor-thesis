@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,114 +35,111 @@ import org.encog.util.normalize.input.InputField;
  */
 public class RangeSegregator implements Segregator {
 
-	/**
-	 * The source field that this is based on.
-	 */
-	private InputField sourceField;
+    /**
+     * The source field that this is based on.
+     */
+    private InputField sourceField;
+    /**
+     * If none of the ranges match, should this data be included.
+     */
+    private boolean include;
+    /**
+     * The ranges.
+     */
+    private final Collection<SegregationRange> ranges =
+            new ArrayList<SegregationRange>();
+    /**
+     * The normalization object.
+     */
+    private DataNormalization normalization;
 
-	/**
-	 * If none of the ranges match, should this data be included.
-	 */
-	private boolean include;
+    /**
+     * Default constructor for reflection.
+     */
+    public RangeSegregator() {
+    }
 
-	/**
-	 * The ranges.
-	 */
-	private final Collection<SegregationRange> ranges = 
-		new ArrayList<SegregationRange>();
+    /**
+     * Construct a range segregator.
+     * <p/>
+     * @param sourceField
+     *                    The source field.
+     * @param include
+     *                    Default action, if the data is not in any of the ranges,
+     *                    should it be included.
+     */
+    public RangeSegregator(final InputField sourceField,
+                           final boolean include) {
+        this.sourceField = sourceField;
+        this.include = include;
+    }
 
-	/**
-	 * The normalization object.
-	 */
-	private DataNormalization normalization;
+    /**
+     * Add a range.
+     * <p/>
+     * @param low
+     *                The low end of the range.
+     * @param high
+     *                The high end of the range.
+     * @param include
+     *                Should this range be included.
+     */
+    public void addRange(final double low, final double high,
+                         final boolean include) {
+        final SegregationRange range = new SegregationRange(low, high, include);
+        addRange(range);
+    }
 
-	/**
-	 * Default constructor for reflection.
-	 */
-	public RangeSegregator() {
-	}
+    /**
+     * Add a range.
+     * <p/>
+     * @param range
+     *              The range to add.
+     */
+    public void addRange(final SegregationRange range) {
+        this.ranges.add(range);
+    }
 
-	/**
-	 * Construct a range segregator.
-	 * 
-	 * @param sourceField
-	 *            The source field.
-	 * @param include
-	 *            Default action, if the data is not in any of the ranges,
-	 *            should it be included.
-	 */
-	public RangeSegregator(final InputField sourceField, 
-			final boolean include) {
-		this.sourceField = sourceField;
-		this.include = include;
-	}
+    /**
+     * @return The normalization object used by this object.
+     */
+    public DataNormalization getNormalization() {
+        return this.normalization;
+    }
 
-	/**
-	 * Add a range.
-	 * 
-	 * @param low
-	 *            The low end of the range.
-	 * @param high
-	 *            The high end of the range.
-	 * @param include
-	 *            Should this range be included.
-	 */
-	public void addRange(final double low, final double high,
-			final boolean include) {
-		final SegregationRange range = new SegregationRange(low, high, include);
-		addRange(range);
-	}
+    /**
+     * @return The source field that the ranges are compared against.
+     */
+    public InputField getSourceField() {
+        return this.sourceField;
+    }
 
-	/**
-	 * Add a range.
-	 * 
-	 * @param range
-	 *            The range to add.
-	 */
-	public void addRange(final SegregationRange range) {
-		this.ranges.add(range);
-	}
+    /**
+     * Init the object.
+     * <p/>
+     * @param normalization The normalization object that owns this range.
+     */
+    public void init(final DataNormalization normalization) {
+        this.normalization = normalization;
+    }
 
-	/**
-	 * @return The normalization object used by this object.
-	 */
-	public DataNormalization getNormalization() {
-		return this.normalization;
-	}
+    /**
+     * @return True if the current row should be included according to this
+     *         segregator.
+     */
+    public boolean shouldInclude() {
+        final double value = this.sourceField.getCurrentValue();
+        for (final SegregationRange range : this.ranges) {
+            if (range.inRange(value)) {
+                return range.isIncluded();
+            }
+        }
+        return this.include;
+    }
 
-	/**
-	 * @return The source field that the ranges are compared against.
-	 */
-	public InputField getSourceField() {
-		return this.sourceField;
-	}
-
-	/**
-	 * Init the object.
-	 * @param normalization The normalization object that owns this range.
-	 */
-	public void init(final DataNormalization normalization) {
-		this.normalization = normalization;
-	}
-
-	/**
-	 * @return True if the current row should be included according to this
-	 *         segregator.
-	 */
-	public boolean shouldInclude() {
-		final double value = this.sourceField.getCurrentValue();
-		for (final SegregationRange range : this.ranges) {
-			if (range.inRange(value)) {
-				return range.isIncluded();
-			}
-		}
-		return this.include;
-	}
-
-	/**
-	 * Nothing needs to be done to setup for a pass.
-	 */
-	public void passInit() {		
-	}
-
+    /**
+     * Nothing needs to be done to setup for a pass.
+     */
+    public void passInit() {
+    }
 }

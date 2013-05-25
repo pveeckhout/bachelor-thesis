@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -43,177 +43,180 @@ import org.encog.util.time.TimeUnit;
  * TemporalNeuralDataSet. This class is designed to load financial data from
  * external sources. This class is designed to track financial data across days.
  * However, it should be usable with other levels of granularity as well.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class MarketMLDataSet extends TemporalMLDataSet {
 
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = 170791819906003867L;
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = 170791819906003867L;
+    /**
+     * The loader to use to obtain the data.
+     */
+    private final MarketLoader loader;
+    /**
+     * A map between the data points and actual data.
+     */
+    private final Map<Integer, TemporalPoint> pointIndex =
+            new HashMap<Integer, TemporalPoint>();
 
-	/**
-	 * The loader to use to obtain the data.
-	 */
-	private final MarketLoader loader;
+    /**
+     * Construct a market data set object.
+     * <p/>
+     * @param loader
+     *                          The loader to use to get the financial data.
+     * @param inputWindowSize
+     *                          The input window size, that is how many datapoints do we use
+     *                          to predict.
+     * @param predictWindowSize
+     *                          How many datapoints do we want to predict.
+     */
+    public MarketMLDataSet(final MarketLoader loader,
+                           final int inputWindowSize,
+                           final int predictWindowSize) {
+        super(inputWindowSize, predictWindowSize);
+        this.loader = loader;
+        setSequenceGrandularity(TimeUnit.DAYS);
+    }
 
-	/**
-	 * A map between the data points and actual data.
-	 */
-	private final Map<Integer, TemporalPoint> pointIndex = 
-		new HashMap<Integer, TemporalPoint>();
+    /**
+     * Add one description of the type of market data that we are seeking at
+     * each datapoint.
+     * <p/>
+     * @param desc
+     *             The data description.
+     */
+    @Override
+    public void addDescription(final TemporalDataDescription desc) {
+        if (!(desc instanceof MarketDataDescription)) {
 
-	/**
-	 * Construct a market data set object.
-	 * 
-	 * @param loader
-	 *            The loader to use to get the financial data.
-	 * @param inputWindowSize
-	 *            The input window size, that is how many datapoints do we use
-	 *            to predict.
-	 * @param predictWindowSize
-	 *            How many datapoints do we want to predict.
-	 */
-	public MarketMLDataSet(final MarketLoader loader,
-			final int inputWindowSize, final int predictWindowSize) {
-		super(inputWindowSize, predictWindowSize);
-		this.loader = loader;
-		setSequenceGrandularity(TimeUnit.DAYS);
-	}
+            final String str =
+                    "Only MarketDataDescription objects may be used " +
+                    "with the MarketNeuralDataSet container.";
 
-	/**
-	 * Add one description of the type of market data that we are seeking at
-	 * each datapoint.
-	 * 
-	 * @param desc
-	 *            The data description.
-	 */
-	@Override
-	public void addDescription(final TemporalDataDescription desc) {
-		if (!(desc instanceof MarketDataDescription)) {
+            throw new MarketError(str);
+        }
+        super.addDescription(desc);
+    }
 
-			final String str = "Only MarketDataDescription objects may be used "
-					+ "with the MarketNeuralDataSet container.";
+    /**
+     * Create a datapoint at the specified date.
+     * <p/>
+     * @param when
+     *             The date to create the point at.
+     * <p/>
+     * @return Returns the TemporalPoint created for the specified date.
+     */
+    @Override
+    public TemporalPoint createPoint(final Date when) {
+        final int sequence = getSequenceFromDate(when);
+        TemporalPoint result = this.pointIndex.get(sequence);
 
-			throw new MarketError(str);
-		}
-		super.addDescription(desc);
-	}
+        if (result == null) {
+            result = super.createPoint(when);
+            this.pointIndex.put(result.getSequence(), result);
+        }
 
-	/**
-	 * Create a datapoint at the specified date.
-	 * 
-	 * @param when
-	 *            The date to create the point at.
-	 * @return Returns the TemporalPoint created for the specified date.
-	 */
-	@Override
-	public TemporalPoint createPoint(final Date when) {
-		final int sequence = getSequenceFromDate(when);
-		TemporalPoint result = this.pointIndex.get(sequence);
+        return result;
+    }
 
-		if (result == null) {
-			result = super.createPoint(when);
-			this.pointIndex.put(result.getSequence(), result);
-		}
+    /**
+     * To be implemented later.
+     * <p/>
+     * @param date
+     *             NOT USED
+     * <p/>
+     * @return NOT USED
+     */
+    public NeuralData generateInputForPrediction(final Date date) {
+        return null;
+    }
 
-		return result;
-	}
+    /**
+     * @return The loader that is being used for this set.
+     */
+    public MarketLoader getLoader() {
+        return this.loader;
+    }
 
-	/**
-	 * To be implemented later.
-	 * 
-	 * @param date
-	 *            NOT USED
-	 * @return NOT USED
-	 */
-	public NeuralData generateInputForPrediction(final Date date) {
-		return null;
-	}
+    /**
+     * Load data from the loader.
+     * <p/>
+     * @param begin
+     *              The beginning date.
+     * @param end
+     *              The ending date.
+     */
+    public void load(final Date begin, final Date end) {
+        // define the starting point if it is not already defined
+        if (getStartingPoint() == null) {
+            setStartingPoint(begin);
+        }
 
-	/**
-	 * @return The loader that is being used for this set.
-	 */
-	public MarketLoader getLoader() {
-		return this.loader;
-	}
+        // clear out any loaded points
+        getPoints().clear();
 
-	/**
-	 * Load data from the loader.
-	 * 
-	 * @param begin
-	 *            The beginning date.
-	 * @param end
-	 *            The ending date.
-	 */
-	public void load(final Date begin, final Date end) {
-		// define the starting point if it is not already defined
-		if (getStartingPoint() == null) {
-			setStartingPoint(begin);
-		}
+        // first obtain a collection of symbols that need to be looked up
+        final Set<TickerSymbol> set = new HashSet<TickerSymbol>();
+        for (final TemporalDataDescription desc : getDescriptions()) {
+            final MarketDataDescription mdesc = (MarketDataDescription) desc;
+            set.add(mdesc.getTicker());
+        }
 
-		// clear out any loaded points
-		getPoints().clear();
+        // now loop over each symbol and load the data
+        for (final TickerSymbol symbol : set) {
+            loadSymbol(symbol, begin, end);
+        }
 
-		// first obtain a collection of symbols that need to be looked up
-		final Set<TickerSymbol> set = new HashSet<TickerSymbol>();
-		for (final TemporalDataDescription desc : getDescriptions()) {
-			final MarketDataDescription mdesc = (MarketDataDescription) desc;
-			set.add(mdesc.getTicker());
-		}
+        // resort the points
+        sortPoints();
+    }
 
-		// now loop over each symbol and load the data
-		for (final TickerSymbol symbol : set) {
-			loadSymbol(symbol, begin, end);
-		}
+    /**
+     * Load one point of market data.
+     * <p/>
+     * @param ticker
+     *               The ticker symbol to load.
+     * @param point
+     *               The point to load at.
+     * @param item
+     *               The item being loaded.
+     */
+    private void loadPointFromMarketData(final TickerSymbol ticker,
+                                         final TemporalPoint point,
+                                         final LoadedMarketData item) {
+        for (final TemporalDataDescription desc : getDescriptions()) {
+            final MarketDataDescription mdesc = (MarketDataDescription) desc;
 
-		// resort the points
-		sortPoints();
-	}
+            if (mdesc.getTicker().equals(ticker)) {
+                point.setData(mdesc.getIndex(), item.getData(mdesc
+                        .getDataType()));
+            }
+        }
+    }
 
-	/**
-	 * Load one point of market data.
-	 * 
-	 * @param ticker
-	 *            The ticker symbol to load.
-	 * @param point
-	 *            The point to load at.
-	 * @param item
-	 *            The item being loaded.
-	 */
-	private void loadPointFromMarketData(final TickerSymbol ticker,
-			final TemporalPoint point, final LoadedMarketData item) {
-		for (final TemporalDataDescription desc : getDescriptions()) {
-			final MarketDataDescription mdesc = (MarketDataDescription) desc;
+    /**
+     * Load one ticker symbol.
+     * <p/>
+     * @param ticker
+     *               The ticker symbol to load.
+     * @param from
+     *               Load data from this date.
+     * @param to
+     *               Load data to this date.
+     */
+    private void loadSymbol(final TickerSymbol ticker, final Date from,
+                            final Date to) {
+        final Collection<LoadedMarketData> data = getLoader().load(ticker,
+                                                                   null, from,
+                                                                   to);
+        for (final LoadedMarketData item : data) {
+            final TemporalPoint point = this.createPoint(item.getWhen());
 
-			if (mdesc.getTicker().equals(ticker)) {
-				point.setData(mdesc.getIndex(), item.getData(mdesc
-						.getDataType()));
-			}
-		}
-	}
-
-	/**
-	 * Load one ticker symbol.
-	 * 
-	 * @param ticker
-	 *            The ticker symbol to load.
-	 * @param from
-	 *            Load data from this date.
-	 * @param to
-	 *            Load data to this date.
-	 */
-	private void loadSymbol(final TickerSymbol ticker, final Date from,
-			final Date to) {
-		final Collection<LoadedMarketData> data = getLoader().load(ticker,
-				null, from, to);
-		for (final LoadedMarketData item : data) {
-			final TemporalPoint point = this.createPoint(item.getWhen());
-
-			loadPointFromMarketData(ticker, point, item);
-		}
-	}
-
+            loadPointFromMarketData(ticker, point, item);
+        }
+    }
 }

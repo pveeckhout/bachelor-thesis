@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,60 +30,60 @@ import org.encog.util.normalize.input.InputField;
  */
 public class OutputFieldDirect extends BasicOutputField {
 
-	/**
-	 * The source field.
-	 */
-	private InputField sourceField;
+    /**
+     * The source field.
+     */
+    private InputField sourceField;
 
-	/**
-	 * Construct a direct output field.
-	 * @param sourceField The source field to pass directly on.
-	 */
-	public OutputFieldDirect(final InputField sourceField) {
-		this.sourceField = sourceField;
-	}
+    /**
+     * Construct a direct output field.
+     * <p/>
+     * @param sourceField The source field to pass directly on.
+     */
+    public OutputFieldDirect(final InputField sourceField) {
+        this.sourceField = sourceField;
+    }
 
-	/**
-	 * Default constructor, used for reflection.
-	 */
-	public OutputFieldDirect() {
+    /**
+     * Default constructor, used for reflection.
+     */
+    public OutputFieldDirect() {
+    }
 
-	}
+    /**
+     * Calculate the value for this field. This will simply be the
+     * value from the input field.
+     * <p/>
+     * @param subfield Not used, as this output field type does not
+     *                 support subfields.
+     * <p/>
+     * @return The calculated value for this field.
+     */
+    public double calculate(final int subfield) {
+        return this.sourceField.getCurrentValue();
+    }
 
-	/**
-	 * Calculate the value for this field. This will simply be the
-	 * value from the input field.
-	 * @param subfield Not used, as this output field type does not
-	 * support subfields.
-	 * @return The calculated value for this field.
-	 */
-	public double calculate(final int subfield) {
-		return this.sourceField.getCurrentValue();
-	}
+    /**
+     * @return Always returns 1, as subfields are not used.
+     */
+    public int getSubfieldCount() {
+        return 1;
+    }
 
-	/**
-	 * @return Always returns 1, as subfields are not used.
-	 */
-	public int getSubfieldCount() {
-		return 1;
-	}
+    /**
+     * Not needed for this sort of output field.
+     */
+    public void rowInit() {
+    }
 
-	/**
-	 * Not needed for this sort of output field.
-	 */
-	public void rowInit() {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString()
-	{
-		StringBuilder result = new StringBuilder();
-		result.append("Direct: ");
-		result.append("Source->");
-		result.append(this.sourceField.toString());
-		return result.toString();
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("Direct: ");
+        result.append("Source->");
+        result.append(this.sourceField.toString());
+        return result.toString();
+    }
 }

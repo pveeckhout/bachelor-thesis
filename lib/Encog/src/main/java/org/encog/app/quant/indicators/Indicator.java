@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,92 +33,90 @@ import org.encog.app.quant.QuantError;
  */
 public abstract class Indicator extends BaseCachedColumn {
 
-	/**
-	 * The beginning index.
-	 */
-	private int beginningIndex;
+    /**
+     * The beginning index.
+     */
+    private int beginningIndex;
+    /**
+     * The ending index.
+     */
+    private int endingIndex;
 
-	/**
-	 * The ending index.
-	 */
-	private int endingIndex;
+    /**
+     * Construct the indicator.
+     * <p/>
+     * @param name
+     *               The indicator name.
+     * @param input
+     *               Is this indicator used to predict?
+     * @param output
+     *               Is this indicator what we are trying to predict.
+     */
+    public Indicator(final String name, final boolean input,
+                     final boolean output) {
+        super(name, input, output);
+    }
 
-	/**
-	 * Construct the indicator.
-	 * 
-	 * @param name
-	 *            The indicator name.
-	 * @param input
-	 *            Is this indicator used to predict?
-	 * @param output
-	 *            Is this indicator what we are trying to predict.
-	 */
-	public Indicator(final String name, final boolean input,
-			final boolean output) {
-		super(name, input, output);
-	}
+    /**
+     * Calculate this indicator.
+     * <p/>
+     * @param data
+     *               The data available to this indicator.
+     * @param length
+     *               The length of data to use.
+     */
+    public abstract void calculate(Map<String, BaseCachedColumn> data,
+                                   int length);
 
-	/**
-	 * Calculate this indicator.
-	 * 
-	 * @param data
-	 *            The data available to this indicator.
-	 * @param length
-	 *            The length of data to use.
-	 */
-	public abstract void calculate(Map<String, BaseCachedColumn> data,
-			int length);
+    /**
+     * @return the beginningIndex
+     */
+    public final int getBeginningIndex() {
+        return this.beginningIndex;
+    }
 
-	/**
-	 * @return the beginningIndex
-	 */
-	public final int getBeginningIndex() {
-		return this.beginningIndex;
-	}
+    /**
+     * @return the endingIndex
+     */
+    public final int getEndingIndex() {
+        return this.endingIndex;
+    }
 
-	/**
-	 * @return the endingIndex
-	 */
-	public final int getEndingIndex() {
-		return this.endingIndex;
-	}
+    /**
+     * @return The number of periods this indicator is for.
+     */
+    public abstract int getPeriods();
 
-	/**
-	 * @return The number of periods this indicator is for.
-	 */
-	public abstract int getPeriods();
+    /**
+     * Require a specific type of underlying data.
+     * <p/>
+     * @param theData
+     *                The data available.
+     * @param item
+     *                The type of data we are looking for.
+     */
+    public final void require(final Map<String, BaseCachedColumn> theData,
+                              final String item) {
+        if (!theData.containsKey(item)) {
+            throw new QuantError(
+                    "To use this indicator, the underlying data must contain: " +
+                    item);
+        }
+    }
 
-	/**
-	 * Require a specific type of underlying data.
-	 * 
-	 * @param theData
-	 *            The data available.
-	 * @param item
-	 *            The type of data we are looking for.
-	 */
-	public final void require(final Map<String, BaseCachedColumn> 
-		theData, final String item) {
-		if (!theData.containsKey(item)) {
-			throw new QuantError(
-					"To use this indicator, the underlying data must contain: "
-							+ item);
-		}
-	}
+    /**
+     * @param theBeginningIndex
+     *                          the beginningIndex to set
+     */
+    public final void setBeginningIndex(final int theBeginningIndex) {
+        this.beginningIndex = theBeginningIndex;
+    }
 
-	/**
-	 * @param theBeginningIndex
-	 *            the beginningIndex to set
-	 */
-	public final void setBeginningIndex(final int theBeginningIndex) {
-		this.beginningIndex = theBeginningIndex;
-	}
-
-	/**
-	 * @param theEndingIndex
-	 *            the endingIndex to set.
-	 */
-	public final void setEndingIndex(final int theEndingIndex) {
-		this.endingIndex = theEndingIndex;
-	}
-
+    /**
+     * @param theEndingIndex
+     *                       the endingIndex to set.
+     */
+    public final void setEndingIndex(final int theEndingIndex) {
+        this.endingIndex = theEndingIndex;
+    }
 }

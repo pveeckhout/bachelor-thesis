@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -27,47 +27,48 @@ package org.encog.app.generate;
  * Specifies the target language for Encog code generation.
  */
 public enum TargetLanguage {
-	/**
-	 * No code generation.
-	 */
-	NoGeneration,
-	/**
-	 * Generate using Java.
-	 */
-	Java,
-	/**
-	 * Generate using Javascript.
-	 */
-	JavaScript,
-	/**
-	 * Generate using C#.
-	 */
-	CSharp,
-	/**
-	 * Generate for MetaTrader 4 using MQL4.
-	 */
-	MQL4,
-	/**
-	 * Generate for NinjaTrader 7 using NinjaScript.
-	 */
-	NinjaScript;
 
-	/**
-	 * @return The standard file extension to use for each of the languages.
-	 */
-	public String getExtension() {
-		if (this == Java) {
-			return "java";
-		} else if (this == JavaScript) {
-			return "html";
-		} else if (this == CSharp) {
-			return "cs";
-		} else if (this == MQL4) {
-			return "mql4";
-		} else if (this == NinjaScript) {
-			return "cs";
-		} else {
-			return "txt";
-		}
-	}
+    /**
+     * No code generation.
+     */
+    NoGeneration,
+    /**
+     * Generate using Java.
+     */
+    Java,
+    /**
+     * Generate using Javascript.
+     */
+    JavaScript,
+    /**
+     * Generate using C#.
+     */
+    CSharp,
+    /**
+     * Generate for MetaTrader 4 using MQL4.
+     */
+    MQL4,
+    /**
+     * Generate for NinjaTrader 7 using NinjaScript.
+     */
+    NinjaScript;
+
+    /**
+     * @return The standard file extension to use for each of the languages.
+     */
+    public String getExtension() {
+        if (this == Java) {
+            return "java";
+        } else if (this == JavaScript) {
+            return "html";
+        } else if (this == CSharp) {
+            return "cs";
+        } else if (this == MQL4) {
+            return "mql4";
+        } else if (this == NinjaScript) {
+            return "cs";
+        } else {
+            return "txt";
+        }
+    }
 }

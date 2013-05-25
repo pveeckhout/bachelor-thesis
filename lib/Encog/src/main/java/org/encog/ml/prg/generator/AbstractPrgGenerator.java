@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -54,436 +54,437 @@ import org.encog.util.concurrency.MultiThreadable;
  * The abstract base for Full and Grow program generation.
  */
 public abstract class AbstractPrgGenerator implements PrgGenerator,
-		MultiThreadable {
-	/**
-	 * An optional scoring function.
-	 */
-	private CalculateScore score = new ZeroEvalScoreFunction();
+        MultiThreadable {
 
-	/**
-	 * The program context to use.
-	 */
-	private final EncogProgramContext context;
+    /**
+     * An optional scoring function.
+     */
+    private CalculateScore score = new ZeroEvalScoreFunction();
+    /**
+     * The program context to use.
+     */
+    private final EncogProgramContext context;
+    /**
+     * The maximum depth to generate to.
+     */
+    private final int maxDepth;
+    /**
+     * The minimum const to generate.
+     */
+    private double minConst = -10;
+    /**
+     * The maximum const to generate.
+     */
+    private double maxConst = 10;
+    /**
+     * True, if the program has enums.
+     */
+    private final boolean hasEnum;
+    /**
+     * The actual number of threads to use.
+     */
+    private int actualThreads;
+    /**
+     * The number of threads to use.
+     */
+    private int threads;
+    /**
+     * The contents of this population, stored in rendered form. This prevents
+     * duplicates.
+     */
+    private final Set<String> contents = new HashSet<String>();
+    /**
+     * A random number generator factory.
+     */
+    private RandomFactory randomFactory = new BasicRandomFactory();
+    /**
+     * The maximum number of allowed generation errors.
+     */
+    private int maxGenerationErrors = 500;
 
-	/**
-	 * The maximum depth to generate to.
-	 */
-	private final int maxDepth;
+    /**
+     * Construct the generator.
+     * <p/>
+     * @param theContext
+     *                    The context that is to be used for generation.
+     * @param theMaxDepth
+     *                    The maximum depth to generate to.
+     */
+    public AbstractPrgGenerator(final EncogProgramContext theContext,
+                                final int theMaxDepth) {
+        if (theContext.getFunctions().size() == 0) {
+            throw new EncogError("There are no opcodes defined");
+        }
 
-	/**
-	 * The minimum const to generate.
-	 */
-	private double minConst = -10;
+        this.context = theContext;
+        this.maxDepth = theMaxDepth;
+        this.hasEnum = this.context.hasEnum();
+    }
 
-	/**
-	 * The maximum const to generate.
-	 */
-	private double maxConst = 10;
+    /**
+     * Add a population member from one of the threads.
+     * <p/>
+     * @param population
+     *                   The population to add to.
+     * @param prg
+     *                   The program to add.
+     */
+    public void addPopulationMember(final PrgPopulation population,
+                                    final EncogProgram prg) {
+        synchronized (this) {
+            final Species defaultSpecies = population.getSpecies().get(0);
+            prg.setSpecies(defaultSpecies);
+            defaultSpecies.add(prg);
+            this.contents.add(prg.dumpAsCommonExpression());
+        }
+    }
 
-	/**
-	 * True, if the program has enums.
-	 */
-	private final boolean hasEnum;
+    /**
+     * Attempt to create a genome. Cycle the specified number of times if an
+     * error occurs.
+     * <p/>
+     * @param rnd The random number generator.
+     * @param pop The population.
+     * <p/>
+     * @return The generated genome.
+     */
+    public EncogProgram attemptCreateGenome(final Random rnd,
+                                            final Population pop) {
+        boolean done = false;
+        EncogProgram result = null;
+        int tries = this.maxGenerationErrors;
 
-	/**
-	 * The actual number of threads to use.
-	 */
-	private int actualThreads;
+        while (!done) {
+            result = generate(rnd);
+            result.setPopulation(pop);
 
-	/**
-	 * The number of threads to use.
-	 */
-	private int threads;
+            double s;
+            try {
+                tries--;
+                s = this.score.calculateScore(result);
+            } catch (final EARuntimeError e) {
+                s = Double.NaN;
+            }
 
-	/**
-	 * The contents of this population, stored in rendered form. This prevents
-	 * duplicates.
-	 */
-	private final Set<String> contents = new HashSet<String>();
+            if (tries < 0) {
+                throw new EncogError(
+                        "Could not generate a valid genome after " +
+                        this.maxGenerationErrors + " tries.");
+            } else if (!Double.isNaN(s) && !Double.isInfinite(s) &&
+                    !this.contents.contains(result.dumpAsCommonExpression())) {
+                done = true;
+            }
+        }
 
-	/**
-	 * A random number generator factory.
-	 */
-	private RandomFactory randomFactory = new BasicRandomFactory();
+        return result;
+    }
 
-	/**
-	 * The maximum number of allowed generation errors.
-	 */
-	private int maxGenerationErrors = 500;
+    /**
+     * Create a random note according to the specified paramaters.
+     * <p/>
+     * @param rnd             A random number generator.
+     * @param program         The program to generate for.
+     * @param depthRemaining  The depth remaining to generate.
+     * @param types           The types to generate.
+     * @param includeTerminal Should we include terminal nodes.
+     * @param includeFunction Should we include function nodes.
+     * <p/>
+     * @return The generated program node.
+     */
+    public ProgramNode createRandomNode(final Random rnd,
+                                        final EncogProgram program,
+                                        final int depthRemaining,
+                                        final List<ValueType> types,
+                                        final boolean includeTerminal,
+                                        final boolean includeFunction) {
 
-	/**
-	 * Construct the generator.
-	 * 
-	 * @param theContext
-	 *            The context that is to be used for generation.
-	 * @param theMaxDepth
-	 *            The maximum depth to generate to.
-	 */
-	public AbstractPrgGenerator(final EncogProgramContext theContext,
-			final int theMaxDepth) {
-		if (theContext.getFunctions().size() == 0) {
-			throw new EncogError("There are no opcodes defined");
-		}
+        // if we've hit the max depth, then create a terminal nodes, so it stops
+        // here
+        if (depthRemaining == 0) {
+            return createTerminalNode(rnd, program, types);
+        }
 
-		this.context = theContext;
-		this.maxDepth = theMaxDepth;
-		this.hasEnum = this.context.hasEnum();
-	}
+        // choose which opcode set we might create the node from
+        final List<ProgramExtensionTemplate> opcodeSet = getContext()
+                .getFunctions().findOpcodes(types, getContext(),
+                                            includeTerminal, includeFunction);
 
-	/**
-	 * Add a population member from one of the threads.
-	 * 
-	 * @param population
-	 *            The population to add to.
-	 * @param prg
-	 *            The program to add.
-	 */
-	public void addPopulationMember(final PrgPopulation population,
-			final EncogProgram prg) {
-		synchronized (this) {
-			final Species defaultSpecies = population.getSpecies().get(0);
-			prg.setSpecies(defaultSpecies);
-			defaultSpecies.add(prg);
-			this.contents.add(prg.dumpAsCommonExpression());
-		}
-	}
+        // choose a random opcode
+        final ProgramExtensionTemplate temp = generateRandomOpcode(rnd,
+                                                                   opcodeSet);
+        if (temp == null) {
+            throw new EACompileError(
+                    "Trying to generate a random opcode when no opcodes exist.");
+        }
 
-	/**
-	 * Attempt to create a genome. Cycle the specified number of times if an
-	 * error occurs.
-	 * 
-	 * @param rnd The random number generator.
-	 * @param pop The population.
-	 * @return The generated genome.
-	 */
-	public EncogProgram attemptCreateGenome(final Random rnd,
-			final Population pop) {
-		boolean done = false;
-		EncogProgram result = null;
-		int tries = this.maxGenerationErrors;
+        // create the child nodes
+        final int childNodeCount = temp.getChildNodeCount();
+        final ProgramNode[] children = new ProgramNode[childNodeCount];
 
-		while (!done) {
-			result = generate(rnd);
-			result.setPopulation(pop);
+        if (temp.getNodeType().isOperator() && children.length >= 2) {
 
-			double s;
-			try {
-				tries--;
-				s = this.score.calculateScore(result);
-			} catch (final EARuntimeError e) {
-				s = Double.NaN;
-			}
+            // for an operator of size 2 or greater make sure all children are
+            // the same time
+            final List<ValueType> childTypes = temp.getParams().get(0)
+                    .determineArgumentTypes(types);
+            final ValueType selectedType = childTypes.get(rnd
+                    .nextInt(childTypes.size()));
+            childTypes.clear();
+            childTypes.add(selectedType);
 
-			if (tries < 0) {
-				throw new EncogError("Could not generate a valid genome after "
-						+ this.maxGenerationErrors + " tries.");
-			} else if (!Double.isNaN(s) && !Double.isInfinite(s)
-					&& !this.contents.contains(result.dumpAsCommonExpression())) {
-				done = true;
-			}
-		}
+            // now create the children of a common type
+            for (int i = 0; i < children.length; i++) {
+                children[i] = createNode(rnd, program, depthRemaining - 1,
+                                         childTypes);
+            }
+        } else {
 
-		return result;
-	}
+            // otherwise, let the children have their own types
+            for (int i = 0; i < children.length; i++) {
+                final List<ValueType> childTypes = temp.getParams().get(i)
+                        .determineArgumentTypes(types);
+                children[i] = createNode(rnd, program, depthRemaining - 1,
+                                         childTypes);
+            }
+        }
 
-	/**
-	 * Create a random note according to the specified paramaters.
-	 * @param rnd A random number generator.
-	 * @param program The program to generate for.
-	 * @param depthRemaining The depth remaining to generate.
-	 * @param types The types to generate.
-	 * @param includeTerminal Should we include terminal nodes.
-	 * @param includeFunction Should we include function nodes.
-	 * @return The generated program node.
-	 */
-	public ProgramNode createRandomNode(final Random rnd,
-			final EncogProgram program, final int depthRemaining,
-			final List<ValueType> types, final boolean includeTerminal,
-			final boolean includeFunction) {
+        // now actually create the node
+        final ProgramNode result = new ProgramNode(program, temp, children);
+        temp.randomize(rnd, types, result, getMinConst(), getMaxConst());
+        return result;
+    }
 
-		// if we've hit the max depth, then create a terminal nodes, so it stops
-		// here
-		if (depthRemaining == 0) {
-			return createTerminalNode(rnd, program, types);
-		}
+    /**
+     * Create a terminal node.
+     * <p/>
+     * @param rnd     A random number generator.
+     * @param program The program to generate for.
+     * @param types   The types that we might generate.
+     * <p/>
+     * @return The terminal program node.
+     */
+    public ProgramNode createTerminalNode(final Random rnd,
+                                          final EncogProgram program,
+                                          final List<ValueType> types) {
+        final ProgramExtensionTemplate temp = generateRandomOpcode(
+                rnd,
+                getContext().getFunctions().findOpcodes(types, this.context,
+                                                        true, false));
+        if (temp == null) {
+            throw new EACompileError("No opcodes exist for the type: " +
+                    types.toString());
+        }
+        final ProgramNode result = new ProgramNode(program, temp,
+                                                   new ProgramNode[]{});
 
-		// choose which opcode set we might create the node from
-		final List<ProgramExtensionTemplate> opcodeSet = getContext()
-				.getFunctions().findOpcodes(types, getContext(),
-						includeTerminal, includeFunction);
+        temp.randomize(rnd, types, result, this.minConst, this.maxConst);
+        return result;
+    }
 
-		// choose a random opcode
-		final ProgramExtensionTemplate temp = generateRandomOpcode(rnd,
-				opcodeSet);
-		if (temp == null) {
-			throw new EACompileError(
-					"Trying to generate a random opcode when no opcodes exist.");
-		}
+    public int determineMaxDepth(final Random rnd) {
+        return this.maxDepth;
+    }
 
-		// create the child nodes
-		final int childNodeCount = temp.getChildNodeCount();
-		final ProgramNode[] children = new ProgramNode[childNodeCount];
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public EncogProgram generate(final Random rnd) {
+        final EncogProgram program = new EncogProgram(this.context);
+        final List<ValueType> types = new ArrayList<ValueType>();
+        types.add(this.context.getResult().getVariableType());
+        program.setRootNode(createNode(rnd, program, determineMaxDepth(rnd),
+                                       types));
+        return program;
+    }
 
-		if (temp.getNodeType().isOperator() && children.length >= 2) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void generate(final Random rnd, final Population pop) {
+        // prepare population
+        this.contents.clear();
+        pop.getSpecies().clear();
+        final Species defaultSpecies = pop.createSpecies();
 
-			// for an operator of size 2 or greater make sure all children are
-			// the same time
-			final List<ValueType> childTypes = temp.getParams().get(0)
-					.determineArgumentTypes(types);
-			final ValueType selectedType = childTypes.get(rnd
-					.nextInt(childTypes.size()));
-			childTypes.clear();
-			childTypes.add(selectedType);
+        // determine thread usage
+        if (this.score.requireSingleThreaded()) {
+            this.actualThreads = 1;
+        } else if (this.threads == 0) {
+            this.actualThreads = Runtime.getRuntime().availableProcessors();
+        } else {
+            this.actualThreads = this.threads;
+        }
 
-			// now create the children of a common type
-			for (int i = 0; i < children.length; i++) {
-				children[i] = createNode(rnd, program, depthRemaining - 1,
-						childTypes);
-			}
-		} else {
+        // start up
+        ExecutorService taskExecutor = null;
 
-			// otherwise, let the children have their own types
-			for (int i = 0; i < children.length; i++) {
-				final List<ValueType> childTypes = temp.getParams().get(i)
-						.determineArgumentTypes(types);
-				children[i] = createNode(rnd, program, depthRemaining - 1,
-						childTypes);
-			}
-		}
+        if (this.threads == 1) {
+            taskExecutor = Executors.newSingleThreadScheduledExecutor();
+        } else {
+            taskExecutor = Executors.newFixedThreadPool(this.actualThreads);
+        }
 
-		// now actually create the node
-		final ProgramNode result = new ProgramNode(program, temp, children);
-		temp.randomize(rnd, types, result, getMinConst(), getMaxConst());
-		return result;
-	}
+        for (int i = 0; i < pop.getPopulationSize(); i++) {
+            taskExecutor.execute(new GenerateWorker(this, (PrgPopulation) pop));
+        }
 
-	/**
-	 * Create a terminal node.
-	 * @param rnd A random number generator.
-	 * @param program The program to generate for.
-	 * @param types The types that we might generate.
-	 * @return The terminal program node.
-	 */
-	public ProgramNode createTerminalNode(final Random rnd,
-			final EncogProgram program, final List<ValueType> types) {
-		final ProgramExtensionTemplate temp = generateRandomOpcode(
-				rnd,
-				getContext().getFunctions().findOpcodes(types, this.context,
-						true, false));
-		if (temp == null) {
-			throw new EACompileError("No opcodes exist for the type: "
-					+ types.toString());
-		}
-		final ProgramNode result = new ProgramNode(program, temp,
-				new ProgramNode[] {});
+        taskExecutor.shutdown();
+        try {
+            taskExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
+        } catch (final InterruptedException e) {
+            throw new GeneticError(e);
+        }
 
-		temp.randomize(rnd, types, result, this.minConst, this.maxConst);
-		return result;
-	}
+        // just pick a leader, for the default species.
+        defaultSpecies.setLeader(defaultSpecies.getMembers().get(0));
+    }
 
-	public int determineMaxDepth(final Random rnd) {
-		return this.maxDepth;
-	}
+    /**
+     * Generate a random opcode.
+     * <p/>
+     * @param rnd     Random number generator.
+     * @param opcodes The opcodes to choose from.
+     * <p/>
+     * @return The selected opcode.
+     */
+    public ProgramExtensionTemplate generateRandomOpcode(final Random rnd,
+                                                         final List<ProgramExtensionTemplate> opcodes) {
+        final int maxOpCode = opcodes.size();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public EncogProgram generate(final Random rnd) {
-		final EncogProgram program = new EncogProgram(this.context);
-		final List<ValueType> types = new ArrayList<ValueType>();
-		types.add(this.context.getResult().getVariableType());
-		program.setRootNode(createNode(rnd, program, determineMaxDepth(rnd),
-				types));
-		return program;
-	}
+        if (maxOpCode == 0) {
+            return null;
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void generate(final Random rnd, final Population pop) {
-		// prepare population
-		this.contents.clear();
-		pop.getSpecies().clear();
-		final Species defaultSpecies = pop.createSpecies();
+        int tries = 10000;
 
-		// determine thread usage
-		if (this.score.requireSingleThreaded()) {
-			this.actualThreads = 1;
-		} else if (this.threads == 0) {
-			this.actualThreads = Runtime.getRuntime().availableProcessors();
-		} else {
-			this.actualThreads = this.threads;
-		}
+        ProgramExtensionTemplate result = null;
 
-		// start up
-		ExecutorService taskExecutor = null;
+        while (result == null) {
+            final int opcode = rnd.nextInt(maxOpCode);
+            result = opcodes.get(opcode);
+            tries--;
+            if (tries < 0) {
+                throw new EACompileError(
+                        "Could not generate an opcode.  Make sure you have valid opcodes defined.");
+            }
+        }
+        return result;
+    }
 
-		if (this.threads == 1) {
-			taskExecutor = Executors.newSingleThreadScheduledExecutor();
-		} else {
-			taskExecutor = Executors.newFixedThreadPool(this.actualThreads);
-		}
+    /**
+     * @return the context
+     */
+    public EncogProgramContext getContext() {
+        return this.context;
+    }
 
-		for (int i = 0; i < pop.getPopulationSize(); i++) {
-			taskExecutor.execute(new GenerateWorker(this, (PrgPopulation) pop));
-		}
+    /**
+     * @return the maxConst
+     */
+    public double getMaxConst() {
+        return this.maxConst;
+    }
 
-		taskExecutor.shutdown();
-		try {
-			taskExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
-		} catch (final InterruptedException e) {
-			throw new GeneticError(e);
-		}
+    /**
+     * @return the maxDepth
+     */
+    public int getMaxDepth() {
+        return this.maxDepth;
+    }
 
-		// just pick a leader, for the default species.
-		defaultSpecies.setLeader(defaultSpecies.getMembers().get(0));
-	}
+    /**
+     * @return the maxGenerationErrors
+     */
+    @Override
+    public int getMaxGenerationErrors() {
+        return this.maxGenerationErrors;
+    }
 
-	/**
-	 * Generate a random opcode.
-	 * @param rnd Random number generator.
-	 * @param opcodes The opcodes to choose from.
-	 * @return The selected opcode.
-	 */
-	public ProgramExtensionTemplate generateRandomOpcode(final Random rnd,
-			final List<ProgramExtensionTemplate> opcodes) {
-		final int maxOpCode = opcodes.size();
+    /**
+     * @return the minConst
+     */
+    public double getMinConst() {
+        return this.minConst;
+    }
 
-		if (maxOpCode == 0) {
-			return null;
-		}
+    /**
+     * @return the randomFactory
+     */
+    public RandomFactory getRandomFactory() {
+        return this.randomFactory;
+    }
 
-		int tries = 10000;
+    /**
+     * @return the score
+     */
+    public CalculateScore getScore() {
+        return this.score;
+    }
 
-		ProgramExtensionTemplate result = null;
+    /**
+     * @return The desired number of threads.
+     */
+    @Override
+    public int getThreadCount() {
+        return this.threads;
+    }
 
-		while (result == null) {
-			final int opcode = rnd.nextInt(maxOpCode);
-			result = opcodes.get(opcode);
-			tries--;
-			if (tries < 0) {
-				throw new EACompileError(
-						"Could not generate an opcode.  Make sure you have valid opcodes defined.");
-			}
-		}
-		return result;
-	}
+    /**
+     * @return the hasEnum
+     */
+    public boolean isHasEnum() {
+        return this.hasEnum;
+    }
 
-	/**
-	 * @return the context
-	 */
-	public EncogProgramContext getContext() {
-		return this.context;
-	}
+    /**
+     * @param maxConst
+     *                 the maxConst to set
+     */
+    public void setMaxConst(final double maxConst) {
+        this.maxConst = maxConst;
+    }
 
-	/**
-	 * @return the maxConst
-	 */
-	public double getMaxConst() {
-		return this.maxConst;
-	}
+    /**
+     * @param maxGenerationErrors
+     *                            the maxGenerationErrors to set
+     */
+    @Override
+    public void setMaxGenerationErrors(final int maxGenerationErrors) {
+        this.maxGenerationErrors = maxGenerationErrors;
+    }
 
-	/**
-	 * @return the maxDepth
-	 */
-	public int getMaxDepth() {
-		return this.maxDepth;
-	}
+    /**
+     * @param minConst
+     *                 the minConst to set
+     */
+    public void setMinConst(final double minConst) {
+        this.minConst = minConst;
+    }
 
-	/**
-	 * @return the maxGenerationErrors
-	 */
-	@Override
-	public int getMaxGenerationErrors() {
-		return this.maxGenerationErrors;
-	}
+    /**
+     * @param randomFactory
+     *                      the randomFactory to set
+     */
+    public void setRandomFactory(final RandomFactory randomFactory) {
+        this.randomFactory = randomFactory;
+    }
 
-	/**
-	 * @return the minConst
-	 */
-	public double getMinConst() {
-		return this.minConst;
-	}
+    /**
+     * @param score
+     *              the score to set
+     */
+    public void setScore(final CalculateScore score) {
+        this.score = score;
+    }
 
-	/**
-	 * @return the randomFactory
-	 */
-	public RandomFactory getRandomFactory() {
-		return this.randomFactory;
-	}
-
-	/**
-	 * @return the score
-	 */
-	public CalculateScore getScore() {
-		return this.score;
-	}
-
-	/**
-	 * @return The desired number of threads.
-	 */
-	@Override
-	public int getThreadCount() {
-		return this.threads;
-	}
-
-	/**
-	 * @return the hasEnum
-	 */
-	public boolean isHasEnum() {
-		return this.hasEnum;
-	}
-
-	/**
-	 * @param maxConst
-	 *            the maxConst to set
-	 */
-	public void setMaxConst(final double maxConst) {
-		this.maxConst = maxConst;
-	}
-
-	/**
-	 * @param maxGenerationErrors
-	 *            the maxGenerationErrors to set
-	 */
-	@Override
-	public void setMaxGenerationErrors(final int maxGenerationErrors) {
-		this.maxGenerationErrors = maxGenerationErrors;
-	}
-
-	/**
-	 * @param minConst
-	 *            the minConst to set
-	 */
-	public void setMinConst(final double minConst) {
-		this.minConst = minConst;
-	}
-
-	/**
-	 * @param randomFactory
-	 *            the randomFactory to set
-	 */
-	public void setRandomFactory(final RandomFactory randomFactory) {
-		this.randomFactory = randomFactory;
-	}
-
-	/**
-	 * @param score
-	 *            the score to set
-	 */
-	public void setScore(final CalculateScore score) {
-		this.score = score;
-	}
-
-	/**
-	 * @param numThreads
-	 *            The desired thread count.
-	 */
-	@Override
-	public void setThreadCount(final int numThreads) {
-		this.threads = numThreads;
-	}
-
+    /**
+     * @param numThreads
+     *                   The desired thread count.
+     */
+    @Override
+    public void setThreadCount(final int numThreads) {
+        this.threads = numThreads;
+    }
 }

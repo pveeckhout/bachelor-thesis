@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,43 +31,45 @@ import org.encog.ml.data.MLDataSet;
 import org.encog.neural.pnn.BasicPNN;
 
 public class ValidateNetwork {
-	
-	
-	public static void validateMethodToData(MLMethod method, MLDataSet training) {
-		
-		if( !(method instanceof MLInput) || !(method instanceof MLOutput) ) {
-			throw new EncogError("This machine learning method is not compatible with the provided data.");
-		}
-		
-		int trainingInputCount = training.getInputSize();
-		int trainingOutputCount = training.getIdealSize();
-		int methodInputCount = 0;
-		int methodOutputCount = 0;
-		
-		if( method instanceof MLInput ) {
-			methodInputCount = ((MLInput)method).getInputCount();
-		}
-		
-		if( method instanceof MLOutput ) {
-			methodOutputCount = ((MLOutput)method).getOutputCount();
-		}
-		
-		if( methodInputCount != trainingInputCount ) {
-			throw new EncogError("The machine learning method has an input length of " + methodInputCount + ", but the training data has " + trainingInputCount  + ". They must be the same.");
-		}
-		
-		if (!(method instanceof BasicPNN)) {
-			if (trainingOutputCount > 0
-					&& methodOutputCount != trainingOutputCount) {
-				throw new EncogError(
-						"The machine learning method has an output length of "
-								+ methodOutputCount
-								+ ", but the training data has "
-								+ trainingOutputCount
-								+ ". They must be the same.");
-			}
-		}
-		
-	}
-	
+
+    public static void validateMethodToData(MLMethod method, MLDataSet training) {
+
+        if (!(method instanceof MLInput) || !(method instanceof MLOutput)) {
+            throw new EncogError(
+                    "This machine learning method is not compatible with the provided data.");
+        }
+
+        int trainingInputCount = training.getInputSize();
+        int trainingOutputCount = training.getIdealSize();
+        int methodInputCount = 0;
+        int methodOutputCount = 0;
+
+        if (method instanceof MLInput) {
+            methodInputCount = ((MLInput) method).getInputCount();
+        }
+
+        if (method instanceof MLOutput) {
+            methodOutputCount = ((MLOutput) method).getOutputCount();
+        }
+
+        if (methodInputCount != trainingInputCount) {
+            throw new EncogError(
+                    "The machine learning method has an input length of " +
+                    methodInputCount + ", but the training data has " +
+                    trainingInputCount + ". They must be the same.");
+        }
+
+        if (!(method instanceof BasicPNN)) {
+            if (trainingOutputCount > 0 &&
+                    methodOutputCount != trainingOutputCount) {
+                throw new EncogError(
+                        "The machine learning method has an output length of " +
+                        methodOutputCount +
+                        ", but the training data has " +
+                        trainingOutputCount +
+                        ". They must be the same.");
+            }
+        }
+
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,144 +33,138 @@ import org.encog.util.Stopwatch;
  */
 public class ConsoleAnalystListener implements AnalystListener {
 
-	/**
-	 * The current task.
-	 */
-	private String currentTask = "";
+    /**
+     * The current task.
+     */
+    private String currentTask = "";
+    /**
+     * Stopwatch to time process.
+     */
+    private final Stopwatch stopwatch = new Stopwatch();
+    /**
+     * True if shutdown has been requested.
+     */
+    private boolean shutdownRequested;
+    /**
+     * True if the current command should be canceled.
+     */
+    private boolean cancelCommand;
 
-	/**
-	 * Stopwatch to time process.
-	 */
-	private final Stopwatch stopwatch = new Stopwatch();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void report(final int total, final int current,
+                       final String message) {
+        if (total == 0) {
+            System.out.println(current + " : " + message);
+        } else {
+            System.out.println(current + "/" + total + " : " + message);
+        }
 
-	/**
-	 * True if shutdown has been requested.
-	 */
-	private boolean shutdownRequested;
+    }
 
-	/**
-	 * True if the current command should be canceled.
-	 */
-	private boolean cancelCommand;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reportCommandBegin(final int total, final int current,
+                                   final String name) {
+        System.out.println();
+        if (total == 0) {
+            System.out.println("Beginning Task#" + current + " : " + name);
+        } else {
+            System.out.println("Beginning Task#" + current + "/" + total +
+                    " : " + name);
+        }
+        this.currentTask = name;
+        this.stopwatch.start();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void report(final int total, final int current, 
-			final String message) {
-		if (total == 0) {
-			System.out.println(current + " : " + message);
-		} else {
-			System.out.println(current + "/" + total + " : " + message);
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reportCommandEnd(final boolean cancel) {
+        String cancelStr = "";
+        this.cancelCommand = false;
+        this.stopwatch.stop();
 
-	}
+        if (cancel) {
+            cancelStr = "canceled";
+        } else {
+            cancelStr = "completed";
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reportCommandBegin(final int total, final int current,
-			final String name) {
-		System.out.println();
-		if (total == 0) {
-			System.out.println("Beginning Task#" + current + " : " + name);
-		} else {
-			System.out.println("Beginning Task#" + current + "/" + total
-					+ " : " + name);
-		}
-		this.currentTask = name;
-		this.stopwatch.start();
-	}
+        System.out.println("Task " +
+                this.currentTask +
+                " " +
+                cancelStr +
+                ", task elapsed time " +
+                Format.formatTimeSpan((int) (this.stopwatch
+                .getElapsedMilliseconds() / Format.MILI_IN_SEC)));
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reportCommandEnd(final boolean cancel) {
-		String cancelStr = "";
-		this.cancelCommand = false;
-		this.stopwatch.stop();
-		
-		if (cancel) {
-			cancelStr = "canceled";
-		} else {
-			cancelStr = "completed";
-		}
-		
-		System.out.println("Task "
-				+ this.currentTask
-				+ " "
-				+ cancelStr
-				+ ", task elapsed time "
-				+ Format.formatTimeSpan((int) (this.stopwatch
-						.getElapsedMilliseconds() / Format.MILI_IN_SEC)));
+    }
 
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reportTraining(final MLTrain train) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reportTraining(final MLTrain train) {
+        System.out.println("Iteration #" +
+                Format.formatInteger(train.getIteration()) +
+                " Error:" +
+                Format.formatPercent(train.getError()) +
+                " elapsed time = " +
+                Format.formatTimeSpan((int) (this.stopwatch
+                .getElapsedMilliseconds() / Format.MILI_IN_SEC)));
+    }
 
-		System.out.println("Iteration #"
-				+ Format.formatInteger(train.getIteration())
-				+ " Error:"
-				+ Format.formatPercent(train.getError())
-				+ " elapsed time = "
-				+ Format.formatTimeSpan((int) (this.stopwatch
-						.getElapsedMilliseconds() / Format.MILI_IN_SEC)));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reportTrainingBegin() {
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reportTrainingBegin() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reportTrainingEnd() {
+    }
 
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public synchronized void requestCancelCommand() {
+        this.cancelCommand = true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reportTrainingEnd() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public synchronized void requestShutdown() {
+        this.shutdownRequested = true;
 
-	}
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public synchronized void requestCancelCommand() {
-		this.cancelCommand = true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public synchronized boolean shouldShutDown() {
+        return this.shutdownRequested;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public synchronized void requestShutdown() {
-		this.shutdownRequested = true;
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public synchronized boolean shouldShutDown() {
-		return this.shutdownRequested;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public synchronized boolean shouldStopCommand() {
-		return this.cancelCommand;
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public synchronized boolean shouldStopCommand() {
+        return this.cancelCommand;
+    }
 }

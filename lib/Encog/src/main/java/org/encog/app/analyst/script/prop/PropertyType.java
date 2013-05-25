@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -27,28 +27,29 @@ package org.encog.app.analyst.script.prop;
  * The property types supported for Encog Analyst.
  */
 public enum PropertyType {
-	/**
-	 * A boolean property.
-	 */
-	TypeBoolean,
-	/**
-	 * A string property.
-	 */
-	TypeString,
-	/**
-	 * An integer property.
-	 */
-	TypeInteger,
-	/**
-	 * A double property.
-	 */
-	TypeDouble,
-	/**
-	 * A list.
-	 */
-	TypeListString,
-	/**
-	 * A format.
-	 */
-	typeFormat
+
+    /**
+     * A boolean property.
+     */
+    TypeBoolean,
+    /**
+     * A string property.
+     */
+    TypeString,
+    /**
+     * An integer property.
+     */
+    TypeInteger,
+    /**
+     * A double property.
+     */
+    TypeDouble,
+    /**
+     * A list.
+     */
+    TypeListString,
+    /**
+     * A format.
+     */
+    typeFormat
 }

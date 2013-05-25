@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,37 +30,39 @@ import java.util.List;
  *
  */
 public interface FreeformLayer {
-	
-	/**
-	 * Add a neuron to this layer.
-	 * @param basicFreeformNeuron The neuron to add.
-	 */
-	void add(FreeformNeuron basicFreeformNeuron);
-	
-	/**
-	 * @return The neurons in this layer.
-	 */
-	List<FreeformNeuron> getNeurons();
 
-	/**
-	 * @return True if this layer has bias.
-	 */
-	boolean hasBias();
+    /**
+     * Add a neuron to this layer.
+     * <p/>
+     * @param basicFreeformNeuron The neuron to add.
+     */
+    void add(FreeformNeuron basicFreeformNeuron);
 
-	/**
-	 * Set the activation for the specified index.
-	 * @param i The index.
-	 * @param data The data for that index.
-	 */
-	void setActivation(int i, double data);
+    /**
+     * @return The neurons in this layer.
+     */
+    List<FreeformNeuron> getNeurons();
 
-	/**
-	 * @return The size of this layer, including bias.
-	 */
-	int size();
+    /**
+     * @return True if this layer has bias.
+     */
+    boolean hasBias();
 
-	/**
-	 * @return The size of this layer, no bias counted.
-	 */
-	int sizeNonBias();
+    /**
+     * Set the activation for the specified index.
+     * <p/>
+     * @param i    The index.
+     * @param data The data for that index.
+     */
+    void setActivation(int i, double data);
+
+    /**
+     * @return The size of this layer, including bias.
+     */
+    int size();
+
+    /**
+     * @return The size of this layer, no bias counted.
+     */
+    int sizeNonBias();
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -39,16 +39,14 @@ import org.encog.util.csv.CSVFormat;
 
 public class TestSegregateCSV extends TestCase {
 
-	public static final File INPUT_NAME = new File("test.csv");
+    public static final File INPUT_NAME = new File("test.csv");
     public static final File OUTPUT1_NAME = new File("test2.csv");
     public static final File OUTPUT2_NAME = new File("test3.csv");
 
-    public void generateTestFileHeadings(boolean header) throws IOException
-    {
-    	PrintWriter tw = new PrintWriter(new FileWriter(INPUT_NAME));
+    public void generateTestFileHeadings(boolean header) throws IOException {
+        PrintWriter tw = new PrintWriter(new FileWriter(INPUT_NAME));
 
-        if (header)
-        {
+        if (header) {
             tw.println("a,b");
         }
         tw.println("one,1");
@@ -60,19 +58,18 @@ public class TestSegregateCSV extends TestCase {
         tw.close();
     }
 
-    public void testFilterCSVHeaders() throws IOException
-    {
+    public void testFilterCSVHeaders() throws IOException {
         generateTestFileHeadings(true);
         SegregateCSV norm = new SegregateCSV();
         norm.getTargets().add(new SegregateTargetPercent(OUTPUT1_NAME, 75));
         norm.getTargets().add(new SegregateTargetPercent(OUTPUT2_NAME, 25));
-        norm.analyze(INPUT_NAME, true, CSVFormat.ENGLISH);            
+        norm.analyze(INPUT_NAME, true, CSVFormat.ENGLISH);
         norm.process();
 
         BufferedReader tr = new BufferedReader(new FileReader(OUTPUT1_NAME));
-        Assert.assertEquals("\"a\",\"b\"",tr.readLine());
-        Assert.assertEquals("one,1",tr.readLine());
-        Assert.assertEquals("two,2",tr.readLine());
+        Assert.assertEquals("\"a\",\"b\"", tr.readLine());
+        Assert.assertEquals("one,1", tr.readLine());
+        Assert.assertEquals("two,2", tr.readLine());
         Assert.assertEquals("three,3", tr.readLine());
         Assert.assertNull(tr.readLine());
         tr.close();
@@ -88,8 +85,7 @@ public class TestSegregateCSV extends TestCase {
         OUTPUT2_NAME.delete();
     }
 
-    public void testFilterCSVNoHeaders() throws IOException
-    {
+    public void testFilterCSVNoHeaders() throws IOException {
         generateTestFileHeadings(false);
         SegregateCSV norm = new SegregateCSV();
         norm.getTargets().add(new SegregateTargetPercent(OUTPUT1_NAME, 75));
@@ -114,5 +110,4 @@ public class TestSegregateCSV extends TestCase {
         OUTPUT1_NAME.delete();
         OUTPUT2_NAME.delete();
     }
-	
 }

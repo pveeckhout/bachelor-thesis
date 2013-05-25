@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,46 +32,47 @@ import org.encog.util.csv.ReadCSV;
  */
 public class LoadedRow {
 
-	/**
-	 * The row data.
-	 */
-	private final String[] data;
+    /**
+     * The row data.
+     */
+    private final String[] data;
 
-	/**
-	 * Load a row from the specified CSV file.
-	 * 
-	 * @param csv
-	 *            The CSV file to use.
-	 */
-	public LoadedRow(final ReadCSV csv) {
-		this(csv, 0);
-	}
+    /**
+     * Load a row from the specified CSV file.
+     * <p/>
+     * @param csv
+     *            The CSV file to use.
+     */
+    public LoadedRow(final ReadCSV csv) {
+        this(csv, 0);
+    }
 
-	/**
-	 * Construct a loaded row.
-	 * @param csv The CSV file to use.
-	 * @param extra The number of extra columns to add.
-	 */
-	public LoadedRow(final ReadCSV csv, final int extra) {
-		final int count = csv.getColumnCount();
-		this.data = new String[count + extra];
-		for (int i = 0; i < count; i++) {
-			this.data[i] = csv.get(i);
-		}
-	}
-	
-	public LoadedRow(CSVFormat csvFormat, final double[] d, final int extra) {
-		final int count = d.length;
-		this.data = new String[count + extra];
-		for (int i = 0; i < count; i++) {
-			this.data[i] = csvFormat.format(d[i], 5) + d[i];
-		}
-	}
+    /**
+     * Construct a loaded row.
+     * <p/>
+     * @param csv   The CSV file to use.
+     * @param extra The number of extra columns to add.
+     */
+    public LoadedRow(final ReadCSV csv, final int extra) {
+        final int count = csv.getColumnCount();
+        this.data = new String[count + extra];
+        for (int i = 0; i < count; i++) {
+            this.data[i] = csv.get(i);
+        }
+    }
 
-	/**
-	 * @return The row data.
-	 */
-	public String[] getData() {
-		return this.data;
-	}
+    public LoadedRow(CSVFormat csvFormat, final double[] d, final int extra) {
+        final int count = d.length;
+        this.data = new String[count + extra];
+        for (int i = 0; i < count; i++) {
+            this.data[i] = csvFormat.format(d[i], 5) + d[i];
+        }
+    }
+
+    /**
+     * @return The row data.
+     */
+    public String[] getData() {
+        return this.data;
+    }
 }

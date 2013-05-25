@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,27 +28,27 @@ import java.util.Random;
 /**
  * Basic vector algebra operators.
  * Vectors are represented as arrays of doubles.
- * 
- * This class was created to support the calculations 
+ * <p/>
+ * This class was created to support the calculations
  * in the PSO algorithm.
- * 
+ * <p/>
  * This class is thread safe.
- * 
+ * <p/>
  * Contributed by:
  * Geoffroy Noel
- * https://github.com/goffer-looney 
- * 
+ * https://github.com/goffer-looney
+ * <p/>
  * @author Geoffroy Noel
  */
 public class VectorAlgebra {
 
-    static Random rand = new Random(); 
+    static Random rand = new Random();
 
     /**
      * v1 = v1 + v2
-     * 
-     * @param v1    an array of doubles
-     * @param v2    an array of doubles
+     * <p/>
+     * @param v1 an array of doubles
+     * @param v2 an array of doubles
      */
     public void add(double[] v1, double[] v2) {
         for (int i = 0; i < v1.length; i++) {
@@ -58,9 +58,9 @@ public class VectorAlgebra {
 
     /**
      * v1 = v1 - v2
-     * 
-     * @param v1    an array of doubles
-     * @param v2    an array of doubles
+     * <p/>
+     * @param v1 an array of doubles
+     * @param v2 an array of doubles
      */
     public void sub(double[] v1, double[] v2) {
         for (int i = 0; i < v1.length; i++) {
@@ -70,8 +70,8 @@ public class VectorAlgebra {
 
     /**
      * v = -v
-     * 
-     * @param v     an array of doubles
+     * <p/>
+     * @param v an array of doubles
      */
     public void neg(double[] v) {
         for (int i = 0; i < v.length; i++) {
@@ -81,43 +81,43 @@ public class VectorAlgebra {
 
     /**
      * v = k * U(0,1) * v
-     * 
-     * The components of the vector are multiplied 
+     * <p/>
+     * The components of the vector are multiplied
      * by k and a random number.
-     * A new random number is generated for each 
-     * component.    
+     * A new random number is generated for each
+     * component.
      * Thread-safety depends on Random.nextDouble()
-     * 
-     * @param v     an array of doubles.
-     * @param k     a scalar.
+     * <p/>
+     * @param v an array of doubles.
+     * @param k a scalar.
      */
     public void mulRand(double[] v, double k) {
         for (int i = 0; i < v.length; i++) {
             v[i] *= k * rand.nextDouble();
-        }       
+        }
     }
 
     /**
      * v = k * v
-     * 
-     * The components of the vector are multiplied 
+     * <p/>
+     * The components of the vector are multiplied
      * by k.
-     * 
-     * @param v     an array of doubles.
-     * @param k     a scalar.
+     * <p/>
+     * @param v an array of doubles.
+     * @param k a scalar.
      */
     public void mul(double[] v, double k) {
         for (int i = 0; i < v.length; i++) {
             v[i] *= k;
-        }       
+        }
     }
 
     /**
      * dst = src
      * Copy a vector.
-     * 
-     * @param dst   an array of doubles
-     * @param src   an array of doubles
+     * <p/>
+     * @param dst an array of doubles
+     * @param src an array of doubles
      */
     public void copy(double[] dst, double[] src) {
         System.arraycopy(src, 0, dst, 0, src.length);
@@ -125,8 +125,8 @@ public class VectorAlgebra {
 
     /**
      * v = U(0, 0.1)
-     * 
-     * @param v     an array of doubles
+     * <p/>
+     * @param v an array of doubles
      */
     public void randomise(double[] v) {
         randomise(v, 0.1);
@@ -134,12 +134,12 @@ public class VectorAlgebra {
 
     /**
      * v = U(-1, 1) * maxValue
-     * 
-     * Randomise each component of a vector to 
+     * <p/>
+     * Randomise each component of a vector to
      * [-maxValue, maxValue].
      * thread-safety depends on Random.nextDouble().
-     * 
-     * @param v     an array of doubles
+     * <p/>
+     * @param v an array of doubles
      */
     public void randomise(double[] v, double maxValue) {
         for (int i = 0; i < v.length; i++) {
@@ -148,33 +148,38 @@ public class VectorAlgebra {
     }
 
     /**
-     * For each components, reset their value to maxValue if 
+     * For each components, reset their value to maxValue if
      * their absolute value exceeds it.
-     * 
-     * @param v         an array of doubles
-     * @param maxValue  if -1 this function does nothing
+     * <p/>
+     * @param v        an array of doubles
+     * @param maxValue if -1 this function does nothing
      */
     public void clampComponents(double[] v, double maxValue) {
         if (maxValue != -1) {
             for (int i = 0; i < v.length; i++) {
-                if (v[i] > maxValue) v[i] = maxValue;
-                if (v[i] < -maxValue) v[i] = -maxValue;
+                if (v[i] > maxValue) {
+                    v[i] = maxValue;
+                }
+                if (v[i] < -maxValue) {
+                    v[i] = -maxValue;
+                }
             }
         }
     }
 
     /**
      * Take the dot product of two vectors.
+     * <p/>
      * @param v1 The first vector.
      * @param v2 The second vector.
+     * <p/>
      * @return The dot product.
      */
-	public double dotProduct(double[] v1, double[] v2) {
-		double d = 0;
-		for(int i=0;i<v1.length;i++) {
-			d+=v1[i]*v2[i];
-		}
-		return Math.sqrt(d);
-	}
-
+    public double dotProduct(double[] v1, double[] v2) {
+        double d = 0;
+        for (int i = 0; i < v1.length; i++) {
+            d += v1[i] * v2[i];
+        }
+        return Math.sqrt(d);
+    }
 }

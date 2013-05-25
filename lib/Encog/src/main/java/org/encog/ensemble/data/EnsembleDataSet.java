@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,101 +37,100 @@ import org.encog.ml.data.basic.BasicMLDataPair;
  */
 public class EnsembleDataSet implements MLDataSet {
 
-	private ArrayList<MLDataPair> data;
-	private int idealSize;
-	private int inputSize;
+    private ArrayList<MLDataPair> data;
+    private int idealSize;
+    private int inputSize;
 
-	public EnsembleDataSet(int inputSize, int idealSize) {
-		this.idealSize = idealSize;
-		this.inputSize = inputSize;
-		data = new ArrayList<MLDataPair>();
-	}
+    public EnsembleDataSet(int inputSize, int idealSize) {
+        this.idealSize = idealSize;
+        this.inputSize = inputSize;
+        data = new ArrayList<MLDataPair>();
+    }
 
-	public EnsembleDataSet(MLDataSet mlds) {
-		this.idealSize = mlds.getIdealSize();
-		this.inputSize = mlds.getInputSize();
-		Iterator<MLDataPair> it = mlds.iterator();
-		data = new ArrayList<MLDataPair>();
-		while(it.hasNext()) {
-			data.add(it.next());
-		}
-	}
+    public EnsembleDataSet(MLDataSet mlds) {
+        this.idealSize = mlds.getIdealSize();
+        this.inputSize = mlds.getInputSize();
+        Iterator<MLDataPair> it = mlds.iterator();
+        data = new ArrayList<MLDataPair>();
+        while (it.hasNext()) {
+            data.add(it.next());
+        }
+    }
 
-	@Override
-	public int getIdealSize() {
-		return idealSize;
-	}
+    @Override
+    public int getIdealSize() {
+        return idealSize;
+    }
 
-	@Override
-	public int getInputSize() {
-		return inputSize;
-	}
+    @Override
+    public int getInputSize() {
+        return inputSize;
+    }
 
-	@Override
-	public boolean isSupervised() {
-		return true;
-	}
+    @Override
+    public boolean isSupervised() {
+        return true;
+    }
 
-	@Override
-	public long getRecordCount() {
-		return data.size();
-	}
+    @Override
+    public long getRecordCount() {
+        return data.size();
+    }
 
-	@Override
-	public void getRecord(long index, MLDataPair pair) {
-		final MLDataPair source = this.data.get((int) index);
-		pair.setInputArray(source.getInputArray());
-		if (pair.getIdealArray() != null) {
-			pair.setIdealArray(source.getIdealArray());
-		}
-	}
+    @Override
+    public void getRecord(long index, MLDataPair pair) {
+        final MLDataPair source = this.data.get((int) index);
+        pair.setInputArray(source.getInputArray());
+        if (pair.getIdealArray() != null) {
+            pair.setIdealArray(source.getIdealArray());
+        }
+    }
 
-	@Override
-	public MLDataSet openAdditional() {
-		EnsembleDataSet copy = new EnsembleDataSet(idealSize,inputSize);
-		for (MLDataPair line: data) {
-			BasicMLDataPair newLine = new BasicMLDataPair(line.getInput(), line.getIdeal());
-			copy.add(newLine);
-		}
-		return copy;
-	}
+    @Override
+    public MLDataSet openAdditional() {
+        EnsembleDataSet copy = new EnsembleDataSet(idealSize, inputSize);
+        for (MLDataPair line : data) {
+            BasicMLDataPair newLine = new BasicMLDataPair(line.getInput(), line
+                    .getIdeal());
+            copy.add(newLine);
+        }
+        return copy;
+    }
 
-	@Override
-	public void add(MLData data1) {
-		BasicMLDataPair mlP = new BasicMLDataPair(data1);
-		data.add(mlP);
-	}
+    @Override
+    public void add(MLData data1) {
+        BasicMLDataPair mlP = new BasicMLDataPair(data1);
+        data.add(mlP);
+    }
 
-	@Override
-	public void add(MLData inputData, MLData idealData) {
-		BasicMLDataPair mlP = new BasicMLDataPair(inputData, idealData);
-		data.add(mlP);
-	}
+    @Override
+    public void add(MLData inputData, MLData idealData) {
+        BasicMLDataPair mlP = new BasicMLDataPair(inputData, idealData);
+        data.add(mlP);
+    }
 
-	@Override
-	public void add(MLDataPair inputData) {
-		data.add(inputData);
-	}
+    @Override
+    public void add(MLDataPair inputData) {
+        data.add(inputData);
+    }
 
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
+    @Override
+    public void close() {
+        // TODO Auto-generated method stub
+    }
 
-	}
+    @Override
+    public int size() {
+        return data.size();
+    }
 
-	@Override
-	public int size() {
-		return data.size();
-	}
+    @Override
+    public MLDataPair get(int index) {
+        return data.get(index);
+    }
 
-	@Override
-	public MLDataPair get(int index) {
-		return data.get(index);
-	}
-
-	@Override
-	public Iterator<MLDataPair> iterator() {
-		return data.iterator();
-	}
-
+    @Override
+    public Iterator<MLDataPair> iterator() {
+        return data.iterator();
+    }
 }

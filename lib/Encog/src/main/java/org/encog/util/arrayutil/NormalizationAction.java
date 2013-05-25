@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -27,43 +27,38 @@ package org.encog.util.arrayutil;
  * Normalization actions desired.
  */
 public enum NormalizationAction {
-	/**
-	 * Do not normalize the column, just allow it to pass through. This allows
-	 * string fields to pass through as well.
-	 */
-	PassThrough,
 
-	/**
-	 * Normalize this column.
-	 */
-	Normalize,
+    /**
+     * Do not normalize the column, just allow it to pass through. This allows
+     * string fields to pass through as well.
+     */
+    PassThrough,
+    /**
+     * Normalize this column.
+     */
+    Normalize,
+    /**
+     * Ignore this column, do not include in the output.
+     */
+    Ignore,
+    /**
+     * Use the "one-of" classification method.
+     */
+    OneOf,
+    /**
+     * Use the equilateral classification method.
+     */
+    Equilateral,
+    /**
+     * Use a single-field classification method.
+     */
+    SingleField;
 
-	/**
-	 * Ignore this column, do not include in the output.
-	 */
-	Ignore,
-
-	/**
-	 * Use the "one-of" classification method.
-	 */
-	OneOf,
-
-	/**
-	 * Use the equilateral classification method.
-	 */
-	Equilateral,
-
-	/**
-	 * Use a single-field classification method.
-	 */
-	SingleField;
-
-	/**
-	 * @return True, if this is a classify.
-	 */
-	public boolean isClassify() {
-		return (this == OneOf) || (this == SingleField)
-				|| (this == Equilateral);
-	}
-
+    /**
+     * @return True, if this is a classify.
+     */
+    public boolean isClassify() {
+        return (this == OneOf) || (this == SingleField) ||
+                (this == Equilateral);
+    }
 }

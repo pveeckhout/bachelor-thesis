@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,93 +28,100 @@ import org.encog.util.obj.ReflectionUtil;
 /**
  * Holds a ticker symbol and exchange. The exchange is for external use only and
  * is not used by Encog currently.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class TickerSymbol {
 
-	/**
-	 * The ticker symbol.
-	 */
-	private final String symbol;
+    /**
+     * The ticker symbol.
+     */
+    private final String symbol;
+    /**
+     * The exchange.
+     */
+    private final String exchange;
 
-	/**
-	 * The exchange.
-	 */
-	private final String exchange;
+    /**
+     * Construct a ticker symbol with no exchange.
+     * <p/>
+     * @param symbol
+     *               The ticker symbol.
+     */
+    public TickerSymbol(final String symbol) {
+        this.symbol = symbol;
+        this.exchange = null;
+    }
 
-	/**
-	 * Construct a ticker symbol with no exchange.
-	 * 
-	 * @param symbol
-	 *            The ticker symbol.
-	 */
-	public TickerSymbol(final String symbol) {
-		this.symbol = symbol;
-		this.exchange = null;
-	}
+    /**
+     * Construct a ticker symbol with exchange.
+     * <p/>
+     * @param symbol
+     *                 The ticker symbol.
+     * @param exchange
+     *                 The exchange.
+     */
+    public TickerSymbol(final String symbol, final String exchange) {
+        this.symbol = symbol;
+        this.exchange = exchange;
+    }
 
-	/**
-	 * Construct a ticker symbol with exchange.
-	 * 
-	 * @param symbol
-	 *            The ticker symbol.
-	 * @param exchange
-	 *            The exchange.
-	 */
-	public TickerSymbol(final String symbol, final String exchange) {
-		this.symbol = symbol;
-		this.exchange = exchange;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(final Object other) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(final Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof TickerSymbol)) {
+            return false;
+        }
+        TickerSymbol otherMyClass = (TickerSymbol) other;
 
-	    if (other == null) return false;
-	    if (other == this) return true;
-	    if (!(other instanceof TickerSymbol))return false;
-	    TickerSymbol otherMyClass = (TickerSymbol)other;		
+        // if the symbols do not even match then they are not equal
+        if (!otherMyClass.getSymbol().equals(getSymbol())) {
+            return false;
+        }
 
-		// if the symbols do not even match then they are not equal
-		if (!otherMyClass.getSymbol().equals(getSymbol())) {
-			return false;
-		}
+        // if the symbols match then we need to compare the exchanges
+        if ((otherMyClass.getExchange() == null) &&
+                (otherMyClass.getExchange() == null)) {
+            return true;
+        }
 
-		// if the symbols match then we need to compare the exchanges
-		if ((otherMyClass.getExchange() == null) && (otherMyClass.getExchange() == null)) {
-			return true;
-		}
+        if ((otherMyClass.getExchange() == null) ||
+                (otherMyClass.getExchange() == null)) {
+            return false;
+        }
 
-		if ((otherMyClass.getExchange() == null) || (otherMyClass.getExchange() == null)) {
-			return false;
-		}
+        return otherMyClass.getExchange().equals(getExchange());
+    }
 
-		return otherMyClass.getExchange().equals(getExchange());
-	}
+    /**
+     * @return the exchange
+     */
+    public String getExchange() {
+        return this.exchange;
+    }
 
-	/**
-	 * @return the exchange
-	 */
-	public String getExchange() {
-		return this.exchange;
-	}
+    /**
+     * @return the symbol
+     */
+    public String getSymbol() {
+        return this.symbol;
+    }
 
-	/**
-	 * @return the symbol
-	 */
-	public String getSymbol() {
-		return this.symbol;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode() {
-		return ReflectionUtil.safeHashCode(this.symbol)
-				+ ReflectionUtil.safeHashCode(this.exchange);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return ReflectionUtil.safeHashCode(this.symbol) +
+                ReflectionUtil.safeHashCode(this.exchange);
+    }
 }

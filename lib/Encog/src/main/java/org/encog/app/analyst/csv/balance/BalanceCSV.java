@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -38,106 +38,106 @@ import org.encog.util.csv.ReadCSV;
  * unbalanced training set. You may have a large number of one particular class,
  * and many fewer elements of other classes. This can hinder many Machine
  * Learning methods. This class can be used to balance the data.
- * 
+ * <p/>
  * Obviously this class cannot generate data. You must request how many items
  * you want per class. Some classes will have lower than this number if they
  * were already below the specified amount. Any class above this amount will be
  * trimmed to that amount.
  */
 public class BalanceCSV extends BasicFile {
-	/**
-	 * Tracks the counts of each class.
-	 */
-	private Map<String, Integer> counts;
 
-	/**
-	 * Analyze the data. This counts the records and prepares the data to be
-	 * processed.
-	 * 
-	 * @param inputFile
-	 *            The input file to process.
-	 * @param headers
-	 *            True, if headers are present.
-	 * @param format
-	 *            The format of the CSV file.
-	 */
-	public void analyze(final File inputFile, final boolean headers,
-			final CSVFormat format) {
-		this.setInputFilename(inputFile);
-		setExpectInputHeaders(headers);
-		setInputFormat(format);
+    /**
+     * Tracks the counts of each class.
+     */
+    private Map<String, Integer> counts;
 
-		setAnalyzed(true);
+    /**
+     * Analyze the data. This counts the records and prepares the data to be
+     * processed.
+     * <p/>
+     * @param inputFile
+     *                  The input file to process.
+     * @param headers
+     *                  True, if headers are present.
+     * @param format
+     *                  The format of the CSV file.
+     */
+    public void analyze(final File inputFile, final boolean headers,
+                        final CSVFormat format) {
+        this.setInputFilename(inputFile);
+        setExpectInputHeaders(headers);
+        setInputFormat(format);
 
-		performBasicCounts();
-	}
+        setAnalyzed(true);
 
-	/**
-	 * Return a string that lists the counts per class.
-	 * 
-	 * @return The counts per class.
-	 */
-	public String dumpCounts() {
-		final StringBuilder result = new StringBuilder();
-		for (final String key : this.counts.keySet()) {
-			result.append(key);
-			result.append(" : ");
-			result.append(this.counts.get(key));
-			result.append("\n");
-		}
-		return result.toString();
-	}
+        performBasicCounts();
+    }
 
-	/**
-	 * @return Tracks the counts of each class.
-	 */
-	public Map<String, Integer> getCounts() {
-		return this.counts;
-	}
+    /**
+     * Return a string that lists the counts per class.
+     * <p/>
+     * @return The counts per class.
+     */
+    public String dumpCounts() {
+        final StringBuilder result = new StringBuilder();
+        for (final String key : this.counts.keySet()) {
+            result.append(key);
+            result.append(" : ");
+            result.append(this.counts.get(key));
+            result.append("\n");
+        }
+        return result.toString();
+    }
 
-	/**
-	 * Process and balance the data.
-	 * 
-	 * @param outputFile
-	 *            The output file to write data to.
-	 * @param targetField
-	 *            The field that is being balanced, this field determines the
-	 *            classes.
-	 * @param countPer
-	 *            The desired count per class.
-	 */
-	public void process(final File outputFile, final int targetField,
-			final int countPer) {
-		validateAnalyzed();
-		final PrintWriter tw = prepareOutputFile(outputFile);
+    /**
+     * @return Tracks the counts of each class.
+     */
+    public Map<String, Integer> getCounts() {
+        return this.counts;
+    }
 
-		this.counts = new HashMap<String, Integer>();
+    /**
+     * Process and balance the data.
+     * <p/>
+     * @param outputFile
+     *                    The output file to write data to.
+     * @param targetField
+     *                    The field that is being balanced, this field determines the
+     *                    classes.
+     * @param countPer
+     *                    The desired count per class.
+     */
+    public void process(final File outputFile, final int targetField,
+                        final int countPer) {
+        validateAnalyzed();
+        final PrintWriter tw = prepareOutputFile(outputFile);
 
-		final ReadCSV csv = new ReadCSV(getInputFilename().toString(),
-				isExpectInputHeaders(), getFormat());
+        this.counts = new HashMap<String, Integer>();
 
-		resetStatus();
-		while (csv.next() && !shouldStop()) {
-			final LoadedRow row = new LoadedRow(csv);
-			updateStatus(false);
-			final String key = row.getData()[targetField];
-			int count;
-			if (!this.counts.containsKey(key)) {
-				count = 0;
-			} else {
-				count = this.counts.get(key);
-			}
+        final ReadCSV csv = new ReadCSV(getInputFilename().toString(),
+                                        isExpectInputHeaders(), getFormat());
 
-			if (count < countPer) {
-				writeRow(tw, row);
-				count++;
-			}
+        resetStatus();
+        while (csv.next() && !shouldStop()) {
+            final LoadedRow row = new LoadedRow(csv);
+            updateStatus(false);
+            final String key = row.getData()[targetField];
+            int count;
+            if (!this.counts.containsKey(key)) {
+                count = 0;
+            } else {
+                count = this.counts.get(key);
+            }
 
-			this.counts.put(key, count);
-		}
-		reportDone(false);
-		csv.close();
-		tw.close();
-	}
+            if (count < countPer) {
+                writeRow(tw, row);
+                count++;
+            }
 
+            this.counts.put(key, count);
+        }
+        reportDone(false);
+        csv.close();
+        tw.close();
+    }
 }

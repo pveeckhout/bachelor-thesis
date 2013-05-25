@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -38,60 +38,62 @@ import org.encog.util.ParamsHolder;
  * A factory to create RBF networks.
  */
 public class RBFNetworkFactory {
-	
-	/**
-	 * The max layer count.
-	 */
-	public static final int MAX_LAYERS = 3;
-	
-	/**
-	 * Create a RBF network.
-	 * @param architecture THe architecture string to use.
-	 * @param input The input count. 
-	 * @param output The output count.
-	 * @return The RBF network.
-	 */
-	public MLMethod create(final String architecture, final int input,
-			final int output) {
 
-		final List<String> layers = ArchitectureParse.parseLayers(architecture);
-		if (layers.size() != MAX_LAYERS) {
-			throw new EncogError(
-					"RBF Networks must have exactly three elements, " 
-					+ "separated by ->.");
-		}
+    /**
+     * The max layer count.
+     */
+    public static final int MAX_LAYERS = 3;
 
-		final ArchitectureLayer inputLayer = ArchitectureParse.parseLayer(
-				layers.get(0), input);
-		final ArchitectureLayer rbfLayer = ArchitectureParse.parseLayer(
-				layers.get(1), -1);
-		final ArchitectureLayer outputLayer = ArchitectureParse.parseLayer(
-				layers.get(2), output);
+    /**
+     * Create a RBF network.
+     * <p/>
+     * @param architecture THe architecture string to use.
+     * @param input        The input count.
+     * @param output       The output count.
+     * <p/>
+     * @return The RBF network.
+     */
+    public MLMethod create(final String architecture, final int input,
+                           final int output) {
 
-		final int inputCount = inputLayer.getCount();
-		final int outputCount = outputLayer.getCount();
+        final List<String> layers = ArchitectureParse.parseLayers(architecture);
+        if (layers.size() != MAX_LAYERS) {
+            throw new EncogError(
+                    "RBF Networks must have exactly three elements, " +
+                    "separated by ->.");
+        }
 
-		RBFEnum t;
+        final ArchitectureLayer inputLayer = ArchitectureParse.parseLayer(
+                layers.get(0), input);
+        final ArchitectureLayer rbfLayer = ArchitectureParse.parseLayer(
+                layers.get(1), -1);
+        final ArchitectureLayer outputLayer = ArchitectureParse.parseLayer(
+                layers.get(2), output);
 
-		if (rbfLayer.getName().equalsIgnoreCase("Gaussian")) {
-			t = RBFEnum.Gaussian;
-		} else if (rbfLayer.getName().equalsIgnoreCase("Multiquadric")) {
-			t = RBFEnum.Multiquadric;
-		} else if (rbfLayer.getName().equalsIgnoreCase("InverseMultiquadric")) {
-			t = RBFEnum.InverseMultiquadric;
-		} else if (rbfLayer.getName().equalsIgnoreCase("MexicanHat")) {
-			t = RBFEnum.MexicanHat;
-		} else {
-			throw new NeuralNetworkError("Unknown RBF: " + rbfLayer.getName());
-		}
+        final int inputCount = inputLayer.getCount();
+        final int outputCount = outputLayer.getCount();
 
-		final ParamsHolder holder = new ParamsHolder(rbfLayer.getParams());
+        RBFEnum t;
 
-		final int rbfCount = holder.getInt("C", true, 0);
+        if (rbfLayer.getName().equalsIgnoreCase("Gaussian")) {
+            t = RBFEnum.Gaussian;
+        } else if (rbfLayer.getName().equalsIgnoreCase("Multiquadric")) {
+            t = RBFEnum.Multiquadric;
+        } else if (rbfLayer.getName().equalsIgnoreCase("InverseMultiquadric")) {
+            t = RBFEnum.InverseMultiquadric;
+        } else if (rbfLayer.getName().equalsIgnoreCase("MexicanHat")) {
+            t = RBFEnum.MexicanHat;
+        } else {
+            throw new NeuralNetworkError("Unknown RBF: " + rbfLayer.getName());
+        }
 
-		final RBFNetwork result = new RBFNetwork(inputCount, rbfCount,
-				outputCount, t);
+        final ParamsHolder holder = new ParamsHolder(rbfLayer.getParams());
 
-		return result;
-	}
+        final int rbfCount = holder.getInt("C", true, 0);
+
+        final RBFNetwork result = new RBFNetwork(inputCount, rbfCount,
+                                                 outputCount, t);
+
+        return result;
+    }
 }

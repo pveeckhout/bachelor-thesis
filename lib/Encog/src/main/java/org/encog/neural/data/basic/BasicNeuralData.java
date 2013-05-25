@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,39 +32,38 @@ import org.encog.neural.data.NeuralData;
  */
 public class BasicNeuralData extends BasicMLData {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1524371205985251772L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1524371205985251772L;
 
-	/**
-	 * Construct from a double array.
-	 * 
-	 * @param d
-	 *            A double array.
-	 */
-	public BasicNeuralData(final double[] d) {
-		super(d);
-	}
+    /**
+     * Construct from a double array.
+     * <p/>
+     * @param d
+     *          A double array.
+     */
+    public BasicNeuralData(final double[] d) {
+        super(d);
+    }
 
-	/**
-	 * Construct to a specific size.
-	 * 
-	 * @param size
-	 *            The size to use.
-	 */
-	public BasicNeuralData(final int size) {
-		super(size);
-	}
+    /**
+     * Construct to a specific size.
+     * <p/>
+     * @param size
+     *             The size to use.
+     */
+    public BasicNeuralData(final int size) {
+        super(size);
+    }
 
-	/**
-	 * Construct from another object.
-	 * 
-	 * @param d
-	 *            The other object.
-	 */
-	public BasicNeuralData(final NeuralData d) {
-		super(d);
-	}
-
+    /**
+     * Construct from another object.
+     * <p/>
+     * @param d
+     *          The other object.
+     */
+    public BasicNeuralData(final NeuralData d) {
+        super(d);
+    }
 }

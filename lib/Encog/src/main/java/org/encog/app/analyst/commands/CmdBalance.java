@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,91 +37,90 @@ import org.encog.util.logging.EncogLogging;
 /**
  * Performs the balance command. This allows large classes to have members
  * discarded.
- * 
+ * <p/>
  */
 public class CmdBalance extends Cmd {
 
-	/**
-	 * The name of this command.
-	 */
-	public static final String COMMAND_NAME = "BALANCE";
+    /**
+     * The name of this command.
+     */
+    public static final String COMMAND_NAME = "BALANCE";
 
-	/**
-	 * Construct the balance command.
-	 * 
-	 * @param analyst
-	 *            The analyst to use with this command.
-	 */
-	public CmdBalance(final EncogAnalyst analyst) {
-		super(analyst);
-	}
+    /**
+     * Construct the balance command.
+     * <p/>
+     * @param analyst
+     *                The analyst to use with this command.
+     */
+    public CmdBalance(final EncogAnalyst analyst) {
+        super(analyst);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean executeCommand(final String args) {
-		// get filenames
-		final String sourceID = getProp().getPropertyString(
-				ScriptProperties.BALANCE_CONFIG_SOURCE_FILE);
-		final String targetID = getProp().getPropertyString(
-				ScriptProperties.BALANCE_CONFIG_TARGET_FILE);
-		
-		EncogLogging.log(EncogLogging.LEVEL_DEBUG, 
-			"Beginning balance");
-		EncogLogging.log(EncogLogging.LEVEL_DEBUG, 
-			"source file:" + sourceID);
-		EncogLogging.log(EncogLogging.LEVEL_DEBUG, 
-			"target file:" + targetID);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean executeCommand(final String args) {
+        // get filenames
+        final String sourceID = getProp().getPropertyString(
+                ScriptProperties.BALANCE_CONFIG_SOURCE_FILE);
+        final String targetID = getProp().getPropertyString(
+                ScriptProperties.BALANCE_CONFIG_TARGET_FILE);
 
-		final File sourceFile = getScript().resolveFilename(sourceID);
-		final File targetFile = getScript().resolveFilename(targetID);
+        EncogLogging.log(EncogLogging.LEVEL_DEBUG,
+                         "Beginning balance");
+        EncogLogging.log(EncogLogging.LEVEL_DEBUG,
+                         "source file:" + sourceID);
+        EncogLogging.log(EncogLogging.LEVEL_DEBUG,
+                         "target file:" + targetID);
 
-		// get other config data
-		final int countPer = getProp().getPropertyInt(
-				ScriptProperties.BALANCE_CONFIG_COUNT_PER);
-		final String targetFieldStr = getProp().getPropertyString(
-				ScriptProperties.BALANCE_CONFIG_BALANCE_FIELD);
-		final DataField targetFieldDF = getAnalyst().getScript().findDataField(
-				targetFieldStr);
-		if (targetFieldDF == null) {
-			throw new AnalystError("Can't find balance target field: "
-					+ targetFieldStr);
-		}
-		if (!targetFieldDF.isClass()) {
-			throw new AnalystError("Can't balance on non-class field: "
-					+ targetFieldStr);
-		}
+        final File sourceFile = getScript().resolveFilename(sourceID);
+        final File targetFile = getScript().resolveFilename(targetID);
 
-		final int targetFieldIndex = getAnalyst().getScript()
-				.findDataFieldIndex(targetFieldDF);
+        // get other config data
+        final int countPer = getProp().getPropertyInt(
+                ScriptProperties.BALANCE_CONFIG_COUNT_PER);
+        final String targetFieldStr = getProp().getPropertyString(
+                ScriptProperties.BALANCE_CONFIG_BALANCE_FIELD);
+        final DataField targetFieldDF = getAnalyst().getScript().findDataField(
+                targetFieldStr);
+        if (targetFieldDF == null) {
+            throw new AnalystError("Can't find balance target field: " +
+                    targetFieldStr);
+        }
+        if (!targetFieldDF.isClass()) {
+            throw new AnalystError("Can't balance on non-class field: " +
+                    targetFieldStr);
+        }
 
-		// mark generated
-		getScript().markGenerated(targetID);
+        final int targetFieldIndex = getAnalyst().getScript()
+                .findDataFieldIndex(targetFieldDF);
 
-		// get formats
-		final CSVFormat format = getScript().determineFormat();
+        // mark generated
+        getScript().markGenerated(targetID);
 
-		// prepare to normalize
-		final BalanceCSV balance = new BalanceCSV();
-		balance.setScript(getScript());
-		getAnalyst().setCurrentQuantTask(balance);
-		balance.setReport(new AnalystReportBridge(getAnalyst()));
+        // get formats
+        final CSVFormat format = getScript().determineFormat();
 
-		final boolean headers = getScript().expectInputHeaders(sourceID);
-		balance.analyze(sourceFile, headers, format);
-		balance.setProduceOutputHeaders(true);
-		balance.process(targetFile, targetFieldIndex, countPer);
-		getAnalyst().setCurrentQuantTask(null);
-		return balance.shouldStop();
-	}
+        // prepare to normalize
+        final BalanceCSV balance = new BalanceCSV();
+        balance.setScript(getScript());
+        getAnalyst().setCurrentQuantTask(balance);
+        balance.setReport(new AnalystReportBridge(getAnalyst()));
 
-	/**
-	 * {@inheritDoc} 
-	 */
-	@Override
-	public String getName() {
-		return CmdBalance.COMMAND_NAME;
-	}
+        final boolean headers = getScript().expectInputHeaders(sourceID);
+        balance.analyze(sourceFile, headers, format);
+        balance.setProduceOutputHeaders(true);
+        balance.process(targetFile, targetFieldIndex, countPer);
+        getAnalyst().setCurrentQuantTask(null);
+        return balance.shouldStop();
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName() {
+        return CmdBalance.COMMAND_NAME;
+    }
 }

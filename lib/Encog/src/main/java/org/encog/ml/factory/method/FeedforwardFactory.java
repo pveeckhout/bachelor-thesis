@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -41,88 +41,89 @@ import org.encog.neural.networks.layers.BasicLayer;
  */
 public class FeedforwardFactory {
 
-	/**
-	 * Error.
-	 */
-	public static final String CANT_DEFINE_ACT 
-		= "Can't define activation function before first layer.";
+    /**
+     * Error.
+     */
+    public static final String CANT_DEFINE_ACT =
+            "Can't define activation function before first layer.";
+    /**
+     * The activation function factory to use.
+     */
+    private MLActivationFactory factory = new MLActivationFactory();
 
-	/**
-	 * The activation function factory to use.
-	 */
-	private MLActivationFactory factory = new MLActivationFactory();
-	
-	/**
-	 * Create a feed forward network.
-	 * @param architecture The architecture string to use.
-	 * @param input The input count.
-	 * @param output The output count.
-	 * @return The feedforward network.
-	 */
-	public MLMethod create(final String architecture, final int input,
-			final int output) {
-		
-		if( input<=0 ) {
-			throw new EncogError("Must have at least one input for feedforward.");
-		}
-		
-		if( output<=0 ) {
-			throw new EncogError("Must have at least one output for feedforward.");
-		}
-		
-		
-		final BasicNetwork result = new BasicNetwork();
-		final List<String> layers = ArchitectureParse.parseLayers(architecture);
-		ActivationFunction af = new ActivationLinear();
+    /**
+     * Create a feed forward network.
+     * <p/>
+     * @param architecture The architecture string to use.
+     * @param input        The input count.
+     * @param output       The output count.
+     * <p/>
+     * @return The feedforward network.
+     */
+    public MLMethod create(final String architecture, final int input,
+                           final int output) {
 
-		int questionPhase = 0;
-		for (final String layerStr : layers) {
-			int defaultCount;
-			// determine default
-			if (questionPhase == 0) {
-				defaultCount = input;
-			} else {
-				defaultCount = output;
-			}
+        if (input <= 0) {
+            throw new EncogError("Must have at least one input for feedforward.");
+        }
 
-			final ArchitectureLayer layer = ArchitectureParse.parseLayer(
-					layerStr, defaultCount);
-			final boolean bias = layer.isBias();
+        if (output <= 0) {
+            throw new EncogError(
+                    "Must have at least one output for feedforward.");
+        }
 
-			String part = layer.getName();
-			if (part != null) {
-				part = part.trim();
-			} else {
-				part = "";
-			}
-			
-			ActivationFunction lookup = this.factory.create(part);
-			
-			if (lookup!=null) {
-				af = lookup;
-			} else {
-				if (layer.isUsedDefault()) {
-					questionPhase++;
-					if (questionPhase > 2) {
-						throw new EncogError("Only two ?'s may be used.");
-					}
-				}
 
-				if (layer.getCount() == 0) {
-					throw new EncogError("Unknown architecture element: "
-							+ architecture + ", can't parse: " + part);
-				}
+        final BasicNetwork result = new BasicNetwork();
+        final List<String> layers = ArchitectureParse.parseLayers(architecture);
+        ActivationFunction af = new ActivationLinear();
 
-				result.addLayer(new BasicLayer(af, bias,
-						layer.getCount()));
+        int questionPhase = 0;
+        for (final String layerStr : layers) {
+            int defaultCount;
+            // determine default
+            if (questionPhase == 0) {
+                defaultCount = input;
+            } else {
+                defaultCount = output;
+            }
 
-			}
-		}
+            final ArchitectureLayer layer = ArchitectureParse.parseLayer(
+                    layerStr, defaultCount);
+            final boolean bias = layer.isBias();
 
-		result.getStructure().finalizeStructure();
-		result.reset();
+            String part = layer.getName();
+            if (part != null) {
+                part = part.trim();
+            } else {
+                part = "";
+            }
 
-		return result;
-	}
+            ActivationFunction lookup = this.factory.create(part);
 
+            if (lookup != null) {
+                af = lookup;
+            } else {
+                if (layer.isUsedDefault()) {
+                    questionPhase++;
+                    if (questionPhase > 2) {
+                        throw new EncogError("Only two ?'s may be used.");
+                    }
+                }
+
+                if (layer.getCount() == 0) {
+                    throw new EncogError("Unknown architecture element: " +
+                            architecture + ", can't parse: " + part);
+                }
+
+                result.addLayer(new BasicLayer(af, bias,
+                                               layer.getCount()));
+
+            }
+        }
+
+        result.getStructure().finalizeStructure();
+        result.reset();
+
+        return result;
+    }
 }

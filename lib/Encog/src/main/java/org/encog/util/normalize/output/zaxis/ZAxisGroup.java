@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,51 +30,49 @@ import org.encog.util.normalize.output.OutputFieldGrouped;
  * Used to group Z-Axis fields together. Both OutputFieldZAxis and
  * OutputFieldZAxisSynthetic fields may belong to this group. For
  * more information see the OutputFieldZAxis class.
- * 
+ * <p/>
  */
 public class ZAxisGroup extends BasicOutputFieldGroup {
 
-	/**
-	 * The calculated length.
-	 */
-	private double length;
+    /**
+     * The calculated length.
+     */
+    private double length;
+    /**
+     * The multiplier, which is the value that all other values will be
+     * multiplied to become normalized.
+     */
+    private double multiplier;
 
-	/**
-	 * The multiplier, which is the value that all other values will be
-	 * multiplied to become normalized.
-	 */
-	private double multiplier;
+    /**
+     * @return The vector length.
+     */
+    public double getLength() {
+        return this.length;
+    }
 
-	/**
-	 * @return The vector length.
-	 */
-	public double getLength() {
-		return this.length;
-	}
+    /**
+     * @return The value to multiply the other values by to normalize them.
+     */
+    public double getMultiplier() {
+        return this.multiplier;
+    }
 
-	/**
-	 * @return The value to multiply the other values by to normalize them.
-	 */
-	public double getMultiplier() {
-		return this.multiplier;
-	}
+    /**
+     * Initialize this group for a new row.
+     */
+    public void rowInit() {
+        double value = 0;
 
-	/**
-	 * Initialize this group for a new row.
-	 */
-	public void rowInit() {
-		double value = 0;
-
-		for (final OutputFieldGrouped field : getGroupedFields()) {
-			if (!(field instanceof OutputFieldZAxisSynthetic)) {
-				if (field.getSourceField() != null) {
-					value += (field.getSourceField().getCurrentValue() * field
-							.getSourceField().getCurrentValue());
-				}
-			}
-		}
-		this.length = Math.sqrt(value);
-		this.multiplier = 1.0 / Math.sqrt(getGroupedFields().size());
-	}
-
+        for (final OutputFieldGrouped field : getGroupedFields()) {
+            if (!(field instanceof OutputFieldZAxisSynthetic)) {
+                if (field.getSourceField() != null) {
+                    value += (field.getSourceField().getCurrentValue() * field
+                            .getSourceField().getCurrentValue());
+                }
+            }
+        }
+        this.length = Math.sqrt(value);
+        this.multiplier = 1.0 / Math.sqrt(getGroupedFields().size());
+    }
 }

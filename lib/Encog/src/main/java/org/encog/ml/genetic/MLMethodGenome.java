@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,50 +32,46 @@ import org.encog.ml.genetic.genome.DoubleArrayGenome;
  * is the weight and bias matrix.
  */
 public class MLMethodGenome extends DoubleArrayGenome {
-	
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * The phenome.
-	 */
-	private MLEncodable phenotype;
 
+    /**
+     * Serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The phenome.
+     */
+    private MLEncodable phenotype;
 
-	/**
-	 * Construct a neural genome.
-	 * @param thePhenotype The phenotype to use.
-	 */
-	public MLMethodGenome(
-			final MLEncodable thePhenotype) {
-		super(thePhenotype.encodedArrayLength());
-		this.phenotype = thePhenotype;
-		this.phenotype.encodeToArray(getData());
-	}
+    /**
+     * Construct a neural genome.
+     * <p/>
+     * @param thePhenotype The phenotype to use.
+     */
+    public MLMethodGenome(
+            final MLEncodable thePhenotype) {
+        super(thePhenotype.encodedArrayLength());
+        this.phenotype = thePhenotype;
+        this.phenotype.encodeToArray(getData());
+    }
 
+    /**
+     * @return the phenotype
+     */
+    public MLEncodable getPhenotype() {
+        return phenotype;
+    }
 
-	/**
-	 * @return the phenotype
-	 */
-	public MLEncodable getPhenotype() {
-		return phenotype;
-	}
+    /**
+     * @param phenotype the phenotype to set
+     */
+    public void setPhenotype(MLEncodable phenotype) {
+        this.phenotype = phenotype;
+    }
 
-
-	/**
-	 * @param phenotype the phenotype to set
-	 */
-	public void setPhenotype(MLEncodable phenotype) {
-		this.phenotype = phenotype;
-	}
-
-
-	/**
-	 * Decode the phenotype.
-	 */
-	public void decode() {
-		this.phenotype.decodeFromArray(getData());
-	}
+    /**
+     * Decode the phenotype.
+     */
+    public void decode() {
+        this.phenotype.decodeFromArray(getData());
+    }
 }

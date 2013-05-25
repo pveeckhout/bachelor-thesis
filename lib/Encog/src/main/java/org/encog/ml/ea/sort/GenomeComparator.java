@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,56 +32,60 @@ import org.encog.ml.ea.genome.Genome;
  * and penalties.
  */
 public interface GenomeComparator extends Comparator<Genome> {
-	/**
-	 * Apply a bonus, this is a simple percent that is applied in the direction
-	 * specified by the "should minimize" property of the score function.
-	 * 
-	 * @param value
-	 *            The current value.
-	 * @param bonus
-	 *            The bonus.
-	 * @return The resulting value.
-	 */
-	double applyBonus(final double value, final double bonus);
 
-	/**
-	 * Apply a penalty, this is a simple percent that is applied in the
-	 * direction specified by the "should minimize" property of the score
-	 * function.
-	 * 
-	 * @param value
-	 *            The current value.
-	 * @param bonus
-	 *            The penalty.
-	 * @return The resulting value.
-	 */
-	double applyPenalty(final double value, final double bonus);
+    /**
+     * Apply a bonus, this is a simple percent that is applied in the direction
+     * specified by the "should minimize" property of the score function.
+     * <p/>
+     * @param value
+     *              The current value.
+     * @param bonus
+     *              The bonus.
+     * <p/>
+     * @return The resulting value.
+     */
+    double applyBonus(final double value, final double bonus);
 
-	/**
-	 * Determine if one score is better than the other.
-	 * 
-	 * @param d1
-	 *            The first score to compare.
-	 * @param d2
-	 *            The second score to compare.
-	 * @return True if d1 is better than d2.
-	 */
-	boolean isBetterThan(double d1, double d2);
+    /**
+     * Apply a penalty, this is a simple percent that is applied in the
+     * direction specified by the "should minimize" property of the score
+     * function.
+     * <p/>
+     * @param value
+     *              The current value.
+     * @param bonus
+     *              The penalty.
+     * <p/>
+     * @return The resulting value.
+     */
+    double applyPenalty(final double value, final double bonus);
 
-	/**
-	 * Determine if one genome is better than the other genome.
-	 * 
-	 * @param genome1
-	 *            The first genome.
-	 * @param genome2
-	 *            The second genome.
-	 * @return True, if genome1 is better than genome2.
-	 */
-	boolean isBetterThan(Genome genome1, Genome genome2);
+    /**
+     * Determine if one score is better than the other.
+     * <p/>
+     * @param d1
+     *           The first score to compare.
+     * @param d2
+     *           The second score to compare.
+     * <p/>
+     * @return True if d1 is better than d2.
+     */
+    boolean isBetterThan(double d1, double d2);
 
-	/**
-	 * @return Returns true if the score should be minimized.
-	 */
-	boolean shouldMinimize();
+    /**
+     * Determine if one genome is better than the other genome.
+     * <p/>
+     * @param genome1
+     *                The first genome.
+     * @param genome2
+     *                The second genome.
+     * <p/>
+     * @return True, if genome1 is better than genome2.
+     */
+    boolean isBetterThan(Genome genome1, Genome genome2);
 
+    /**
+     * @return Returns true if the score should be minimized.
+     */
+    boolean shouldMinimize();
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -26,76 +26,73 @@ package org.encog.util.concurrency.job;
 /**
  * The job unit context contains context information to be passed to a job unit.
  * This tells the thread what to work on.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class JobUnitContext {
 
-	/**
-	 * Data that defines what job unit should be done.
-	 */
-	private Object jobUnit;
+    /**
+     * Data that defines what job unit should be done.
+     */
+    private Object jobUnit;
+    /**
+     * The concurrent job owner.
+     */
+    private ConcurrentJob owner;
+    /**
+     * The task number for this job.
+     */
+    private int taskNumber;
 
-	/**
-	 * The concurrent job owner.
-	 */
-	private ConcurrentJob owner;
+    /**
+     * @return The job unit.
+     */
+    public Object getJobUnit() {
+        return this.jobUnit;
+    }
 
-	/**
-	 * The task number for this job.
-	 */
-	private int taskNumber;
+    /**
+     * @return The concurrent job that owns this task.
+     */
+    public ConcurrentJob getOwner() {
+        return this.owner;
+    }
 
-	/**
-	 * @return The job unit.
-	 */
-	public Object getJobUnit() {
-		return this.jobUnit;
-	}
+    /**
+     * @return The task number.
+     */
+    public int getTaskNumber() {
+        return this.taskNumber;
+    }
 
-	/**
-	 * @return The concurrent job that owns this task.
-	 */
-	public ConcurrentJob getOwner() {
-		return this.owner;
-	}
+    /**
+     * Set the job unit.
+     * <p/>
+     * @param jobUnit
+     *                The job unit.
+     */
+    public void setJobUnit(final Object jobUnit) {
+        this.jobUnit = jobUnit;
+    }
 
-	/**
-	 * @return The task number.
-	 */
-	public int getTaskNumber() {
-		return this.taskNumber;
-	}
+    /**
+     * Set the job owner.
+     * <p/>
+     * @param owner
+     *              The job owner.
+     */
+    public void setOwner(final ConcurrentJob owner) {
+        this.owner = owner;
+    }
 
-	/**
-	 * Set the job unit.
-	 * 
-	 * @param jobUnit
-	 *            The job unit.
-	 */
-	public void setJobUnit(final Object jobUnit) {
-		this.jobUnit = jobUnit;
-	}
-
-	/**
-	 * Set the job owner.
-	 * 
-	 * @param owner
-	 *            The job owner.
-	 */
-	public void setOwner(final ConcurrentJob owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * Set the task number.
-	 * 
-	 * @param taskNumber
-	 *            The task number.
-	 */
-	public void setTaskNumber(final int taskNumber) {
-		this.taskNumber = taskNumber;
-	}
-
+    /**
+     * Set the task number.
+     * <p/>
+     * @param taskNumber
+     *                   The task number.
+     */
+    public void setTaskNumber(final int taskNumber) {
+        this.taskNumber = taskNumber;
+    }
 }

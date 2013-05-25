@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,72 +36,72 @@ import org.encog.util.obj.ObjectHolder;
  */
 public class OperationList extends ChooseObject<EvolutionaryOperator> {
 
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Determine the maximum number of offspring that might be produced by any
-	 * of the operators in this list.
-	 * 
-	 * @return The maximum number of offspring.
-	 */
-	public int maxOffspring() {
-		int result = 0;
-		for (final ObjectHolder<EvolutionaryOperator> holder : getList()) {
-			result = Math.max(result, holder.getObj().offspringProduced());
-		}
-		return result;
-	}
+    /**
+     * Determine the maximum number of offspring that might be produced by any
+     * of the operators in this list.
+     * <p/>
+     * @return The maximum number of offspring.
+     */
+    public int maxOffspring() {
+        int result = 0;
+        for (final ObjectHolder<EvolutionaryOperator> holder : getList()) {
+            result = Math.max(result, holder.getObj().offspringProduced());
+        }
+        return result;
+    }
 
-	/**
-	 * Determine the maximum number of parents required by any of the operators
-	 * in the list.
-	 * 
-	 * @return The maximum number of parents.
-	 */
-	public int maxParents() {
-		int result = Integer.MIN_VALUE;
-		for (final ObjectHolder<EvolutionaryOperator> holder : getList()) {
-			result = Math.max(result, holder.getObj().parentsNeeded());
-		}
-		return result;
-	}
+    /**
+     * Determine the maximum number of parents required by any of the operators
+     * in the list.
+     * <p/>
+     * @return The maximum number of parents.
+     */
+    public int maxParents() {
+        int result = Integer.MIN_VALUE;
+        for (final ObjectHolder<EvolutionaryOperator> holder : getList()) {
+            result = Math.max(result, holder.getObj().parentsNeeded());
+        }
+        return result;
+    }
 
-	/**
-	 * Pick a operator based on the number of parents available.
-	 * 
-	 * @param rnd
-	 *            A random number generator.
-	 * @param maxParents
-	 *            The maximum number of parents available.
-	 * @return The operator that was selected.
-	 */
-	public EvolutionaryOperator pickMaxParents(final Random rnd,
-			final int maxParents) {
+    /**
+     * Pick a operator based on the number of parents available.
+     * <p/>
+     * @param rnd
+     *                   A random number generator.
+     * @param maxParents
+     *                   The maximum number of parents available.
+     * <p/>
+     * @return The operator that was selected.
+     */
+    public EvolutionaryOperator pickMaxParents(final Random rnd,
+                                               final int maxParents) {
 
-		// determine the total probability of eligible operators
-		double total = 0;
-		for (final ObjectHolder<EvolutionaryOperator> holder : getList()) {
-			if (holder.getObj().parentsNeeded() <= maxParents) {
-				total += holder.getProbability();
-			}
-		}
+        // determine the total probability of eligible operators
+        double total = 0;
+        for (final ObjectHolder<EvolutionaryOperator> holder : getList()) {
+            if (holder.getObj().parentsNeeded() <= maxParents) {
+                total += holder.getProbability();
+            }
+        }
 
-		// choose an operator
-		final double r = rnd.nextDouble() * total;
-		double current = 0;
-		for (final ObjectHolder<EvolutionaryOperator> holder : getList()) {
-			if (holder.getObj().parentsNeeded() <= maxParents) {
-				current += holder.getProbability();
-				if (r < current) {
-					return holder.getObj();
-				}
-			}
-		}
+        // choose an operator
+        final double r = rnd.nextDouble() * total;
+        double current = 0;
+        for (final ObjectHolder<EvolutionaryOperator> holder : getList()) {
+            if (holder.getObj().parentsNeeded() <= maxParents) {
+                current += holder.getProbability();
+                if (r < current) {
+                    return holder.getObj();
+                }
+            }
+        }
 
-		return null;
-	}
-
+        return null;
+    }
 }

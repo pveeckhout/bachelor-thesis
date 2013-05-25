@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -45,386 +45,376 @@ import org.encog.util.logging.EncogLogging;
 
 /**
  * A CODEC that can read/write Microsoft Excel (*.XLSX) files.
- * 
+ * <p/>
  */
 public class ExcelCODEC implements DataSetCODEC {
 
-	/**
-	 * The Excel file.
-	 */
-	private final File file;
+    /**
+     * The Excel file.
+     */
+    private final File file;
+    /**
+     * The Excel file that we are reading.
+     */
+    private ZipFile readZipFile;
+    /**
+     * The current zip entry.
+     */
+    private ZipEntry entry;
+    /**
+     * XML that is currently being parsed.
+     */
+    private ReadXML xmlIn;
+    /**
+     * The number of inputs.
+     */
+    private int inputCount;
+    /**
+     * THe number of ideals.
+     */
+    private int idealCount;
+    /**
+     * The file stream to write to.
+     */
+    private FileOutputStream fos;
+    /**
+     * The zip stream to write to.
+     */
+    private ZipOutputStream zos;
+    /**
+     * A byte buffer to hold the output during an export to XLSX.
+     */
+    private ByteArrayOutputStream buffer;
+    /**
+     * The XML output.
+     */
+    private WriteXML xmlOut;
+    /**
+     * THe current row, during an export.
+     */
+    private int row;
 
-	/**
-	 * The Excel file that we are reading.
-	 */
-	private ZipFile readZipFile;
+    /**
+     * Constructor to create Excel from binary.
+     * <p/>
+     * @param theFile
+     *                The CSV file to create.
+     */
+    public ExcelCODEC(final File theFile) {
 
-	/**
-	 * The current zip entry.
-	 */
-	private ZipEntry entry;
+        this.file = theFile;
+    }
 
-	/**
-	 * XML that is currently being parsed.
-	 */
-	private ReadXML xmlIn;
+    /**
+     * Create a CODEC to load data from Excel to binary.
+     * <p/>
+     * @param theFile
+     *                      The Excel file to load.
+     * @param theInputCount
+     *                      The number of input columns.
+     * @param theIdealCount
+     *                      The number of ideal columns.
+     */
+    public ExcelCODEC(final File theFile, final int theInputCount,
+                      final int theIdealCount) {
 
-	/**
-	 * The number of inputs.
-	 */
-	private int inputCount;
+        this.file = theFile;
+        this.inputCount = theInputCount;
+        this.idealCount = theIdealCount;
+    }
 
-	/**
-	 * THe number of ideals.
-	 */
-	private int idealCount;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        if (this.readZipFile != null) {
+            try {
+                this.readZipFile.close();
+                this.readZipFile = null;
+            } catch (final IOException e) {
+                throw new BufferedDataError(e);
+            }
+        }
 
-	/**
-	 * The file stream to write to.
-	 */
-	private FileOutputStream fos;
+        if (this.zos != null) {
+            try {
+                final ZipEntry theEntry = new ZipEntry(
+                        "xl/worksheets/sheet1.xml");
+                this.xmlOut.endTag();
+                this.xmlOut.addAttribute("left", "0.7");
+                this.xmlOut.addAttribute("right", "0.7");
+                this.xmlOut.addAttribute("top", "0.75");
+                this.xmlOut.addAttribute("bottom", "0.75");
+                this.xmlOut.addAttribute("header", "0.3");
+                this.xmlOut.addAttribute("footer", "0.3");
 
-	/**
-	 * The zip stream to write to.
-	 */
-	private ZipOutputStream zos;
+                this.xmlOut.beginTag("pageMargins");
+                this.xmlOut.endTag();
+                this.xmlOut.endTag();
+                this.xmlOut.endDocument();
 
-	/**
-	 * A byte buffer to hold the output during an export to XLSX.
-	 */
-	private ByteArrayOutputStream buffer;
+                final byte[] b = this.buffer.toByteArray();
+                theEntry.setSize(b.length);
+                theEntry.setCompressedSize(-1);
+                theEntry.setMethod(ZipEntry.DEFLATED);
+                this.zos.putNextEntry(theEntry);
+                this.zos.write(b);
+                this.zos.closeEntry();
+                this.zos.close();
+                this.zos = null;
+            } catch (final IOException e) {
+                throw new BufferedDataError(e);
+            }
+        }
 
-	/**
-	 * The XML output.
-	 */
-	private WriteXML xmlOut;
+        if (this.fos != null) {
+            try {
+                this.fos.close();
+                this.fos = null;
+            } catch (final IOException e) {
+                throw new BufferedDataError(e);
+            }
+        }
+    }
 
-	/**
-	 * THe current row, during an export.
-	 */
-	private int row;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getIdealSize() {
+        return this.idealCount;
+    }
 
-	/**
-	 * Constructor to create Excel from binary.
-	 * 
-	 * @param theFile
-	 *            The CSV file to create.
-	 */
-	public ExcelCODEC(final File theFile) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInputSize() {
+        return this.inputCount;
+    }
 
-		this.file = theFile;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void prepareRead() {
+        try {
+            this.readZipFile = new ZipFile(this.file);
 
-	/**
-	 * Create a CODEC to load data from Excel to binary.
-	 * 
-	 * @param theFile
-	 *            The Excel file to load.
-	 * @param theInputCount
-	 *            The number of input columns.
-	 * @param theIdealCount
-	 *            The number of ideal columns.
-	 */
-	public ExcelCODEC(final File theFile, final int theInputCount,
-			final int theIdealCount) {
+            final Enumeration<? extends ZipEntry> entries = this.readZipFile
+                    .entries();
 
-		this.file = theFile;
-		this.inputCount = theInputCount;
-		this.idealCount = theIdealCount;
-	}
+            this.entry = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void close() {
-		if (this.readZipFile != null) {
-			try {
-				this.readZipFile.close();
-				this.readZipFile = null;
-			} catch (final IOException e) {
-				throw new BufferedDataError(e);
-			}
-		}
+            while (entries.hasMoreElements()) {
+                final ZipEntry e = entries.nextElement();
+                if (e.getName().equals("xl/worksheets/sheet1.xml")) {
+                    this.entry = e;
+                }
+            }
 
-		if (this.zos != null) {
-			try {
-				final ZipEntry theEntry 
-					= new ZipEntry("xl/worksheets/sheet1.xml");
-				this.xmlOut.endTag();
-				this.xmlOut.addAttribute("left", "0.7");
-				this.xmlOut.addAttribute("right", "0.7");
-				this.xmlOut.addAttribute("top", "0.75");
-				this.xmlOut.addAttribute("bottom", "0.75");
-				this.xmlOut.addAttribute("header", "0.3");
-				this.xmlOut.addAttribute("footer", "0.3");
+            if (this.entry == null) {
+                this.readZipFile.close();
+                this.readZipFile = null;
+                throw new BufferedDataError("Could not find worksheet.");
+            }
 
-				this.xmlOut.beginTag("pageMargins");
-				this.xmlOut.endTag();
-				this.xmlOut.endTag();
-				this.xmlOut.endDocument();
+            final InputStream is = this.readZipFile.getInputStream(this.entry);
+            this.xmlIn = new ReadXML(is);
 
-				final byte[] b = this.buffer.toByteArray();
-				theEntry.setSize(b.length);
-				theEntry.setCompressedSize(-1);
-				theEntry.setMethod(ZipEntry.DEFLATED);
-				this.zos.putNextEntry(theEntry);
-				this.zos.write(b);
-				this.zos.closeEntry();
-				this.zos.close();
-				this.zos = null;
-			} catch (final IOException e) {
-				throw new BufferedDataError(e);
-			}
-		}
+        } catch (final ZipException e) {
+            throw new BufferedDataError("Not a valid Excel file.");
+        } catch (final IOException e) {
+            throw new BufferedDataError(e);
+        }
+    }
 
-		if (this.fos != null) {
-			try {
-				this.fos.close();
-				this.fos = null;
-			} catch (final IOException e) {
-				throw new BufferedDataError(e);
-			}
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void prepareWrite(final int recordCount, final int inputSize,
+                             final int idealSize) {
+        this.inputCount = inputSize;
+        this.idealCount = idealSize;
+        ZipInputStream zis = null;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getIdealSize() {
-		return this.idealCount;
-	}
+        try {
+            this.fos = new FileOutputStream(this.file);
+            this.zos = new ZipOutputStream(this.fos);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getInputSize() {
-		return this.inputCount;
-	}
+            final InputStream is = ResourceInputStream
+                    .openResourceInputStream("org/encog/data/blank.xlsx");
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void prepareRead() {
-		try {
-			this.readZipFile = new ZipFile(this.file);
+            zis = new ZipInputStream(is);
 
-			final Enumeration<? extends ZipEntry> entries = this.readZipFile
-					.entries();
+            ZipEntry theEntry;
 
-			this.entry = null;
+            while (zis.available() > 0) {
+                theEntry = zis.getNextEntry();
+                if ((entry != null) &&
+                        !"xl/worksheets/sheet1.xml".equals(entry.getName())) {
 
-			while (entries.hasMoreElements()) {
-				final ZipEntry e = entries.nextElement();
-				if (e.getName().equals("xl/worksheets/sheet1.xml")) {
-					this.entry = e;
-				}
-			}
+                    final ZipEntry entry2 = new ZipEntry(theEntry);
+                    entry2.setCompressedSize(-1);
+                    this.zos.putNextEntry(entry2);
+                    final byte[] theBuffer = new byte[(int) entry.getSize()];
+                    zis.read(theBuffer);
+                    this.zos.write(theBuffer);
+                    this.zos.closeEntry();
+                }
+            }
 
-			if (this.entry == null) {
-				this.readZipFile.close();
-				this.readZipFile = null;
-				throw new BufferedDataError("Could not find worksheet.");
-			}
+            zis.close();
+            zis = null;
 
-			final InputStream is = this.readZipFile.getInputStream(this.entry);
-			this.xmlIn = new ReadXML(is);
+            this.buffer = new ByteArrayOutputStream();
+            this.xmlOut = new WriteXML(this.buffer);
+            this.xmlOut.beginDocument();
+            this.xmlOut
+                    .addAttribute("xmlns",
+                                  "http://schemas.openxmlformats.org/spreadsheetml/2006/main");
+            this.xmlOut
+                    .addAttribute("xmlns:r",
+                                  "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            this.xmlOut.beginTag("worksheet");
+            final StringBuilder d = new StringBuilder();
+            d.append(toColumn(this.inputCount + this.idealCount));
+            d.append("" + recordCount);
+            this.xmlOut.addAttribute("ref", "A1:" + d.toString());
+            this.xmlOut.beginTag("dimension");
+            this.xmlOut.endTag();
+            this.xmlOut.beginTag("sheetViews");
+            this.xmlOut.addAttribute("tabSelected", "1");
+            this.xmlOut.addAttribute("workbookViewId", "0");
+            this.xmlOut.beginTag("sheetView");
+            this.xmlOut.endTag();
+            this.xmlOut.endTag();
+            this.xmlOut.addAttribute("defaultRowHeight", "15");
+            this.xmlOut.beginTag("sheetFormatPtr");
+            this.xmlOut.endTag();
+            this.row = 1;
+            this.xmlOut.beginTag("sheetData");
 
-		} catch (final ZipException e) {
-			throw new BufferedDataError("Not a valid Excel file.");
-		} catch (final IOException e) {
-			throw new BufferedDataError(e);
-		}
-	}
+        } catch (final IOException ex) {
+            throw new BufferedDataError(ex);
+        } finally {
+            if (zis != null) {
+                try {
+                    zis.close();
+                } catch (IOException e) {
+                    EncogLogging.log(e);
+                }
+            }
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void prepareWrite(final int recordCount, final int inputSize,
-			final int idealSize) {
-		this.inputCount = inputSize;
-		this.idealCount = idealSize;
-		ZipInputStream zis = null;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean read(final double[] input, final double[] ideal,
+                        double[] significance) {
 
-		try {
-			this.fos = new FileOutputStream(this.file);
-			this.zos = new ZipOutputStream(this.fos);
+        int ch;
 
-			final InputStream is = ResourceInputStream
-					.openResourceInputStream("org/encog/data/blank.xlsx");
+        while ((ch = this.xmlIn.read()) != -1) {
+            if (ch == 0) {
+                if (this.xmlIn.is("row", true)) {
+                    readRow(this.xmlIn, input, ideal);
+                    return true;
+                }
+            }
+        }
 
-			zis = new ZipInputStream(is);
+        significance[0] = 1.0;
+        return false;
+    }
 
-			ZipEntry theEntry;
+    /**
+     * {@inheritDoc}
+     */
+    private void readRow(final ReadXML xmlIn,
+                         final double[] input,
+                         final double[] ideal) {
+        int ch;
 
-			while (zis.available() > 0) {
-				theEntry = zis.getNextEntry();
-				if ((entry != null)
-			&& !"xl/worksheets/sheet1.xml".equals(entry.getName())) {
+        int index = 0;
+        while ((ch = this.xmlIn.read()) != -1) {
+            if (ch == 0) {
+                if (this.xmlIn.is("v", true)) {
+                    final String str = this.xmlIn.readTextToTag();
+                    final double d = CSVFormat.ENGLISH.parse(str);
+                    if (index < input.length) {
+                        input[index] = d;
+                    } else {
+                        ideal[index - input.length] = d;
+                    }
+                    index++;
+                } else if (this.xmlIn.is("row", false)) {
+                    break;
+                }
+            }
+        }
+    }
 
-					final ZipEntry entry2 = new ZipEntry(theEntry);
-					entry2.setCompressedSize(-1);
-					this.zos.putNextEntry(entry2);
-					final byte[] theBuffer 
-						= new byte[(int) entry.getSize()];
-					zis.read(theBuffer);
-					this.zos.write(theBuffer);
-					this.zos.closeEntry();
-				}
-			}
+    /**
+     * Convert a numeric index, to an Excel column.
+     * <p/>
+     * @param index
+     *              The numeric index.
+     * <p/>
+     * @return The column, i.e. A or AA.
+     */
+    private String toColumn(final int index) {
+        final StringBuilder result = new StringBuilder();
+        final int first = index / 26;
+        final int second = index % 26;
+        if (first > 0) {
+            result.append((char) ('A' + (first - 1)));
+            result.append((char) ('A' + (second - 1)));
+        } else {
+            result.append((char) ('A' + (second - 1)));
+        }
+        return result.toString();
+    }
 
-			zis.close();
-			zis = null;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void write(final double[] input, final double[] ideal,
+                      final double significance) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("1");
+        builder.append(":");
+        builder.append(this.inputCount + this.idealCount);
+        this.xmlOut.addAttribute("spans", builder.toString());
+        this.xmlOut.addAttribute("r", "" + (this.row++));
+        this.xmlOut.beginTag("row");
+        int index = 0;
+        for (int i = 0; i < this.inputCount; i++) {
+            this.xmlOut.addAttribute("r", toColumn(index++));
+            this.xmlOut.beginTag("c");
+            this.xmlOut.beginTag("v");
+            this.xmlOut.addText(CSVFormat.EG_FORMAT.format(input[i],
+                                                           Encog.DEFAULT_PRECISION));
+            this.xmlOut.endTag();
+            this.xmlOut.endTag();
+        }
 
-			this.buffer = new ByteArrayOutputStream();
-			this.xmlOut = new WriteXML(this.buffer);
-			this.xmlOut.beginDocument();
-			this.xmlOut
-					.addAttribute("xmlns",
-		"http://schemas.openxmlformats.org/spreadsheetml/2006/main");
-			this.xmlOut
-					.addAttribute("xmlns:r",
-"http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-			this.xmlOut.beginTag("worksheet");
-			final StringBuilder d = new StringBuilder();
-			d.append(toColumn(this.inputCount + this.idealCount));
-			d.append("" + recordCount);
-			this.xmlOut.addAttribute("ref", "A1:" + d.toString());
-			this.xmlOut.beginTag("dimension");
-			this.xmlOut.endTag();
-			this.xmlOut.beginTag("sheetViews");
-			this.xmlOut.addAttribute("tabSelected", "1");
-			this.xmlOut.addAttribute("workbookViewId", "0");
-			this.xmlOut.beginTag("sheetView");
-			this.xmlOut.endTag();
-			this.xmlOut.endTag();
-			this.xmlOut.addAttribute("defaultRowHeight", "15");
-			this.xmlOut.beginTag("sheetFormatPtr");
-			this.xmlOut.endTag();
-			this.row = 1;
-			this.xmlOut.beginTag("sheetData");
+        for (int i = 0; i < this.idealCount; i++) {
+            this.xmlOut.addAttribute("r", toColumn(index++));
+            this.xmlOut.beginTag("c");
+            this.xmlOut.beginTag("v");
+            this.xmlOut.addText(CSVFormat.EG_FORMAT.format(ideal[i],
+                                                           Encog.DEFAULT_PRECISION));
+            this.xmlOut.endTag();
+            this.xmlOut.endTag();
+        }
 
-		} catch (final IOException ex) {
-			throw new BufferedDataError(ex);
-		} finally {
-			if( zis!=null ) {
-				try {
-					zis.close();
-				} catch (IOException e) {
-					EncogLogging.log(e);
-				}
-			}
-		}
-	}
+        this.xmlOut.endTag();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean read(final double[] input, final double[] ideal, double[] significance) {
-
-		int ch;
-
-		while ((ch = this.xmlIn.read()) != -1) {
-			if (ch == 0) {
-				if (this.xmlIn.is("row", true)) {
-					readRow(this.xmlIn, input, ideal);
-					return true;
-				}
-			}
-		}
-
-		significance[0] = 1.0;
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	private void readRow(final ReadXML xmlIn, 
-			final double[] input,
-			final double[] ideal) {
-		int ch;
-
-		int index = 0;
-		while ((ch = this.xmlIn.read()) != -1) {
-			if (ch == 0) {
-				if (this.xmlIn.is("v", true)) {
-					final String str = this.xmlIn.readTextToTag();
-					final double d = CSVFormat.ENGLISH.parse(str);
-					if (index < input.length) {
-						input[index] = d;
-					} else {
-						ideal[index - input.length] = d;
-					}
-					index++;
-				} else if (this.xmlIn.is("row", false)) {
-					break;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Convert a numeric index, to an Excel column.
-	 * 
-	 * @param index
-	 *            The numeric index.
-	 * @return The column, i.e. A or AA.
-	 */
-	private String toColumn(final int index) {
-		final StringBuilder result = new StringBuilder();
-		final int first = index / 26;
-		final int second = index % 26;
-		if (first > 0) {
-			result.append((char) ('A' + (first - 1)));
-			result.append((char) ('A' + (second - 1)));
-		} else {
-			result.append((char) ('A' + (second - 1)));
-		}
-		return result.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void write(final double[] input, final double[] ideal, 
-			final double significance) {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("1");
-		builder.append(":");
-		builder.append(this.inputCount + this.idealCount);
-		this.xmlOut.addAttribute("spans", builder.toString());
-		this.xmlOut.addAttribute("r", "" + (this.row++));
-		this.xmlOut.beginTag("row");
-		int index = 0;
-		for (int i = 0; i < this.inputCount; i++) {
-			this.xmlOut.addAttribute("r", toColumn(index++));
-			this.xmlOut.beginTag("c");
-			this.xmlOut.beginTag("v");
-			this.xmlOut.addText(CSVFormat.EG_FORMAT.format(input[i],
-					Encog.DEFAULT_PRECISION));
-			this.xmlOut.endTag();
-			this.xmlOut.endTag();
-		}
-
-		for (int i = 0; i < this.idealCount; i++) {
-			this.xmlOut.addAttribute("r", toColumn(index++));
-			this.xmlOut.beginTag("c");
-			this.xmlOut.beginTag("v");
-			this.xmlOut.addText(CSVFormat.EG_FORMAT.format(ideal[i],
-					Encog.DEFAULT_PRECISION));
-			this.xmlOut.endTag();
-			this.xmlOut.endTag();
-		}
-
-		this.xmlOut.endTag();
-
-	}
-
+    }
 }

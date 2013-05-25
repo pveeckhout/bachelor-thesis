@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,42 +36,41 @@ import org.encog.ensemble.data.factories.WrappingNonResamplingDataSetFactory;
 
 public class Stacking extends Ensemble {
 
-	private int splits;
+    private int splits;
 
-	public Stacking(int splits, int dataSetSize, EnsembleMLMethodFactory mlFactory, EnsembleTrainFactory trainFactory, EnsembleAggregator aggregator)
-	{
-		int dataSplits = aggregator.needsTraining() ? splits + 1 : splits;
-		this.dataSetFactory = new WrappingNonResamplingDataSetFactory(dataSplits);
-		this.splits = splits;
-		this.mlFactory = mlFactory;
-		this.trainFactory = trainFactory;
-		this.members = new ArrayList<EnsembleML>();
-		this.aggregator = aggregator;
-		initMembers();
-	}
+    public Stacking(int splits, int dataSetSize,
+                    EnsembleMLMethodFactory mlFactory,
+                    EnsembleTrainFactory trainFactory,
+                    EnsembleAggregator aggregator) {
+        int dataSplits = aggregator.needsTraining() ? splits + 1 : splits;
+        this.dataSetFactory =
+                new WrappingNonResamplingDataSetFactory(dataSplits);
+        this.splits = splits;
+        this.mlFactory = mlFactory;
+        this.trainFactory = trainFactory;
+        this.members = new ArrayList<EnsembleML>();
+        this.aggregator = aggregator;
+        initMembers();
+    }
 
-	@Override
-	public void initMembers()
-	{
-		this.initMembersBySplits(this.splits);
-	}
+    @Override
+    public void initMembers() {
+        this.initMembersBySplits(this.splits);
+    }
 
-	@Override
-	public ProblemType getProblemType() {
-		return EnsembleTypes.ProblemType.CLASSIFICATION;
-	}
+    @Override
+    public ProblemType getProblemType() {
+        return EnsembleTypes.ProblemType.CLASSIFICATION;
+    }
 
-	@Override
-	public EnsembleML getMember(int memberNumber) {
-		return members.get(memberNumber);
-	}
+    @Override
+    public EnsembleML getMember(int memberNumber) {
+        return members.get(memberNumber);
+    }
 
-	public void trainStep() {
-		for (EnsembleML current : members)
-		{
-			current.trainStep();
-		}
-	}
-
-
+    public void trainStep() {
+        for (EnsembleML current : members) {
+            current.trainStep();
+        }
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,90 +34,90 @@ import org.encog.neural.networks.training.propagation.back.Backpropagation;
  */
 public class BPROPJob extends TrainingJob {
 
-	/**
-	 * The learning rate to use.
-	 */
-	private double learningRate;
+    /**
+     * The learning rate to use.
+     */
+    private double learningRate;
+    /**
+     * The momentum to use.
+     */
+    private double momentum;
 
-	/**
-	 * The momentum to use.
-	 */
-	private double momentum;
+    /**
+     * Construct a job definition for RPROP. For more information on backprop,
+     * see the Backpropagation class. Use OpenCLratio of 1.0 and process one
+     * iteration per cycle.
+     * <p/>
+     * @param network
+     *                     The network to use.
+     * @param training
+     *                     The training data to use.
+     * @param loadToMemory
+     *                     Should binary data be loaded to memory?
+     * @param learningRate
+     *                     THe learning rate to use.
+     * @param momentum
+     *                     The momentum to use.
+     */
+    public BPROPJob(final BasicNetwork network, final MLDataSet training,
+                    final boolean loadToMemory, final double learningRate,
+                    final double momentum) {
+        super(network, training, loadToMemory);
+        this.learningRate = learningRate;
+        this.momentum = momentum;
 
-	/**
-	 * Construct a job definition for RPROP. For more information on backprop,
-	 * see the Backpropagation class. Use OpenCLratio of 1.0 and process one
-	 * iteration per cycle.
-	 * 
-	 * @param network
-	 *            The network to use.
-	 * @param training
-	 *            The training data to use.
-	 * @param loadToMemory
-	 *            Should binary data be loaded to memory?
-	 * @param learningRate
-	 *            THe learning rate to use.
-	 * @param momentum
-	 *            The momentum to use.
-	 */
-	public BPROPJob(final BasicNetwork network, final MLDataSet training,
-			final boolean loadToMemory, final double learningRate,
-			final double momentum) {
-		super(network, training, loadToMemory);
-		this.learningRate = learningRate;
-		this.momentum = momentum;
+    }
 
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void createTrainer(final boolean singleThreaded) {
+        final Propagation train = new Backpropagation(getNetwork(),
+                                                      getTraining(),
+                                                      getLearningRate(),
+                                                      getMomentum());
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void createTrainer(final boolean singleThreaded) {
-		final Propagation train = new Backpropagation(getNetwork(),
-				getTraining(), getLearningRate(), getMomentum());
+        if (singleThreaded) {
+            train.setThreadCount(1);
+        } else {
+            train.setThreadCount(0);
+        }
 
-		if (singleThreaded) {
-			train.setThreadCount(1);
-		} else {
-			train.setThreadCount(0);
-		}
+        for (final Strategy strategy : getStrategies()) {
+            train.addStrategy(strategy);
+        }
 
-		for (final Strategy strategy : getStrategies()) {
-			train.addStrategy(strategy);
-		}
+        setTrain(train);
+    }
 
-		setTrain(train);
-	}
+    /**
+     * @return the learningRate
+     */
+    public double getLearningRate() {
+        return this.learningRate;
+    }
 
-	/**
-	 * @return the learningRate
-	 */
-	public double getLearningRate() {
-		return this.learningRate;
-	}
+    /**
+     * @return the momentum
+     */
+    public double getMomentum() {
+        return this.momentum;
+    }
 
-	/**
-	 * @return the momentum
-	 */
-	public double getMomentum() {
-		return this.momentum;
-	}
+    /**
+     * @param learningRate
+     *                     the learningRate to set
+     */
+    public void setLearningRate(final double learningRate) {
+        this.learningRate = learningRate;
+    }
 
-	/**
-	 * @param learningRate
-	 *            the learningRate to set
-	 */
-	public void setLearningRate(final double learningRate) {
-		this.learningRate = learningRate;
-	}
-
-	/**
-	 * @param momentum
-	 *            the momentum to set
-	 */
-	public void setMomentum(final double momentum) {
-		this.momentum = momentum;
-	}
-
+    /**
+     * @param momentum
+     *                 the momentum to set
+     */
+    public void setMomentum(final double momentum) {
+        this.momentum = momentum;
+    }
 }

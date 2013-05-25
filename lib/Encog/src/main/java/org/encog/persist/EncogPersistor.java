@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,27 +32,30 @@ import java.io.OutputStream;
  */
 public interface EncogPersistor {
 
-	/**
-	 * @return Get the class string for the object.
-	 */
-	String getPersistClassString();
+    /**
+     * @return Get the class string for the object.
+     */
+    String getPersistClassString();
 
-	/**
-	 * Read the object from an input stream.
-	 * @param is The input stream.
-	 * @return The object.
-	 */
-	Object read(InputStream is);
+    /**
+     * Read the object from an input stream.
+     * <p/>
+     * @param is The input stream.
+     * <p/>
+     * @return The object.
+     */
+    Object read(InputStream is);
 
-	/**
-	 * Save the object.
-	 * @param os The output stream to save to.
-	 * @param obj The object to save.
-	 */
-	void save(OutputStream os, Object obj);
+    /**
+     * Save the object.
+     * <p/>
+     * @param os  The output stream to save to.
+     * @param obj The object to save.
+     */
+    void save(OutputStream os, Object obj);
 
-	/**
-	 * @return Get the file version used by this persistor.
-	 */
-	int getFileVersion();
+    /**
+     * @return Get the file version used by this persistor.
+     */
+    int getFileVersion();
 }

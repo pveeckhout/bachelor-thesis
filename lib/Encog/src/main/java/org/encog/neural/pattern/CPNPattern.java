@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,117 +32,113 @@ import org.encog.neural.cpn.CPN;
  */
 public class CPNPattern implements NeuralNetworkPattern {
 
-	/**
-	 * The tag for the INSTAR layer.
-	 */
-	public static final String TAG_INSTAR = "INSTAR";
+    /**
+     * The tag for the INSTAR layer.
+     */
+    public static final String TAG_INSTAR = "INSTAR";
+    /**
+     * The tag for the OUTSTAR layer.
+     */
+    public static final String TAG_OUTSTAR = "OUTSTAR";
+    /**
+     * The number of neurons in the instar layer.
+     */
+    private int instarCount;
+    /**
+     * The number of neurons in the outstar layer.
+     */
+    private int outstarCount;
+    /**
+     * The number of neurons in the hidden layer.
+     */
+    private int inputCount;
 
-	/**
-	 * The tag for the OUTSTAR layer.
-	 */
-	public static final String TAG_OUTSTAR = "OUTSTAR";
+    /**
+     * Not used, will throw an error. CPN networks already have a predefined
+     * hidden layer called the instar layer.
+     * <p/>
+     * @param count
+     *              NOT USED
+     */
+    public void addHiddenLayer(final int count) {
+        throw new PatternError(
+                "A CPN already has a predefined hidden layer.  No additional" +
+                "specification is needed.");
+    }
 
-	/**
-	 * The number of neurons in the instar layer.
-	 */
-	private int instarCount;
+    /**
+     * Clear any parameters that were set.
+     */
+    public void clear() {
+        this.inputCount = 0;
+        this.instarCount = 0;
+        this.outstarCount = 0;
+    }
 
-	/**
-	 * The number of neurons in the outstar layer.
-	 */
-	private int outstarCount;
+    /**
+     * Generate the network.
+     * <p/>
+     * @return The generated network.
+     */
+    public MLMethod generate() {
+        return new CPN(inputCount, instarCount, outstarCount, 1);
+    }
 
-	/**
-	 * The number of neurons in the hidden layer.
-	 */
-	private int inputCount;
+    /**
+     * This method will throw an error. The CPN network uses predefined
+     * activation functions.
+     * <p/>
+     * @param activation
+     *                   NOT USED
+     */
+    public void setActivationFunction(final ActivationFunction activation) {
+        throw new PatternError(
+                "A CPN network will use the BiPolar & competitive activation " +
+                "functions, no activation function needs to be specified.");
+    }
 
+    /**
+     * Set the number of input neurons.
+     * <p/>
+     * @param count
+     *              The input neuron count.
+     */
+    public void setInputNeurons(final int count) {
+        this.inputCount = count;
 
-	/**
-	 * Not used, will throw an error. CPN networks already have a predefined
-	 * hidden layer called the instar layer.
-	 * 
-	 * @param count
-	 *            NOT USED
-	 */
-	public void addHiddenLayer(final int count) {
-		throw new PatternError("A CPN already has a predefined hidden layer.  No additional"
-				+ "specification is needed.");
-	}
+    }
 
-	/**
-	 * Clear any parameters that were set.
-	 */
-	public void clear() {
-		this.inputCount = 0;
-		this.instarCount = 0;
-		this.outstarCount = 0;
-	}
+    /**
+     * Set the number of neurons in the instar layer. This level is essentially
+     * a hidden layer.
+     * <p/>
+     * @param instarCount
+     *                    The instar count.
+     */
+    public void setInstarCount(final int instarCount) {
+        this.instarCount = instarCount;
+    }
 
-	/**
-	 * Generate the network.
-	 * 
-	 * @return The generated network.
-	 */
-	public MLMethod generate() {
-		return new CPN(inputCount,instarCount,outstarCount,1);
-	}
+    /**
+     * Set the number of output neurons. Calling this method maps to setting the
+     * number of neurons in the outstar layer.
+     * <p/>
+     * @param count
+     *              The count.
+     */
+    public void setOutputNeurons(final int count) {
+        this.outstarCount = count;
 
-	/**
-	 * This method will throw an error. The CPN network uses predefined
-	 * activation functions.
-	 * 
-	 * @param activation
-	 *            NOT USED
-	 */
-	public void setActivationFunction(final ActivationFunction activation) {
-		throw new PatternError("A CPN network will use the BiPolar & competitive activation "
-				+ "functions, no activation function needs to be specified.");
-	}
+    }
 
-	/**
-	 * Set the number of input neurons.
-	 * 
-	 * @param count
-	 *            The input neuron count.
-	 */
-	public void setInputNeurons(final int count) {
-		this.inputCount = count;
-
-	}
-
-	/**
-	 * Set the number of neurons in the instar layer. This level is essentially
-	 * a hidden layer.
-	 * 
-	 * @param instarCount
-	 *            The instar count.
-	 */
-	public void setInstarCount(final int instarCount) {
-		this.instarCount = instarCount;
-	}
-
-	/**
-	 * Set the number of output neurons. Calling this method maps to setting the
-	 * number of neurons in the outstar layer.
-	 * 
-	 * @param count
-	 *            The count.
-	 */
-	public void setOutputNeurons(final int count) {
-		this.outstarCount = count;
-
-	}
-
-	/**
-	 * Set the number of neurons in the outstar level, this level is mapped to
-	 * the "output" level.
-	 * 
-	 * @param outstarCount
-	 *            The outstar count.
-	 */
-	public void setOutstarCount(final int outstarCount) {
-		this.outstarCount = outstarCount;
-	}
-
+    /**
+     * Set the number of neurons in the outstar level, this level is mapped to
+     * the "output" level.
+     * <p/>
+     * @param outstarCount
+     *                     The outstar count.
+     */
+    public void setOutstarCount(final int outstarCount) {
+        this.outstarCount = outstarCount;
+    }
 }

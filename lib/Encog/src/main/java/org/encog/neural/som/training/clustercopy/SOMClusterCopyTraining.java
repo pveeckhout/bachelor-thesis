@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,110 +34,113 @@ import org.encog.neural.networks.training.propagation.TrainingContinuation;
 import org.encog.neural.som.SOM;
 
 /**
- * SOM cluster copy is a very simple trainer for SOM's. Using this trainer all of
+ * SOM cluster copy is a very simple trainer for SOM's. Using this trainer all
+ * of
  * the training data is copied to the SOM weights. This can provide a functional
  * SOM, or can be used as a starting point for training.
- * 
- * For now, this trainer will only work if you have equal or fewer training elements 
- * to the number of output neurons.  Eventually I hope to expand this by using 
+ * <p/>
+ * For now, this trainer will only work if you have equal or fewer training
+ * elements
+ * to the number of output neurons. Eventually I hope to expand this by using
  * KMeans clustering.
- * 
+ * <p/>
  */
 public class SOMClusterCopyTraining extends BasicTraining {
 
-	/**
-	 * The SOM to train.
-	 */
-	private final SOM network;
+    /**
+     * The SOM to train.
+     */
+    private final SOM network;
+    /**
+     * Is training done.
+     */
+    private boolean done;
 
-	/**
-	 * Is training done.
-	 */
-	private boolean done;
+    /**
+     * Construct the object.
+     * <p/>
+     * @param network  The network to train.
+     * @param training The training data.
+     */
+    public SOMClusterCopyTraining(final SOM network, final MLDataSet training) {
+        super(TrainingImplementationType.OnePass);
+        this.network = network;
+        if (this.network.getOutputCount() < training.getRecordCount()) {
+            throw new NeuralNetworkError(
+                    "To use cluster copy training you must have at least as many output neurons as training elements.");
+        }
+        setTraining(training);
+    }
 
-	/**
-	 * Construct the object.
-	 * @param network The network to train.
-	 * @param training The training data.
-	 */
-	public SOMClusterCopyTraining(final SOM network, final MLDataSet training) {
-		super(TrainingImplementationType.OnePass);
-		this.network = network;
-		if (this.network.getOutputCount() < training.getRecordCount()) {
-			throw new NeuralNetworkError(
-					"To use cluster copy training you must have at least as many output neurons as training elements.");
-		}		
-		setTraining(training);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final boolean canContinue() {
+        return false;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final boolean canContinue() {
-		return false;
-	}
+    /**
+     * @return True if training can progress no further.
+     */
+    public boolean isTrainingDone() {
+        if (super.isTrainingDone()) {
+            return true;
+        } else {
+            return done;
+        }
+    }
 
-	/**
-	 * @return True if training can progress no further.
-	 */
-	public boolean isTrainingDone() {
-		if (super.isTrainingDone())
-			return true;
-		else
-			return done;
-	}
+    /**
+     * Copy the specified input pattern to the weight matrix. This causes an
+     * output neuron to learn this pattern "exactly". This is useful when a
+     * winner is to be forced.
+     *
+     * @param outputNeuron
+     *                     The output neuron to set.
+     * @param input
+     *                     The input pattern to copy.
+     */
+    private void copyInputPattern(final int outputNeuron, final MLData input) {
+        for (int inputNeuron = 0; inputNeuron < this.network.getInputCount();
+                inputNeuron++) {
+            this.network.getWeights().set(outputNeuron, inputNeuron,
+                                          input.getData(inputNeuron));
+        }
+    }
 
-	/**
-	 * Copy the specified input pattern to the weight matrix. This causes an
-	 * output neuron to learn this pattern "exactly". This is useful when a
-	 * winner is to be forced.
-	 *
-	 * @param outputNeuron
-	 *            The output neuron to set.
-	 * @param input
-	 *            The input pattern to copy.
-	 */
-	private void copyInputPattern(final int outputNeuron, final MLData input) {
-		for (int inputNeuron = 0; inputNeuron < this.network.getInputCount(); inputNeuron++) {
-			this.network.getWeights().set(outputNeuron, inputNeuron,
-					input.getData(inputNeuron));
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final MLMethod getMethod() {
+        return this.network;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final MLMethod getMethod() {
-		return this.network;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void iteration() {
+        int outputNeuron = 0;
+        for (final MLDataPair pair : getTraining()) {
+            copyInputPattern(outputNeuron++, pair.getInput());
+        }
+        this.done = true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void iteration() {
-		int outputNeuron = 0;
-		for (final MLDataPair pair : getTraining()) {
-			copyInputPattern(outputNeuron++, pair.getInput());
-		}
-		this.done = true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TrainingContinuation pause() {
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TrainingContinuation pause() {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void resume(final TrainingContinuation state) {
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void resume(final TrainingContinuation state) {
+    }
 }

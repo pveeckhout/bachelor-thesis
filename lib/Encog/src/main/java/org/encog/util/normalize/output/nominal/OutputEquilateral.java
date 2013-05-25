@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -38,128 +38,128 @@ import org.encog.util.normalize.output.BasicOutputField;
  */
 public class OutputEquilateral extends BasicOutputField {
 
-	/**
-	 * THe nominal items.
-	 */
-	private final List<NominalItem> items = new ArrayList<NominalItem>();
+    /**
+     * THe nominal items.
+     */
+    private final List<NominalItem> items = new ArrayList<NominalItem>();
+    /**
+     * The current equilateral matrix.
+     */
+    private Equilateral equilateral;
+    /**
+     * The current value, which nominal item is selected.
+     */
+    private int currentValue;
+    /**
+     * The high value to map into.
+     */
+    private double high;
+    /**
+     * THe low value to map into.
+     */
+    private double low;
 
-	/**
-	 * The current equilateral matrix.
-	 */
-	private Equilateral equilateral;
+    /**
+     * Prodvide a default constructor for reflection.
+     */
+    public OutputEquilateral() {
+        this(-1, 1);
+    }
 
-	/**
-	 * The current value, which nominal item is selected.
-	 */
-	private int currentValue;
+    /**
+     * Create an equilateral output field with the specified high and low output
+     * values. These will often be 0 to 1 or -1 to 1.
+     * <p/>
+     * @param high
+     *             The high output value.
+     * @param low
+     *             The low output value.
+     */
+    public OutputEquilateral(final double low, final double high) {
+        this.high = high;
+        this.low = low;
+    }
 
-	/**
-	 * The high value to map into.
-	 */
-	private double high;
+    /**
+     * Add a nominal value based on a single value. This creates a 0.1 range
+     * around this value.
+     * <p/>
+     * @param inputField The input field this is based on.
+     * @param value      The value.
+     */
+    public void addItem(final InputField inputField, final double value) {
+        addItem(inputField, value - 0.1, value + 0.1);
+    }
 
-	/**
-	 * THe low value to map into.
-	 */
-	private double low;
+    /**
+     * Add a nominal item based on a range.
+     * <p/>
+     * @param inputField The input field to use.
+     * @param low        The low value of the range.
+     * @param high       The high value of the range.
+     */
+    public void addItem(final InputField inputField, final double low,
+                        final double high) {
+        final NominalItem item = new NominalItem(inputField, low, high);
+        this.items.add(item);
+    }
 
-	/**
-	 * Prodvide a default constructor for reflection.
-	 */
-	public OutputEquilateral() {
-		this(-1,1);
-	}
+    /**
+     * Calculate the value for the specified subfield.
+     * <p/>
+     * @param subfield The subfield to calculate for.
+     * <p/>
+     * @return The calculated value.
+     */
+    public double calculate(final int subfield) {
+        return this.equilateral.encode(this.currentValue)[subfield];
+    }
 
-	/**
-	 * Create an equilateral output field with the specified high and low output
-	 * values. These will often be 0 to 1 or -1 to 1.
-	 * 
-	 * @param high
-	 *            The high output value.
-	 * @param low
-	 * 				The low output value.
-	 */
-	public OutputEquilateral(final double low, final double high) {
-		this.high = high;
-		this.low = low;
-	}
+    /**
+     * @return The equalateral table being used.
+     */
+    public Equilateral getEquilateral() {
+        return this.equilateral;
+    }
 
-	/**
-	 * Add a nominal value based on a single value.  This creates a 0.1 range
-	 * around this value.
-	 * @param inputField The input field this is based on.
-	 * @param value The value.
-	 */
-	public void addItem(final InputField inputField, final double value) {
-		addItem(inputField, value - 0.1, value + 0.1);
-	}
+    /**
+     * @return The high value of the range.
+     */
+    public double getHigh() {
+        return this.high;
+    }
 
-	/**
-	 * Add a nominal item based on a range.
-	 * @param inputField The input field to use.
-	 * @param low The low value of the range.
-	 * @param high The high value of the range.
-	 */
-	public void addItem(final InputField inputField, final double low,
-			final double high) {
-		final NominalItem item = new NominalItem(inputField, low, high);
-		this.items.add(item);
-	}
+    /**
+     * @return The low value of the range.
+     */
+    public double getLow() {
+        return this.low;
+    }
 
-	/**
-	 * Calculate the value for the specified subfield.
-	 * @param subfield The subfield to calculate for.
-	 * @return The calculated value.
-	 */
-	public double calculate(final int subfield) {
-		return this.equilateral.encode(this.currentValue)[subfield];
-	}
+    /**
+     * This is the total number of nominal items minus 1.
+     * <p/>
+     * @return The number of subfields.
+     */
+    public int getSubfieldCount() {
+        return this.items.size() - 1;
+    }
 
-	/**
-	 * @return The equalateral table being used.
-	 */
-	public Equilateral getEquilateral() {
-		return this.equilateral;
-	}
+    /**
+     * Determine which item's index is the value.
+     */
+    public void rowInit() {
+        for (int i = 0; i < this.items.size(); i++) {
+            final NominalItem item = this.items.get(i);
+            if (item.isInRange()) {
+                this.currentValue = i;
+                break;
+            }
+        }
 
-	/**
-	 * @return The high value of the range.
-	 */
-	public double getHigh() {
-		return this.high;
-	}
-
-	/**
-	 * @return The low value of the range.
-	 */
-	public double getLow() {
-		return this.low;
-	}
-
-	/**
-	 * This is the total number of nominal items minus 1.
-	 * 
-	 * @return The number of subfields.
-	 */
-	public int getSubfieldCount() {
-		return this.items.size() - 1;
-	}
-
-	/**
-	 * Determine which item's index is the value.
-	 */
-	public void rowInit() {
-		for (int i = 0; i < this.items.size(); i++) {
-			final NominalItem item = this.items.get(i);
-			if (item.isInRange()) {
-				this.currentValue = i;
-				break;
-			}
-		}
-
-		if (this.equilateral == null) {
-			this.equilateral = new Equilateral(this.items.size(), this.high,
-					this.low);
-		}
-	}
+        if (this.equilateral == null) {
+            this.equilateral = new Equilateral(this.items.size(), this.high,
+                                               this.low);
+        }
+    }
 }

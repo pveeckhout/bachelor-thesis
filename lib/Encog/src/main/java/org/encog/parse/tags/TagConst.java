@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -25,36 +25,32 @@ package org.encog.parse.tags;
 
 /**
  * Constants to use while parsing the tags.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public final class TagConst {
 
-	/**
-	 * The beginning of a comment.
-	 */
-	public static final String COMMENT_BEGIN = "!--";
+    /**
+     * The beginning of a comment.
+     */
+    public static final String COMMENT_BEGIN = "!--";
+    /**
+     * The end of a comment.
+     */
+    public static final String COMMENT_END = "-->";
+    /**
+     * The beginning of a CDATA section.
+     */
+    public static final String CDATA_BEGIN = "![CDATA[";
+    /**
+     * THe end of a CDATA section.
+     */
+    public static final String CDATA_END = "]]";
 
-	/**
-	 * The end of a comment.
-	 */
-	public static final String COMMENT_END = "-->";
-
-	/**
-	 * The beginning of a CDATA section.
-	 */
-	public static final String CDATA_BEGIN = "![CDATA[";
-
-	/**
-	 * THe end of a CDATA section.
-	 */
-	public static final String CDATA_END = "]]";
-
-	/**
-	 * Private constructor.
-	 */
-	private TagConst() {
-
-	}
+    /**
+     * Private constructor.
+     */
+    private TagConst() {
+    }
 }

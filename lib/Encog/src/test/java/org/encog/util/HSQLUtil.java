@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,72 +31,67 @@ import java.util.Properties;
 /**
  * Utilities for using the Hypersonic SQL (HSQL) engine. Encog uses this SQL
  * database for in-memory spidering, as well as unit testing.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public final class HSQLUtil {
 
-	/**
-	 * The driver to use for the memory database.
-	 */
-	public static final String DRIVER = "org.hsqldb.jdbcDriver";
-	
-	/**
-	 * The URL to use for the memory database.
-	 */
-	public static final String URL = "jdbc:hsqldb:mem:encog";
-	
-	/**
-	 * The user id to use for the memory database.
-	 */
-	public static final String UID = "sa";
-	
-	/**
-	 * The password to use for the memory database.
-	 */
-	public static final String PWD = "";
-	
-	/**
-	 * The dialect to use for the memory database.
-	 */
-	public static final String DIALECT = "org.hibernate.dialect.HSQLDialect";
+    /**
+     * The driver to use for the memory database.
+     */
+    public static final String DRIVER = "org.hsqldb.jdbcDriver";
+    /**
+     * The URL to use for the memory database.
+     */
+    public static final String URL = "jdbc:hsqldb:mem:encog";
+    /**
+     * The user id to use for the memory database.
+     */
+    public static final String UID = "sa";
+    /**
+     * The password to use for the memory database.
+     */
+    public static final String PWD = "";
+    /**
+     * The dialect to use for the memory database.
+     */
+    public static final String DIALECT = "org.hibernate.dialect.HSQLDialect";
 
-	/**
-	 * @return A connection to the memory database.
-	 * @throws SQLException An SQL error.
-	 */
-	public static Connection getConnection() throws SQLException {
-		final Properties props = new Properties();
-		props.put("user", HSQLUtil.UID);
-		props.put("password", HSQLUtil.PWD);
+    /**
+     * @return A connection to the memory database.
+     * <p/>
+     * @throws SQLException An SQL error.
+     */
+    public static Connection getConnection() throws SQLException {
+        final Properties props = new Properties();
+        props.put("user", HSQLUtil.UID);
+        props.put("password", HSQLUtil.PWD);
 
-		return DriverManager.getConnection(HSQLUtil.URL, props);
-	}
+        return DriverManager.getConnection(HSQLUtil.URL, props);
+    }
 
+    /**
+     * Load the driver for the memory database.
+     * <p/>
+     * @throws InstantiationException Database error.
+     * @throws IllegalAccessException Database error.
+     * @throws ClassNotFoundException Database error.
+     */
+    public static void loadDriver() throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        Class.forName("org.hsqldb.jdbcDriver");
+    }
 
+    /**
+     * Shutdown the database. Not currently implemented.
+     */
+    public static void shutdown() {
+    }
 
-	/**
-	 * Load the driver for the memory database.
-	 * @throws InstantiationException Database error.
-	 * @throws IllegalAccessException Database error.
-	 * @throws ClassNotFoundException Database error.
-	 */
-	public static void loadDriver() throws InstantiationException,
-			IllegalAccessException, ClassNotFoundException {
-		Class.forName("org.hsqldb.jdbcDriver");
-	}
-
-	/**
-	 * Shutdown the database. Not currently implemented.
-	 */
-	public static void shutdown() {
-
-	}
-	
-	/**
-	 * Private constructor.
-	 */
-	private HSQLUtil() {		
-	}
+    /**
+     * Private constructor.
+     */
+    private HSQLUtil() {
+    }
 }

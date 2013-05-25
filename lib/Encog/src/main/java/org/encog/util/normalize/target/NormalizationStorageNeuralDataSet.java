@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,104 +33,96 @@ import org.encog.util.normalize.DataNormalization;
  */
 public class NormalizationStorageNeuralDataSet implements NormalizationStorage {
 
-	/**
-	 * The input count.
-	 */
-	private int inputCount;
+    /**
+     * The input count.
+     */
+    private int inputCount;
+    /**
+     * The ideal count.
+     */
+    private int idealCount;
+    /**
+     * The data set to add to.
+     */
+    private MLDataSet dataset;
 
-	/**
-	 * The ideal count.
-	 */
-	private int idealCount;
+    public NormalizationStorageNeuralDataSet() {
+    }
 
-	/**
-	 * The data set to add to.
-	 */
-	private MLDataSet dataset;
+    /**
+     * Construct a new NeuralDataSet based on the parameters specified.
+     * <p/>
+     * @param inputCount The input count.
+     * @param idealCount The output count.
+     */
+    public NormalizationStorageNeuralDataSet(final int inputCount,
+                                             final int idealCount) {
+        this.inputCount = inputCount;
+        this.idealCount = idealCount;
+        this.dataset = new BasicNeuralDataSet();
+    }
 
-	
-	public NormalizationStorageNeuralDataSet()
-	{
-		
-	}
-	
-	/**
-	 * Construct a new NeuralDataSet based on the parameters specified.
-	 * 
-	 * @param inputCount The input count.
- 	 * @param idealCount The output count.
-	 */
-	public NormalizationStorageNeuralDataSet(final int inputCount,
-			final int idealCount) {
-		this.inputCount = inputCount;
-		this.idealCount = idealCount;
-		this.dataset = new BasicNeuralDataSet();
-	}
+    /**
+     * Construct a normalized neural storage class to hold data.
+     * <p/>
+     * @param dataset
+     *                The data set to store to. This uses an existing data set.
+     */
+    public NormalizationStorageNeuralDataSet(final MLDataSet dataset) {
+        this.dataset = dataset;
+        this.inputCount = this.dataset.getInputSize();
+        this.idealCount = this.dataset.getIdealSize();
+    }
 
-	/**
-	 * Construct a normalized neural storage class to hold data.
-	 * 
-	 * @param dataset
-	 *            The data set to store to. This uses an existing data set.
-	 */
-	public NormalizationStorageNeuralDataSet(final MLDataSet dataset) {
-		this.dataset = dataset;
-		this.inputCount = this.dataset.getInputSize();
-		this.idealCount = this.dataset.getIdealSize();
-	}
+    /**
+     * Not needed for this storage type.
+     */
+    public void close() {
+    }
 
-	/**
-	 * Not needed for this storage type.
-	 */
-	public void close() {
-	}
+    /**
+     * Not needed for this storage type.
+     */
+    public void open(DataNormalization norm) {
+    }
 
-	/**
-	 * Not needed for this storage type.
-	 */
-	public void open(DataNormalization norm) {
-	}
+    /**
+     * Write an array.
+     * <p/>
+     * @param data
+     *                   The data to write.
+     * @param inputCount
+     *                   How much of the data is input.
+     */
+    public void write(final double[] data, final int inputCount) {
 
-	/**
-	 * Write an array.
-	 * 
-	 * @param data
-	 *            The data to write.
-	 * @param inputCount
-	 *            How much of the data is input.
-	 */
-	public void write(final double[] data, final int inputCount) {
+        if (this.idealCount == 0) {
+            final BasicNeuralData inputData = new BasicNeuralData(data);
+            this.dataset.add(inputData);
+        } else {
+            final BasicNeuralData inputData = new BasicNeuralData(
+                    this.inputCount);
+            final BasicNeuralData idealData = new BasicNeuralData(
+                    this.idealCount);
 
-		if (this.idealCount == 0) {
-			final BasicNeuralData inputData = new BasicNeuralData(data);
-			this.dataset.add(inputData);
-		} else {
-			final BasicNeuralData inputData = new BasicNeuralData(
-					this.inputCount);
-			final BasicNeuralData idealData = new BasicNeuralData(
-					this.idealCount);
+            int index = 0;
+            for (int i = 0; i < this.inputCount; i++) {
+                inputData.setData(i, data[index++]);
+            }
 
-			int index = 0;
-			for (int i = 0; i < this.inputCount; i++) {
-				inputData.setData(i, data[index++]);
-			}
+            for (int i = 0; i < this.idealCount; i++) {
+                idealData.setData(i, data[index++]);
+            }
 
-			for (int i = 0; i < this.idealCount; i++) {
-				idealData.setData(i, data[index++]);
-			}
+            this.dataset.add(inputData, idealData);
+        }
 
-			this.dataset.add(inputData, idealData);
-		}
+    }
 
-	}
-
-	/**
-	 * @return The dataset used.
-	 */
-	public MLDataSet getDataset() {
-		return dataset;
-	}
-	
-	
-
+    /**
+     * @return The dataset used.
+     */
+    public MLDataSet getDataset() {
+        return dataset;
+    }
 }

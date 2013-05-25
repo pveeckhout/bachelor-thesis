@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,27 +28,27 @@ import java.io.Serializable;
 import org.encog.ml.CalculateScore;
 
 public class FitnessObjective implements Serializable {
-	private final double weight;
-	private final CalculateScore score;
-	
-	public FitnessObjective(double weight, CalculateScore score) {
-		super();
-		this.weight = weight;
-		this.score = score;
-	}
-	/**
-	 * @return the weight
-	 */
-	public double getWeight() {
-		return weight;
-	}
-	/**
-	 * @return the score
-	 */
-	public CalculateScore getScore() {
-		return score;
-	}
-	
-	
-	
+
+    private final double weight;
+    private final CalculateScore score;
+
+    public FitnessObjective(double weight, CalculateScore score) {
+        super();
+        this.weight = weight;
+        this.score = score;
+    }
+
+    /**
+     * @return the weight
+     */
+    public double getWeight() {
+        return weight;
+    }
+
+    /**
+     * @return the score
+     */
+    public CalculateScore getScore() {
+        return score;
+    }
 }

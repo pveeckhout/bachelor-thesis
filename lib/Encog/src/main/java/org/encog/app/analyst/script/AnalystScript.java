@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -50,341 +50,340 @@ import org.encog.util.csv.CSVFormat;
  */
 public class AnalystScript {
 
-	/**
-	 * The default MAX size for a class.
-	 */
-	public static final int DEFAULT_MAX_CLASS = 50;
+    /**
+     * The default MAX size for a class.
+     */
+    public static final int DEFAULT_MAX_CLASS = 50;
+    /**
+     * The data fields, these are the raw data from the CSV file.
+     */
+    private DataField[] fields;
+    /**
+     * Information about how to normalize.
+     */
+    private final AnalystNormalize normalize = new AnalystNormalize(this);
+    /**
+     * Information about how to segregate.
+     */
+    private final AnalystSegregate segregate = new AnalystSegregate();
+    /**
+     * Information about the process command.
+     */
+    private final AnalystProcess process = new AnalystProcess();
+    /**
+     * Tracks which files were generated.
+     */
+    private final Set<String> generated = new HashSet<String>();
+    private final List<ScriptOpcode> opcodes = new ArrayList<ScriptOpcode>();
+    /**
+     * The tasks.
+     */
+    private final Map<String, AnalystTask> tasks =
+            new HashMap<String, AnalystTask>();
+    /**
+     * The properties.
+     */
+    private final ScriptProperties properties = new ScriptProperties();
+    /**
+     * The base path.
+     */
+    private String basePath;
 
-	/**
-	 * The data fields, these are the raw data from the CSV file.
-	 */
-	private DataField[] fields;
+    /**
+     * Construct an analyst script.
+     */
+    public AnalystScript() {
+        this.properties.setProperty(ScriptProperties.SETUP_CONFIG_CSV_FORMAT,
+                                    AnalystFileFormat.DECPNT_COMMA);
+        this.properties.setProperty(
+                ScriptProperties.SETUP_CONFIG_MAX_CLASS_COUNT,
+                DEFAULT_MAX_CLASS);
+        this.properties
+                .setProperty(ScriptProperties.SETUP_CONFIG_ALLOWED_CLASSES,
+                             "integer,string");
+    }
 
-	/**
-	 * Information about how to normalize.
-	 */
-	private final AnalystNormalize normalize = new AnalystNormalize(this);
+    /**
+     * Add a task.
+     * <p/>
+     * @param task
+     *             The task to add.
+     */
+    public void addTask(final AnalystTask task) {
+        this.tasks.put(task.getName(), task);
+    }
 
-	/**
-	 * Information about how to segregate.
-	 */
-	private final AnalystSegregate segregate = new AnalystSegregate();
+    /**
+     * Clear all tasks.
+     */
+    public void clearTasks() {
+        this.tasks.clear();
+    }
 
-	/**
-	 * Information about the process command.
-	 */
-	private final AnalystProcess process = new AnalystProcess();
+    /**
+     * Determine the output format.
+     * <p/>
+     * @return The output format.
+     */
+    public CSVFormat determineFormat() {
+        return getProperties().getPropertyCSVFormat(
+                ScriptProperties.SETUP_CONFIG_CSV_FORMAT);
+    }
 
-	/**
-	 * Tracks which files were generated.
-	 */
-	private final Set<String> generated = new HashSet<String>();
+    /**
+     * Determine if input headers are expected.
+     * <p/>
+     * @param filename
+     *                 The filename.
+     * <p/>
+     * @return True if headers are expected.
+     */
+    public boolean expectInputHeaders(final String filename) {
+        if (isGenerated(filename)) {
+            return true;
+        } else {
+            return this.properties
+                    .getPropertyBoolean(
+                    ScriptProperties.SETUP_CONFIG_INPUT_HEADERS);
+        }
+    }
 
-	private final List<ScriptOpcode> opcodes = new ArrayList<ScriptOpcode>();
+    /**
+     * Find the specified data field. Use name to find, and ignore case.
+     * <p/>
+     * @param name
+     *             The name to search for.
+     * <p/>
+     * @return The specified data field.
+     */
+    public DataField findDataField(final String name) {
+        for (final DataField dataField : this.fields) {
+            if (dataField.getName().equalsIgnoreCase(name)) {
+                return dataField;
+            }
+        }
 
-	/**
-	 * The tasks.
-	 */
-	private final Map<String, AnalystTask> tasks = new HashMap<String, AnalystTask>();
+        return null;
+    }
 
-	/**
-	 * The properties.
-	 */
-	private final ScriptProperties properties = new ScriptProperties();
+    /**
+     * Find the specified data field and return its index.
+     * <p/>
+     * @param df
+     *           The data field to search for.
+     * <p/>
+     * @return The index of the specified data field, or -1 if not found.
+     */
+    public int findDataFieldIndex(final DataField df) {
+        for (int result = 0; result < this.fields.length; result++) {
+            if (df == this.fields[result]) {
+                return result;
+            }
+        }
+        return -1;
+    }
 
-	/**
-	 * The base path.
-	 */
-	private String basePath;
+    /**
+     * Find the specified normalized field. Search without case.
+     * <p/>
+     * @param name
+     *              The name of the field we are searching for.
+     * @param slice
+     *              The timeslice.
+     * <p/>
+     * @return The analyst field that was found.
+     */
+    public AnalystField findNormalizedField(final String name, final int slice) {
+        for (final AnalystField field : getNormalize().getNormalizedFields()) {
+            if (field.getName().equalsIgnoreCase(name) &&
+                    (field.getTimeSlice() == slice)) {
+                return field;
+            }
+        }
 
-	/**
-	 * Construct an analyst script.
-	 */
-	public AnalystScript() {
-		this.properties.setProperty(ScriptProperties.SETUP_CONFIG_CSV_FORMAT,
-				AnalystFileFormat.DECPNT_COMMA);
-		this.properties.setProperty(
-				ScriptProperties.SETUP_CONFIG_MAX_CLASS_COUNT,
-				DEFAULT_MAX_CLASS);
-		this.properties
-				.setProperty(ScriptProperties.SETUP_CONFIG_ALLOWED_CLASSES,
-						"integer,string");
-	}
+        return null;
+    }
 
-	/**
-	 * Add a task.
-	 * 
-	 * @param task
-	 *            The task to add.
-	 */
-	public void addTask(final AnalystTask task) {
-		this.tasks.put(task.getName(), task);
-	}
+    /**
+     * @return The base path.
+     */
+    public String getBasePath() {
+        return this.basePath;
+    }
 
-	/**
-	 * Clear all tasks.
-	 */
-	public void clearTasks() {
-		this.tasks.clear();
-	}
+    /**
+     * @return the data fields.
+     */
+    public DataField[] getFields() {
+        return this.fields;
+    }
 
-	/**
-	 * Determine the output format.
-	 * 
-	 * @return The output format.
-	 */
-	public CSVFormat determineFormat() {
-		return getProperties().getPropertyCSVFormat(
-				ScriptProperties.SETUP_CONFIG_CSV_FORMAT);
-	}
+    /**
+     * @return the normalize
+     */
+    public AnalystNormalize getNormalize() {
+        return this.normalize;
+    }
 
-	/**
-	 * Determine if input headers are expected.
-	 * 
-	 * @param filename
-	 *            The filename.
-	 * @return True if headers are expected.
-	 */
-	public boolean expectInputHeaders(final String filename) {
-		if (isGenerated(filename)) {
-			return true;
-		} else {
-			return this.properties
-					.getPropertyBoolean(ScriptProperties.SETUP_CONFIG_INPUT_HEADERS);
-		}
-	}
+    /**
+     * @return The precision.
+     */
+    public int getPrecision() {
+        return Encog.DEFAULT_PRECISION;
+    }
 
-	/**
-	 * Find the specified data field. Use name to find, and ignore case.
-	 * 
-	 * @param name
-	 *            The name to search for.
-	 * @return The specified data field.
-	 */
-	public DataField findDataField(final String name) {
-		for (final DataField dataField : this.fields) {
-			if (dataField.getName().equalsIgnoreCase(name)) {
-				return dataField;
-			}
-		}
+    /**
+     * @return the properties
+     */
+    public ScriptProperties getProperties() {
+        return this.properties;
+    }
 
-		return null;
-	}
+    /**
+     * @return the segregate
+     */
+    public AnalystSegregate getSegregate() {
+        return this.segregate;
+    }
 
-	/**
-	 * Find the specified data field and return its index.
-	 * 
-	 * @param df
-	 *            The data field to search for.
-	 * @return The index of the specified data field, or -1 if not found.
-	 */
-	public int findDataFieldIndex(final DataField df) {
-		for (int result = 0; result < this.fields.length; result++) {
-			if (df == this.fields[result]) {
-				return result;
-			}
-		}
-		return -1;
-	}
+    /**
+     * Get the specified task.
+     * <p/>
+     * @param name
+     *             The name of the testk.
+     * <p/>
+     * @return The analyst task.
+     */
+    public AnalystTask getTask(final String name) {
+        if (!this.tasks.containsKey(name)) {
+            return null;
+        }
+        return this.tasks.get(name);
+    }
 
-	/**
-	 * Find the specified normalized field. Search without case.
-	 * 
-	 * @param name
-	 *            The name of the field we are searching for.
-	 * @param slice
-	 *            The timeslice.
-	 * @return The analyst field that was found.
-	 */
-	public AnalystField findNormalizedField(final String name, final int slice) {
-		for (final AnalystField field : getNormalize().getNormalizedFields()) {
-			if (field.getName().equalsIgnoreCase(name)
-					&& (field.getTimeSlice() == slice)) {
-				return field;
-			}
-		}
+    /**
+     * @return The tasks.
+     */
+    public Map<String, AnalystTask> getTasks() {
+        return this.tasks;
+    }
 
-		return null;
-	}
+    /**
+     * Init this script.
+     */
+    public void init() {
+        this.normalize.init(this);
+    }
 
-	/**
-	 * @return The base path.
-	 */
-	public String getBasePath() {
-		return this.basePath;
-	}
+    /**
+     * Determine if the specified file was generated.
+     * <p/>
+     * @param filename
+     *                 The filename to check.
+     * <p/>
+     * @return True, if the specified file was generated.
+     */
+    public boolean isGenerated(final String filename) {
+        return this.generated.contains(filename);
+    }
 
-	/**
-	 * @return the data fields.
-	 */
-	public DataField[] getFields() {
-		return this.fields;
-	}
+    /**
+     * Load the script.
+     * <p/>
+     * @param stream
+     *               The stream to load from.
+     */
+    public void load(final InputStream stream) {
+        final ScriptLoad s = new ScriptLoad(this);
+        s.load(stream);
+    }
 
-	/**
-	 * @return the normalize
-	 */
-	public AnalystNormalize getNormalize() {
-		return this.normalize;
-	}
+    /**
+     * Mark the sepcified filename as generated.
+     * <p/>
+     * @param filename
+     *                 The filename.
+     */
+    public void markGenerated(final String filename) {
+        this.generated.add(filename);
+    }
 
-	/**
-	 * @return The precision.
-	 */
-	public int getPrecision() {
-		return Encog.DEFAULT_PRECISION;
-	}
+    /**
+     * Resolve the specified filename.
+     * <p/>
+     * @param sourceID
+     *                 The filename to resolve.
+     * <p/>
+     * @return The file path.
+     */
+    public File resolveFilename(final String sourceID) {
+        final String name = getProperties().getFilename(sourceID);
 
-	/**
-	 * @return the properties
-	 */
-	public ScriptProperties getProperties() {
-		return this.properties;
-	}
+        if (new File(name).getParent() == null && this.basePath != null) {
+            return new File(this.basePath, name);
+        } else {
+            return new File(name);
+        }
+    }
 
-	/**
-	 * @return the segregate
-	 */
-	public AnalystSegregate getSegregate() {
-		return this.segregate;
-	}
+    /**
+     * Save to the specified output stream.
+     * <p/>
+     * @param stream
+     *               The output stream.
+     */
+    public void save(final OutputStream stream) {
+        final ScriptSave s = new ScriptSave(this);
+        s.save(stream);
+    }
 
-	/**
-	 * Get the specified task.
-	 * 
-	 * @param name
-	 *            The name of the testk.
-	 * @return The analyst task.
-	 */
-	public AnalystTask getTask(final String name) {
-		if (!this.tasks.containsKey(name)) {
-			return null;
-		}
-		return this.tasks.get(name);
-	}
+    /**
+     * Set the base path.
+     * <p/>
+     * @param theBasePath
+     *                    The base path.
+     */
+    public void setBasePath(final String theBasePath) {
+        this.basePath = theBasePath;
+    }
 
-	/**
-	 * @return The tasks.
-	 */
-	public Map<String, AnalystTask> getTasks() {
-		return this.tasks;
-	}
+    /**
+     * @param theFields
+     *                  the fields to set
+     */
+    public void setFields(final DataField[] theFields) {
+        this.fields = theFields;
+    }
 
-	/**
-	 * Init this script.
-	 */
-	public void init() {
-		this.normalize.init(this);
-	}
+    public AnalystField findAnalystField(String fieldName) {
+        for (AnalystField field : this.normalize.getNormalizedFields()) {
+            if (field.getName().equalsIgnoreCase(fieldName)) {
+                return field;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Determine if the specified file was generated.
-	 * 
-	 * @param filename
-	 *            The filename to check.
-	 * @return True, if the specified file was generated.
-	 */
-	public boolean isGenerated(final String filename) {
-		return this.generated.contains(filename);
-	}
+    public AnalystProcess getProcess() {
+        return process;
+    }
 
-	/**
-	 * Load the script.
-	 * 
-	 * @param stream
-	 *            The stream to load from.
-	 */
-	public void load(final InputStream stream) {
-		final ScriptLoad s = new ScriptLoad(this);
-		s.load(stream);
-	}
+    /**
+     * @return the opcodes
+     */
+    public List<ScriptOpcode> getOpcodes() {
+        return opcodes;
+    }
 
-	/**
-	 * Mark the sepcified filename as generated.
-	 * 
-	 * @param filename
-	 *            The filename.
-	 */
-	public void markGenerated(final String filename) {
-		this.generated.add(filename);
-	}
-
-	/**
-	 * Resolve the specified filename.
-	 * 
-	 * @param sourceID
-	 *            The filename to resolve.
-	 * @return The file path.
-	 */
-	public File resolveFilename(final String sourceID) {
-		final String name = getProperties().getFilename(sourceID);
-
-		if (new File(name).getParent() == null && this.basePath != null) {
-			return new File(this.basePath, name);
-		} else {
-			return new File(name);
-		}
-	}
-
-	/**
-	 * Save to the specified output stream.
-	 * 
-	 * @param stream
-	 *            The output stream.
-	 */
-	public void save(final OutputStream stream) {
-		final ScriptSave s = new ScriptSave(this);
-		s.save(stream);
-	}
-
-	/**
-	 * Set the base path.
-	 * 
-	 * @param theBasePath
-	 *            The base path.
-	 */
-	public void setBasePath(final String theBasePath) {
-		this.basePath = theBasePath;
-	}
-
-	/**
-	 * @param theFields
-	 *            the fields to set
-	 */
-	public void setFields(final DataField[] theFields) {
-		this.fields = theFields;
-	}
-
-	public AnalystField findAnalystField(String fieldName) {
-		for (AnalystField field : this.normalize.getNormalizedFields()) {
-			if (field.getName().equalsIgnoreCase(fieldName)) {
-				return field;
-			}
-		}
-		return null;
-	}
-
-	public AnalystProcess getProcess() {
-		return process;
-	}
-
-	/**
-	 * @return the opcodes
-	 */
-	public List<ScriptOpcode> getOpcodes() {
-		return opcodes;
-	}
-
-	public boolean hasClasses() {
-		for (AnalystField field : this.getNormalize().getNormalizedFields()) {
-			if (field.getAction() != NormalizationAction.Ignore) {
-				DataField df = this.findDataField(field.getName());
-				if (df.isClass()) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
+    public boolean hasClasses() {
+        for (AnalystField field : this.getNormalize().getNormalizedFields()) {
+            if (field.getAction() != NormalizationAction.Ignore) {
+                DataField df = this.findDataField(field.getName());
+                if (df.isClass()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

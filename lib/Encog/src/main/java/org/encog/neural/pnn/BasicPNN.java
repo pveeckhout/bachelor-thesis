@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -37,244 +37,241 @@ import org.encog.util.simple.EncogUtility;
 
 /**
  * This class implements either a:
- * 
+ * <p/>
  * Probabilistic Neural Network (PNN)
- * 
+ * <p/>
  * General Regression Neural Network (GRNN)
- * 
+ * <p/>
  * To use a PNN specify an output mode of classification, to make use of a GRNN
  * specify either an output mode of regression or un-supervised autoassociation.
- * 
+ * <p/>
  * The PNN/GRNN networks are potentially very useful. They share some
  * similarities with RBF-neural networks and also the Support Vector Machine
  * (SVM). These network types directly support the use of classification.
- * 
+ * <p/>
  * The following book was very helpful in implementing PNN/GRNN's in Encog.
- * 
+ * <p/>
  * Advanced Algorithms for Neural Networks: A C++ Sourcebook
- * 
+ * <p/>
  * by Timothy Masters, PhD (http://www.timothymasters.info/) John Wiley & Sons
  * Inc (Computers); April 3, 1995, ISBN: 0471105880
  */
-public class BasicPNN extends AbstractPNN implements MLRegression, MLError, MLClassification {
+public class BasicPNN extends AbstractPNN implements MLRegression, MLError,
+        MLClassification {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7990707837655024635L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7990707837655024635L;
+    /**
+     * The sigma's specify the widths of each kernel used.
+     */
+    private final double[] sigma;
+    /**
+     * The training samples that form the memory of this network.
+     */
+    private BasicMLDataSet samples;
+    /**
+     * Used for classification, the number of cases in each class.
+     */
+    private int[] countPer;
+    /**
+     * The prior probability weights.
+     */
+    private double[] priors;
 
-	/**
-	 * The sigma's specify the widths of each kernel used.
-	 */
-	private final double[] sigma;
+    /**
+     * Construct a BasicPNN network.
+     * <p/>
+     * @param kernel
+     *                    The kernel to use.
+     * @param outmodel
+     *                    The output model for this network.
+     * @param inputCount
+     *                    The number of inputs in this network.
+     * @param outputCount
+     *                    The number of outputs in this network.
+     */
+    public BasicPNN(final PNNKernelType kernel, final PNNOutputMode outmodel,
+                    final int inputCount, final int outputCount) {
+        super(kernel, outmodel, inputCount, outputCount);
 
-	/**
-	 * The training samples that form the memory of this network.
-	 */
-	private BasicMLDataSet samples;
+        setSeparateClass(false);
 
-	/**
-	 * Used for classification, the number of cases in each class.
-	 */
-	private int[] countPer;
+        this.sigma = new double[inputCount];
+    }
 
-	/**
-	 * The prior probability weights.
-	 */
-	private double[] priors;
+    /**
+     * Compute the output from this network.
+     * <p/>
+     * @param input
+     *              The input to the network.
+     * <p/>
+     * @return The output from the network.
+     */
+    @Override
+    public MLData compute(final MLData input) {
 
-	/**
-	 * Construct a BasicPNN network.
-	 * 
-	 * @param kernel
-	 *            The kernel to use.
-	 * @param outmodel
-	 *            The output model for this network.
-	 * @param inputCount
-	 *            The number of inputs in this network.
-	 * @param outputCount
-	 *            The number of outputs in this network.
-	 */
-	public BasicPNN(final PNNKernelType kernel, final PNNOutputMode outmodel,
-			final int inputCount, final int outputCount) {
-		super(kernel, outmodel, inputCount, outputCount);
+        final double[] out = new double[getOutputCount()];
 
-		setSeparateClass(false);
+        double psum = 0.0;
 
-		this.sigma = new double[inputCount];
-	}
+        int r = -1;
+        for (final MLDataPair pair : this.samples) {
+            r++;
 
-	/**
-	 * Compute the output from this network.
-	 * 
-	 * @param input
-	 *            The input to the network.
-	 * @return The output from the network.
-	 */
-	@Override
-	public MLData compute(final MLData input) {
+            if (r == getExclude()) {
+                continue;
+            }
 
-		final double[] out = new double[getOutputCount()];
+            double dist = 0.0;
+            for (int i = 0; i < getInputCount(); i++) {
+                double diff = input.getData(i) - pair.getInput().getData(i);
+                diff /= this.sigma[i];
+                dist += diff * diff;
+            }
 
-		double psum = 0.0;
+            if (getKernel() == PNNKernelType.Gaussian) {
+                dist = Math.exp(-dist);
+            } else if (getKernel() == PNNKernelType.Reciprocal) {
+                dist = 1.0 / (1.0 + dist);
+            }
 
-		int r = -1;
-		for (final MLDataPair pair : this.samples) {
-			r++;
+            if (dist < 1.e-40) {
+                dist = 1.e-40;
+            }
 
-			if (r == getExclude()) {
-				continue;
-			}
+            if (getOutputMode() == PNNOutputMode.Classification) {
+                final int pop = (int) pair.getIdeal().getData(0);
+                out[pop] += dist;
+            } else if (getOutputMode() == PNNOutputMode.Unsupervised) {
+                for (int i = 0; i < getInputCount(); i++) {
+                    out[i] += dist * pair.getInput().getData(i);
+                }
+                psum += dist;
+            } else if (getOutputMode() == PNNOutputMode.Regression) {
 
-			double dist = 0.0;
-			for (int i = 0; i < getInputCount(); i++) {
-				double diff = input.getData(i) - pair.getInput().getData(i);
-				diff /= this.sigma[i];
-				dist += diff * diff;
-			}
+                for (int i = 0; i < getOutputCount(); i++) {
+                    out[i] += dist * pair.getIdeal().getData(i);
+                }
 
-			if (getKernel() == PNNKernelType.Gaussian) {
-				dist = Math.exp(-dist);
-			} else if (getKernel() == PNNKernelType.Reciprocal) {
-				dist = 1.0 / (1.0 + dist);
-			}
+                psum += dist;
+            }
+        }
 
-			if (dist < 1.e-40) {
-				dist = 1.e-40;
-			}
+        if (getOutputMode() == PNNOutputMode.Classification) {
+            psum = 0.0;
+            for (int i = 0; i < getOutputCount(); i++) {
+                if (this.priors[i] >= 0.0) {
+                    out[i] *= this.priors[i] / this.countPer[i];
+                }
+                psum += out[i];
+            }
 
-			if (getOutputMode() == PNNOutputMode.Classification) {
-				final int pop = (int) pair.getIdeal().getData(0);
-				out[pop] += dist;
-			} else if (getOutputMode() == PNNOutputMode.Unsupervised) {
-				for (int i = 0; i < getInputCount(); i++) {
-					out[i] += dist * pair.getInput().getData(i);
-				}
-				psum += dist;
-			} else if (getOutputMode() == PNNOutputMode.Regression) {
+            if (psum < 1.e-40) {
+                psum = 1.e-40;
+            }
 
-				for (int i = 0; i < getOutputCount(); i++) {
-					out[i] += dist * pair.getIdeal().getData(i);
-				}
+            for (int i = 0; i < getOutputCount(); i++) {
+                out[i] /= psum;
+            }
 
-				psum += dist;
-			}
-		}
+        } else if (getOutputMode() == PNNOutputMode.Unsupervised) {
+            for (int i = 0; i < getInputCount(); i++) {
+                out[i] /= psum;
+            }
+        } else if (getOutputMode() == PNNOutputMode.Regression) {
+            for (int i = 0; i < getOutputCount(); i++) {
+                out[i] /= psum;
+            }
+        }
 
-		if (getOutputMode() == PNNOutputMode.Classification) {
-			psum = 0.0;
-			for (int i = 0; i < getOutputCount(); i++) {
-				if (this.priors[i] >= 0.0) {
-					out[i] *= this.priors[i] / this.countPer[i];
-				}
-				psum += out[i];
-			}
+        return new BasicMLData(out);
+    }
 
-			if (psum < 1.e-40) {
-				psum = 1.e-40;
-			}
+    /**
+     * @return the countPer
+     */
+    public int[] getCountPer() {
+        return this.countPer;
+    }
 
-			for (int i = 0; i < getOutputCount(); i++) {
-				out[i] /= psum;
-			}
+    /**
+     * @return the priors
+     */
+    public double[] getPriors() {
+        return this.priors;
+    }
 
-		} else if (getOutputMode() == PNNOutputMode.Unsupervised) {
-			for (int i = 0; i < getInputCount(); i++) {
-				out[i] /= psum;
-			}
-		} else if (getOutputMode() == PNNOutputMode.Regression) {
-			for (int i = 0; i < getOutputCount(); i++) {
-				out[i] /= psum;
-			}
-		}
+    /**
+     * @return the samples
+     */
+    public BasicMLDataSet getSamples() {
+        return this.samples;
+    }
 
-		return new BasicMLData(out);
-	}
+    /**
+     * @return the sigma
+     */
+    public double[] getSigma() {
+        return this.sigma;
+    }
 
-	/**
-	 * @return the countPer
-	 */
-	public int[] getCountPer() {
-		return this.countPer;
-	}
+    /**
+     * @param samples
+     *                the samples to set
+     */
+    public void setSamples(final BasicMLDataSet samples) {
+        this.samples = samples;
 
-	/**
-	 * @return the priors
-	 */
-	public double[] getPriors() {
-		return this.priors;
-	}
+        // update counts per
+        if (getOutputMode() == PNNOutputMode.Classification) {
 
-	/**
-	 * @return the samples
-	 */
-	public BasicMLDataSet getSamples() {
-		return this.samples;
-	}
+            this.countPer = new int[getOutputCount()];
+            this.priors = new double[getOutputCount()];
 
-	/**
-	 * @return the sigma
-	 */
-	public double[] getSigma() {
-		return this.sigma;
-	}
+            for (final MLDataPair pair : samples) {
+                final int i = (int) pair.getIdeal().getData(0);
+                if (i >= this.countPer.length) {
+                    throw new NeuralNetworkError(
+                            "Training data contains more classes than neural network has output neurons to hold.");
+                }
+                this.countPer[i]++;
+            }
 
-	/**
-	 * @param samples
-	 *            the samples to set
-	 */
-	public void setSamples(final BasicMLDataSet samples) {
-		this.samples = samples;
+            for (int i = 0; i < this.priors.length; i++) {
+                this.priors[i] = -1;
+            }
 
-		// update counts per
-		if (getOutputMode() == PNNOutputMode.Classification) {
+        }
+    }
 
-			this.countPer = new int[getOutputCount()];
-			this.priors = new double[getOutputCount()];
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateProperties() {
+        // unneeded
+    }
 
-			for (final MLDataPair pair : samples) {
-				final int i = (int) pair.getIdeal().getData(0);
-				if (i >= this.countPer.length) {
-					throw new NeuralNetworkError(
-							"Training data contains more classes than neural network has output neurons to hold.");
-				}
-				this.countPer[i]++;
-			}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double calculateError(MLDataSet data) {
+        if (getOutputMode() == PNNOutputMode.Classification) {
+            return EncogUtility.calculateClassificationError(this, data);
+        } else {
+            return EncogUtility.calculateRegressionError(this, data);
+        }
+    }
 
-			for (int i = 0; i < this.priors.length; i++) {
-				this.priors[i] = -1;
-			}
-
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateProperties() {
-		// unneeded
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double calculateError(MLDataSet data) {
-		if (getOutputMode() == PNNOutputMode.Classification) {
-			return EncogUtility.calculateClassificationError(this, data);
-		} else {
-			return EncogUtility.calculateRegressionError(this, data);			
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int classify(MLData input) {
-		MLData output = compute(input);
-		return EngineArray.maxIndex(output.getData());
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int classify(MLData input) {
+        MLData output = compute(input);
+        return EngineArray.maxIndex(output.getData());
+    }
 }

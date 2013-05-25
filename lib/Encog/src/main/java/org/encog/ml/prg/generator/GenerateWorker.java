@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,41 +33,39 @@ import org.encog.ml.prg.train.PrgPopulation;
  */
 public class GenerateWorker implements Runnable {
 
-	/**
-	 * The owner.
-	 */
-	private final AbstractPrgGenerator owner;
-	
-	/**
-	 * A random number generator.
-	 */
-	private final Random rnd;
-	
-	/**
-	 * The population.
-	 */
-	private final PrgPopulation population;
+    /**
+     * The owner.
+     */
+    private final AbstractPrgGenerator owner;
+    /**
+     * A random number generator.
+     */
+    private final Random rnd;
+    /**
+     * The population.
+     */
+    private final PrgPopulation population;
 
-	/**
-	 * Construct the worker.
-	 * @param theOwner The owner.
-	 * @param thePopulation The target population.
-	 */
-	public GenerateWorker(final AbstractPrgGenerator theOwner,
-			final PrgPopulation thePopulation) {
-		this.owner = theOwner;
-		this.population = thePopulation;
-		this.rnd = this.owner.getRandomFactory().factor();
-	}
+    /**
+     * Construct the worker.
+     * <p/>
+     * @param theOwner      The owner.
+     * @param thePopulation The target population.
+     */
+    public GenerateWorker(final AbstractPrgGenerator theOwner,
+                          final PrgPopulation thePopulation) {
+        this.owner = theOwner;
+        this.population = thePopulation;
+        this.rnd = this.owner.getRandomFactory().factor();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void run() {
-		final EncogProgram prg = this.owner.attemptCreateGenome(this.rnd,
-				this.population);
-		this.owner.addPopulationMember(this.population, prg);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        final EncogProgram prg = this.owner.attemptCreateGenome(this.rnd,
+                                                                this.population);
+        this.owner.addPopulationMember(this.population, prg);
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,191 +35,197 @@ import org.encog.util.kmeans.Centroid;
  * @author jheaton
  *
  */
-public class BasicMLData implements MLData, 
-	Serializable, Cloneable {
+public class BasicMLData implements MLData,
+        Serializable, Cloneable {
 
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = -3644304891793584603L;
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = -3644304891793584603L;
+    /**
+     * The data held by this object.
+     */
+    private double[] data;
 
-	/**
-	 * The data held by this object.
-	 */
-	private double[] data;
+    /**
+     * Construct this object with the specified data.
+     *
+     * @param d
+     *          The data to construct this object with.
+     */
+    public BasicMLData(final double[] d) {
+        this(d.length);
+        System.arraycopy(d, 0, this.data, 0, d.length);
+    }
 
+    /**
+     * Construct this object with blank data and a specified size.
+     *
+     * @param size
+     *             The amount of data to store.
+     */
+    public BasicMLData(final int size) {
+        this.data = new double[size];
+    }
 
-	/**
-	 * Construct this object with the specified data.
-	 *
-	 * @param d
-	 *            The data to construct this object with.
-	 */
-	public BasicMLData(final double[] d) {
-		this(d.length);
-		System.arraycopy(d, 0, this.data, 0, d.length);
-	}
+    /**
+     * Construct a new BasicMLData object from an existing one. This makes a
+     * copy of an array.
+     *
+     * @param d
+     *          The object to be copied.
+     */
+    public BasicMLData(final MLData d) {
+        this(d.size());
+        System.arraycopy(d.getData(), 0, this.data, 0, d.size());
+    }
 
-	/**
-	 * Construct this object with blank data and a specified size.
-	 *
-	 * @param size
-	 *            The amount of data to store.
-	 */
-	public BasicMLData(final int size) {
-		this.data = new double[size];
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void add(final int index, final double value) {
+        this.data[index] += value;
+    }
 
-	/**
-	 * Construct a new BasicMLData object from an existing one. This makes a
-	 * copy of an array.
-	 *
-	 * @param d
-	 *            The object to be copied.
-	 */
-	public BasicMLData(final MLData d) {
-		this(d.size());
-		System.arraycopy(d.getData(), 0, this.data, 0, d.size());
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clear() {
+        for (int i = 0; i < this.data.length; i++) {
+            this.data[i] = 0;
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void add(final int index, final double value) {
-		this.data[index] += value;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MLData clone() {
+        return new BasicMLData(this);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void clear() {
-		for (int i = 0; i < this.data.length; i++) {
-			this.data[i] = 0;
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double[] getData() {
+        return this.data;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MLData clone() {
-		return new BasicMLData(this);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getData(final int index) {
+        return this.data[index];
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double[] getData() {
-		return this.data;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setData(final double[] theData) {
+        this.data = theData;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double getData(final int index) {
-		return this.data[index];
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setData(final int index, final double d) {
+        this.data[index] = d;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setData(final double[] theData) {
-		this.data = theData;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int size() {
+        return this.data.length;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setData(final int index, final double d) {
-		this.data[index] = d;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder("[");
+        builder.append(this.getClass().getSimpleName());
+        builder.append(":");
+        for (int i = 0; i < this.data.length; i++) {
+            if (i != 0) {
+                builder.append(',');
+            }
+            builder.append(this.data[i]);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int size() {
-		return this.data.length;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Centroid<MLData> createCentroid() {
+        return new BasicMLDataCentroid(this);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder("[");
-		builder.append(this.getClass().getSimpleName());
-		builder.append(":");
-		for (int i = 0; i < this.data.length; i++) {
-			if (i != 0) {
-				builder.append(',');
-			}
-			builder.append(this.data[i]);
-		}
-		builder.append("]");
-		return builder.toString();
-	}
+    /**
+     * Add one data element to another. This does not modify the object.
+     * <p/>
+     * @param o The other data element
+     * <p/>
+     * @return The result.
+     */
+    public MLData plus(MLData o) {
+        if (size() != o.size()) {
+            throw new IllegalArgumentException();
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Centroid<MLData> createCentroid() {
-		return new BasicMLDataCentroid(this);
-	}
-	
-	/**
-	 * Add one data element to another.  This does not modify the object.
-	 * @param o The other data element
-	 * @return The result.
-	 */
-	public MLData plus(MLData o)
-	{
-		if (size() != o.size())
-			throw new IllegalArgumentException();
-		
-		BasicMLData result = new BasicMLData(size());
-		for (int i = 0; i < size(); i++)
-			result.setData(i, getData(i) + o.getData(i));
-		
-		return result;
-	}
-	
-	/**
-	 * Multiply one data element with another.  This does not modify the object.
-	 * @param d The other data element
-	 * @return The result.
-	 */
-	public MLData times(double d)
-	{
-		MLData result = new BasicMLData(size());
-		
-		for (int i = 0; i < size(); i++)
-			result.setData(i, getData(i) * d);
-		
-		return result;
-	}
-	
-	/**
-	 * Subtract one data element from another.  This does not modify the object.
-	 * @param o The other data element
-	 * @return The result.
-	 */
-	public MLData minus(MLData o)
-	{
-		if (size() != o.size())
-			throw new IllegalArgumentException();
-		
-		MLData result = new BasicMLData(size());
-		for (int i = 0; i < size(); i++)
-			result.setData(i,  getData(i) - o.getData(i));
-		
-		return result;
-	}
+        BasicMLData result = new BasicMLData(size());
+        for (int i = 0; i < size(); i++) {
+            result.setData(i, getData(i) + o.getData(i));
+        }
+
+        return result;
+    }
+
+    /**
+     * Multiply one data element with another. This does not modify the object.
+     * <p/>
+     * @param d The other data element
+     * <p/>
+     * @return The result.
+     */
+    public MLData times(double d) {
+        MLData result = new BasicMLData(size());
+
+        for (int i = 0; i < size(); i++) {
+            result.setData(i, getData(i) * d);
+        }
+
+        return result;
+    }
+
+    /**
+     * Subtract one data element from another. This does not modify the object.
+     * <p/>
+     * @param o The other data element
+     * <p/>
+     * @return The result.
+     */
+    public MLData minus(MLData o) {
+        if (size() != o.size()) {
+            throw new IllegalArgumentException();
+        }
+
+        MLData result = new BasicMLData(size());
+        for (int i = 0; i < size(); i++) {
+            result.setData(i, getData(i) - o.getData(i));
+        }
+
+        return result;
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,191 +36,200 @@ import org.encog.util.SimpleParser;
  */
 public final class ArchitectureParse {
 
-	/**
-	 * Private constructor.
-	 */
-	private ArchitectureParse() {		
-	}
-	
-	
-	/**
-	 * parse a layer.
-	 * @param line The line to parse.
-	 * @param defaultValue The default value.
-	 * @return The parsed ArchitectureLayer.
-	 */
-	public static ArchitectureLayer parseLayer(final String line,
-			final int defaultValue) {
-		final ArchitectureLayer layer = new ArchitectureLayer();
+    /**
+     * Private constructor.
+     */
+    private ArchitectureParse() {
+    }
 
-		String check = line.trim().toUpperCase();
+    /**
+     * parse a layer.
+     * <p/>
+     * @param line         The line to parse.
+     * @param defaultValue The default value.
+     * <p/>
+     * @return The parsed ArchitectureLayer.
+     */
+    public static ArchitectureLayer parseLayer(final String line,
+                                               final int defaultValue) {
+        final ArchitectureLayer layer = new ArchitectureLayer();
 
-		// first check for bias
-		if (check.endsWith(":B")) {
-			check = check.substring(0, check.length() - 2);
-			layer.setBias(true);
-		}
+        String check = line.trim().toUpperCase();
 
-		// see if simple number
-		try {
-			layer.setCount(Integer.parseInt(check));
-			if (layer.getCount() < 0) {
-				throw new EncogError("Count cannot be less than zero.");
-			}
-		} catch (final NumberFormatException f) {
-			// don't really care!  Just checking to see if its a number.
-		}
+        // first check for bias
+        if (check.endsWith(":B")) {
+            check = check.substring(0, check.length() - 2);
+            layer.setBias(true);
+        }
 
-		// see if it is a default
-		if ("?".equals(check)) {
-			if (defaultValue < 0) {
-				throw new EncogError("Default (?) in an invalid location.");
-			} else {
-				layer.setCount(defaultValue);
-				layer.setUsedDefault(true);
-				return layer;
-			}
-		}
+        // see if simple number
+        try {
+            layer.setCount(Integer.parseInt(check));
+            if (layer.getCount() < 0) {
+                throw new EncogError("Count cannot be less than zero.");
+            }
+        } catch (final NumberFormatException f) {
+            // don't really care!  Just checking to see if its a number.
+        }
 
-		// single item, no function
-		final int startIndex = check.indexOf('(');
-		final int endIndex = check.lastIndexOf(')');
-		if (startIndex == -1) {
-			layer.setName(check);
-			return layer;
-		}
+        // see if it is a default
+        if ("?".equals(check)) {
+            if (defaultValue < 0) {
+                throw new EncogError("Default (?) in an invalid location.");
+            } else {
+                layer.setCount(defaultValue);
+                layer.setUsedDefault(true);
+                return layer;
+            }
+        }
 
-		// function
-		if (endIndex == -1) {
-			throw new EncogError("Illegal parentheses.");
-		}
+        // single item, no function
+        final int startIndex = check.indexOf('(');
+        final int endIndex = check.lastIndexOf(')');
+        if (startIndex == -1) {
+            layer.setName(check);
+            return layer;
+        }
 
-		layer.setName(check.substring(0, startIndex).trim());
+        // function
+        if (endIndex == -1) {
+            throw new EncogError("Illegal parentheses.");
+        }
 
-		final String paramStr = check.substring(startIndex + 1, endIndex);
-		final Map<String, String> params = ArchitectureParse
-				.parseParams(paramStr);
-		layer.getParams().putAll(params);
-		return layer;
-	}
+        layer.setName(check.substring(0, startIndex).trim());
 
-	/**
-	 * Parse all layers from a line of text.
-	 * @param line The line of text.
-	 * @return A list of the parsed layers.
-	 */
-	public static List<String> parseLayers(final String line) {
-		final List<String> result = new ArrayList<String>();
+        final String paramStr = check.substring(startIndex + 1, endIndex);
+        final Map<String, String> params = ArchitectureParse
+                .parseParams(paramStr);
+        layer.getParams().putAll(params);
+        return layer;
+    }
 
-		int base = 0;
-		boolean done = false;
+    /**
+     * Parse all layers from a line of text.
+     * <p/>
+     * @param line The line of text.
+     * <p/>
+     * @return A list of the parsed layers.
+     */
+    public static List<String> parseLayers(final String line) {
+        final List<String> result = new ArrayList<String>();
 
-		do {
-			String part;
-			final int index = line.indexOf("->", base);
-			if (index != -1) {
-				part = line.substring(base, index).trim();
-				base = index + 2;
-			} else {
-				part = line.substring(base).trim();
-				done = true;
-			}
+        int base = 0;
+        boolean done = false;
 
-			final boolean bias = part.endsWith("b");
-			if (bias) {
-				part = part.substring(0, part.length() - 1);
-			}
+        do {
+            String part;
+            final int index = line.indexOf("->", base);
+            if (index != -1) {
+                part = line.substring(base, index).trim();
+                base = index + 2;
+            } else {
+                part = line.substring(base).trim();
+                done = true;
+            }
 
-			result.add(part);
+            final boolean bias = part.endsWith("b");
+            if (bias) {
+                part = part.substring(0, part.length() - 1);
+            }
 
-		} while (!done);
+            result.add(part);
 
-		return result;
-	}
+        } while (!done);
 
-	/**
-	 * Parse a name.
-	 * @param parser The parser to use.
-	 * @return The name.
-	 */
-	private static String parseName(final SimpleParser parser) {
-		final StringBuilder result = new StringBuilder();
-		parser.eatWhiteSpace();
-		while (parser.isIdentifier()) {
-			result.append(parser.readChar());
-		}
-		return result.toString();
-	}
+        return result;
+    }
 
-	/**
-	 * Parse parameters.
-	 * @param line The line to parse.
-	 * @return The parsed values.
-	 */
-	public static Map<String, String> parseParams(final String line) {
-		final Map<String, String> result = new HashMap<String, String>();
+    /**
+     * Parse a name.
+     * <p/>
+     * @param parser The parser to use.
+     * <p/>
+     * @return The name.
+     */
+    private static String parseName(final SimpleParser parser) {
+        final StringBuilder result = new StringBuilder();
+        parser.eatWhiteSpace();
+        while (parser.isIdentifier()) {
+            result.append(parser.readChar());
+        }
+        return result.toString();
+    }
 
-		final SimpleParser parser = new SimpleParser(line);
+    /**
+     * Parse parameters.
+     * <p/>
+     * @param line The line to parse.
+     * <p/>
+     * @return The parsed values.
+     */
+    public static Map<String, String> parseParams(final String line) {
+        final Map<String, String> result = new HashMap<String, String>();
 
-		while (!parser.eol()) {
-			final String name = ArchitectureParse.parseName(parser)
-					.toUpperCase();
+        final SimpleParser parser = new SimpleParser(line);
 
-			parser.eatWhiteSpace();
-			if (!parser.lookAhead("=", false)) {
-				throw new EncogError("Missing equals(=) operator.");
-			} else {
-				parser.advance();
-			}
+        while (!parser.eol()) {
+            final String name = ArchitectureParse.parseName(parser)
+                    .toUpperCase();
 
-			final String value = ArchitectureParse.parseValue(parser);
+            parser.eatWhiteSpace();
+            if (!parser.lookAhead("=", false)) {
+                throw new EncogError("Missing equals(=) operator.");
+            } else {
+                parser.advance();
+            }
 
-			result.put(name.toUpperCase(), value);
+            final String value = ArchitectureParse.parseValue(parser);
 
-			if (!parser.parseThroughComma()) {
-				break;
-			}
-		}
+            result.put(name.toUpperCase(), value);
 
-		return result;
-	}
+            if (!parser.parseThroughComma()) {
+                break;
+            }
+        }
 
-	/**
-	 * Parse a value.
-	 * @param parser The parser to use.
-	 * @return The newly parsed value.
-	 */
-	private static String parseValue(final SimpleParser parser) {
-		boolean quoted = false;
-		final StringBuilder str = new StringBuilder();
+        return result;
+    }
 
-		parser.eatWhiteSpace();
+    /**
+     * Parse a value.
+     * <p/>
+     * @param parser The parser to use.
+     * <p/>
+     * @return The newly parsed value.
+     */
+    private static String parseValue(final SimpleParser parser) {
+        boolean quoted = false;
+        final StringBuilder str = new StringBuilder();
 
-		if (parser.peek() == '\"') {
-			quoted = true;
-			parser.advance();
-		}
+        parser.eatWhiteSpace();
 
-		while (!parser.eol()) {
-			if (parser.peek() == '\"') {
-				if (quoted) {
-					parser.advance();
-					if (parser.peek() == '\"') {
-						str.append(parser.readChar());
-					} else {
-						break;
-					}
-				} else {
-					str.append(parser.readChar());
-				}
-			} else if (!quoted
-					&& (parser.isWhiteSpace() || (parser.peek() == ','))) {
-				break;
-			} else {
-				str.append(parser.readChar());
-			}
-		}
-		return str.toString();
+        if (parser.peek() == '\"') {
+            quoted = true;
+            parser.advance();
+        }
 
-	}
+        while (!parser.eol()) {
+            if (parser.peek() == '\"') {
+                if (quoted) {
+                    parser.advance();
+                    if (parser.peek() == '\"') {
+                        str.append(parser.readChar());
+                    } else {
+                        break;
+                    }
+                } else {
+                    str.append(parser.readChar());
+                }
+            } else if (!quoted &&
+                    (parser.isWhiteSpace() || (parser.peek() == ','))) {
+                break;
+            } else {
+                str.append(parser.readChar());
+            }
+        }
+        return str.toString();
+
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,32 +36,33 @@ import org.encog.ml.prg.expvalue.ValueType;
  * prematurely. To do this a node is randomly selected from the "function set"
  * until the tree reaches the maximum depth. Once the tree reaches the maximum
  * depth only nodes from the "terminal set" are chosen.
- * 
+ * <p/>
  * This algorithm was implemented as described in the following publication:
- * 
+ * <p/>
  * Genetic programming: on the programming of computers by means of natural
  * selection MIT Press Cambridge, MA, USA (c)1992 ISBN:0-262-11170-5
  */
 public class PrgFullGenerator extends AbstractPrgGenerator {
 
-	/**
-	 * Construct the full generator.
-	 * @param theContext The context.
-	 * @param theMaxDepth The max depth.
-	 */
-	public PrgFullGenerator(final EncogProgramContext theContext,
-			final int theMaxDepth) {
-		super(theContext, theMaxDepth);
-	}
+    /**
+     * Construct the full generator.
+     * <p/>
+     * @param theContext  The context.
+     * @param theMaxDepth The max depth.
+     */
+    public PrgFullGenerator(final EncogProgramContext theContext,
+                            final int theMaxDepth) {
+        super(theContext, theMaxDepth);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ProgramNode createNode(final Random rnd, final EncogProgram program,
-			final int depthRemaining, final List<ValueType> types) {
-		return createRandomNode(rnd, program, depthRemaining, types, false,
-				true);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ProgramNode createNode(final Random rnd, final EncogProgram program,
+                                  final int depthRemaining,
+                                  final List<ValueType> types) {
+        return createRandomNode(rnd, program, depthRemaining, types, false,
+                                true);
+    }
 }

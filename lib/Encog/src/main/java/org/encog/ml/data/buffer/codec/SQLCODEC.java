@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,232 +34,226 @@ import org.encog.ml.data.MLDataError;
 /**
  * A CODEC that is designed to read data from an SQL source. This is a read-only
  * codec.
- * 
+ * <p/>
  */
 public class SQLCODEC implements DataSetCODEC {
 
-	/**
-	 * The JDBC result set.
-	 */
-	private ResultSet results;
+    /**
+     * The JDBC result set.
+     */
+    private ResultSet results;
+    /**
+     * The size of the input data.
+     */
+    private final int inputSize;
+    /**
+     * The size of the ideal data.
+     */
+    private final int idealSize;
+    /**
+     * Should the connection be closed on a call to close.
+     */
+    private final boolean closeConnection;
+    /**
+     * The JDBC connection.
+     */
+    private Connection connection;
+    /**
+     * The JDBC statement.
+     */
+    private PreparedStatement statement;
+    /**
+     * The default fetch size.
+     */
+    private int fetchSize = 0;
 
-	/**
-	 * The size of the input data.
-	 */
-	private final int inputSize;
+    /**
+     * Create a SQLNeuralDataSet based on the specified connection. This
+     * connection WILL NOT be closed when the close method is called.
+     * <p/>
+     * @param theConnection
+     *                      The connection to use.
+     * @param theSQL
+     *                      The SQL command to execute.
+     * @param theInputSize
+     *                      The size of the input data.
+     * @param theIdealSize
+     *                      The size of the ideal data.
+     */
+    public SQLCODEC(final Connection theConnection, final String theSQL,
+                    final int theInputSize, final int theIdealSize) {
 
-	/**
-	 * The size of the ideal data.
-	 */
-	private final int idealSize;
+        this.inputSize = theInputSize;
+        this.idealSize = theIdealSize;
+        this.connection = theConnection;
+        this.closeConnection = false;
 
-	/**
-	 * Should the connection be closed on a call to close.
-	 */
-	private final boolean closeConnection;
+        try {
+            // prepare the statement
+            this.statement = this.connection.prepareStatement(theSQL);
+        } catch (final SQLException e) {
+            throw new MLDataError(e);
+        }
+    }
 
-	/**
-	 * The JDBC connection.
-	 */
-	private Connection connection;
+    /**
+     * Construct a SQL dataset. A connection will be opened, this connection
+     * will be closed when the close method is called.
+     * <p/>
+     * @param theSQL
+     *                     The SQL command to execute.
+     * @param theInputSize
+     *                     The size of the input data.
+     * @param theIdealSize
+     *                     The size of the ideal data.
+     * @param theDriver
+     *                     The driver to use.
+     * @param theURL
+     *                     The database connection URL.
+     * @param theUID
+     *                     The database user id.
+     * @param thePWD
+     *                     The database password.
+     */
+    public SQLCODEC(final String theSQL, final int theInputSize,
+                    final int theIdealSize, final String theDriver,
+                    final String theURL, final String theUID,
+                    final String thePWD) {
 
-	/**
-	 * The JDBC statement.
-	 */
-	private PreparedStatement statement;
+        this.inputSize = theInputSize;
+        this.idealSize = theIdealSize;
+        this.closeConnection = true;
 
-	/**
-	 * The default fetch size.
-	 */
-	private int fetchSize = 0;
+        try {
+            Class.forName(theDriver);
 
-	/**
-	 * Create a SQLNeuralDataSet based on the specified connection. This
-	 * connection WILL NOT be closed when the close method is called.
-	 * 
-	 * @param theConnection
-	 *            The connection to use.
-	 * @param theSQL
-	 *            The SQL command to execute.
-	 * @param theInputSize
-	 *            The size of the input data.
-	 * @param theIdealSize
-	 *            The size of the ideal data.
-	 */
-	public SQLCODEC(final Connection theConnection, final String theSQL,
-			final int theInputSize, final int theIdealSize) {
+            if ((theUID == null) || (thePWD == null)) {
+                this.connection = DriverManager.getConnection(theURL);
+            } else {
+                this.connection = DriverManager.getConnection(theURL, theUID,
+                                                              thePWD);
+            }
 
-		this.inputSize = theInputSize;
-		this.idealSize = theIdealSize;
-		this.connection = theConnection;
-		this.closeConnection = false;
+            // prepare the statement
+            this.statement = this.connection.prepareStatement(theSQL);
 
-		try {
-			// prepare the statement
-			this.statement = this.connection.prepareStatement(theSQL);
-		} catch (final SQLException e) {
-			throw new MLDataError(e);
-		}
-	}
+        } catch (final ClassNotFoundException e) {
+            throw new MLDataError(e);
+        } catch (final SQLException e) {
+            throw new MLDataError(e);
+        }
+    }
 
-	/**
-	 * Construct a SQL dataset. A connection will be opened, this connection
-	 * will be closed when the close method is called.
-	 * 
-	 * @param theSQL
-	 *            The SQL command to execute.
-	 * @param theInputSize
-	 *            The size of the input data.
-	 * @param theIdealSize
-	 *            The size of the ideal data.
-	 * @param theDriver
-	 *            The driver to use.
-	 * @param theURL
-	 *            The database connection URL.
-	 * @param theUID
-	 *            The database user id.
-	 * @param thePWD
-	 *            The database password.
-	 */
-	public SQLCODEC(final String theSQL, final int theInputSize,
-			final int theIdealSize, final String theDriver,
-			final String theURL, final String theUID, final String thePWD) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        try {
+            if (this.closeConnection) {
+                this.connection.close();
+            }
+            this.results.close();
+        } catch (final SQLException e) {
+            throw new MLDataError(e);
+        }
+    }
 
-		this.inputSize = theInputSize;
-		this.idealSize = theIdealSize;
-		this.closeConnection = true;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getIdealSize() {
+        return this.idealSize;
+    }
 
-		try {
-			Class.forName(theDriver);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInputSize() {
+        return this.inputSize;
+    }
 
-			if ((theUID == null) || (thePWD == null)) {
-				this.connection = DriverManager.getConnection(theURL);
-			} else {
-				this.connection = DriverManager.getConnection(theURL, theUID,
-						thePWD);
-			}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void prepareRead() {
+        try {
+            if (this.fetchSize != 0) {
+                this.statement.setFetchSize(this.fetchSize);
+            }
+            // execute the statement
+            this.results = this.statement.executeQuery();
+        } catch (final SQLException e) {
+            throw new MLDataError(e);
+        }
+    }
 
-			// prepare the statement
-			this.statement = this.connection.prepareStatement(theSQL);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void prepareWrite(final int recordCount,
+                             final int theInputSize,
+                             final int theIdealSize) {
+        throw new MLDataError("Write not supported.");
+    }
 
-		} catch (final ClassNotFoundException e) {
-			throw new MLDataError(e);
-		} catch (final SQLException e) {
-			throw new MLDataError(e);
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean read(final double[] input,
+                        final double[] ideal, double[] significance) {
+        try {
+            if (!this.results.next()) {
+                return false;
+            }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void close() {
-		try {
-			if (this.closeConnection) {
-				this.connection.close();
-			}
-			this.results.close();
-		} catch (final SQLException e) {
-			throw new MLDataError(e);
-		}
-	}
+            for (int i = 0; i < this.inputSize; i++) {
+                final double d = this.results.getDouble(i + 1);
+                input[i] = d;
+            }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getIdealSize() {
-		return this.idealSize;
-	}
+            if (this.idealSize > 0) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getInputSize() {
-		return this.inputSize;
-	}
+                for (int i = 0; i < this.idealSize; i++) {
+                    final double d = this.results.getDouble(this.inputSize + i +
+                            1);
+                    ideal[i] = d;
+                }
+            }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void prepareRead() {
-		try {
-			if (this.fetchSize != 0) {
-				this.statement.setFetchSize(this.fetchSize);
-			}
-			// execute the statement
-			this.results = this.statement.executeQuery();
-		} catch (final SQLException e) {
-			throw new MLDataError(e);
-		}
-	}
+            significance[0] = 1;
+            return true;
+        } catch (final SQLException e) {
+            throw new MLDataError(e);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void prepareWrite(final int recordCount, 
-			final int theInputSize,
-			final int theIdealSize) {
-		throw new MLDataError("Write not supported.");
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void write(final double[] input, final double[] ideal,
+                      double significance) {
+        throw new MLDataError("Write not supported.");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean read(final double[] input, 
-			final double[] ideal, double[] significance) {
-		try {
-			if (!this.results.next()) {
-				return false;
-			}
+    /**
+     * @return the fetchSize
+     */
+    public int getFetchSize() {
+        return fetchSize;
+    }
 
-			for (int i = 0; i < this.inputSize; i++) {
-				final double d = this.results.getDouble(i + 1);
-				input[i] = d;
-			}
-
-			if (this.idealSize > 0) {
-
-				for (int i = 0; i < this.idealSize; i++) {
-					final double d = this.results.getDouble(this.inputSize + i
-							+ 1);
-					ideal[i] = d;
-				}
-			}
-
-			significance[0] = 1;
-			return true;
-		} catch (final SQLException e) {
-			throw new MLDataError(e);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void write(final double[] input, final double[] ideal, double significance) {
-		throw new MLDataError("Write not supported.");
-	}
-
-	/**
-	 * @return the fetchSize
-	 */
-	public int getFetchSize() {
-		return fetchSize;
-	}
-
-	/**
-	 * @param theFetchSize
-	 *            the fetchSize to set
-	 */
-	public void setFetchSize(final int theFetchSize) {
-		this.fetchSize = theFetchSize;
-	}
-	
-	
+    /**
+     * @param theFetchSize
+     *                     the fetchSize to set
+     */
+    public void setFetchSize(final int theFetchSize) {
+        this.fetchSize = theFetchSize;
+    }
 }

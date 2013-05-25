@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,20 +32,21 @@ import java.util.Collection;
  *
  */
 public interface OutputFieldGroup extends Serializable {
-	
-	/**
-	 * Add an output field to the group.
-	 * @param field The field to add.
-	 */
-	void addField(OutputFieldGrouped field);
 
-	/**
-	 * @return All of the output fields in this group.
-	 */
-	Collection<OutputFieldGrouped> getGroupedFields();
+    /**
+     * Add an output field to the group.
+     * <p/>
+     * @param field The field to add.
+     */
+    void addField(OutputFieldGrouped field);
 
-	/**
-	 * Init the group for a new row.
-	 */
-	void rowInit();
+    /**
+     * @return All of the output fields in this group.
+     */
+    Collection<OutputFieldGrouped> getGroupedFields();
+
+    /**
+     * Init the group for a new row.
+     */
+    void rowInit();
 }

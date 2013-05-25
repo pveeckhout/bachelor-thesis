@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,71 +30,73 @@ import java.util.Map;
  */
 public interface MLProperties extends MLMethod {
 
-	/**
-	 * @return A map of all properties.
-	 */
-	Map<String, String> getProperties();
+    /**
+     * @return A map of all properties.
+     */
+    Map<String, String> getProperties();
 
-	/**
-	 * Get the specified property as a double.
-	 * 
-	 * @param name
-	 *            The name of the property.
-	 * @return The property as a double.
-	 */
-	double getPropertyDouble(final String name);
+    /**
+     * Get the specified property as a double.
+     * <p/>
+     * @param name
+     *             The name of the property.
+     * <p/>
+     * @return The property as a double.
+     */
+    double getPropertyDouble(final String name);
 
-	/**
-	 * Get the specified property as a long.
-	 * 
-	 * @param name
-	 *            The name of the specified property.
-	 * @return The value of the specified property.
-	 */
-	long getPropertyLong(final String name);
+    /**
+     * Get the specified property as a long.
+     * <p/>
+     * @param name
+     *             The name of the specified property.
+     * <p/>
+     * @return The value of the specified property.
+     */
+    long getPropertyLong(final String name);
 
-	/**
-	 * Get the specified property as a string.
-	 * 
-	 * @param name
-	 *            The name of the property.
-	 * @return The value of the property.
-	 */
-	String getPropertyString(final String name);
+    /**
+     * Get the specified property as a string.
+     * <p/>
+     * @param name
+     *             The name of the property.
+     * <p/>
+     * @return The value of the property.
+     */
+    String getPropertyString(final String name);
 
-	/**
-	 * Set a property as a double.
-	 * 
-	 * @param name
-	 *            The name of the property.
-	 * @param d
-	 *            The value of the property.
-	 */
-	void setProperty(final String name, final double d);
+    /**
+     * Set a property as a double.
+     * <p/>
+     * @param name
+     *             The name of the property.
+     * @param d
+     *             The value of the property.
+     */
+    void setProperty(final String name, final double d);
 
-	/**
-	 * Set a property as a long.
-	 * 
-	 * @param name
-	 *            The name of the property.
-	 * @param l
-	 *            The value of the property.
-	 */
-	void setProperty(final String name, final long l);
+    /**
+     * Set a property as a long.
+     * <p/>
+     * @param name
+     *             The name of the property.
+     * @param l
+     *             The value of the property.
+     */
+    void setProperty(final String name, final long l);
 
-	/**
-	 * Set a property as a double.
-	 * 
-	 * @param name
-	 *            The name of the property.
-	 * @param value
-	 *            The value of the property.
-	 */
-	void setProperty(final String name, final String value);
-	
-	/**
-	 * Update any objeccts when a property changes.
-	 */
-	void updateProperties();
-	
+    /**
+     * Set a property as a double.
+     * <p/>
+     * @param name
+     *              The name of the property.
+     * @param value
+     *              The value of the property.
+     */
+    void setProperty(final String name, final String value);
+
+    /**
+     * Update any objeccts when a property changes.
+     */
+    void updateProperties();
 }

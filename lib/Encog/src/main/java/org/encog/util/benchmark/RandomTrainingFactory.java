@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,103 +31,103 @@ import org.encog.ml.data.basic.BasicMLDataPair;
 import org.encog.ml.data.basic.BasicMLDataSet;
 
 /**
- * Class used to generate random training sets.  This will always generate
- * the same number outputs, as it always uses the same seed values.  This
+ * Class used to generate random training sets. This will always generate
+ * the same number outputs, as it always uses the same seed values. This
  * allows for the consistent results needed by the benchmark.
  */
 public final class RandomTrainingFactory {
 
-	/**
-	 * Generate a random training set.
-	 * 
-	 * @param seed
-	 *            The seed value to use, the same seed value will always produce
-	 *            the same results.
-	 * @param count
-	 *            How many training items to generate.
-	 * @param inputCount
-	 *            How many input numbers.
-	 * @param idealCount
-	 *            How many ideal numbers.
-	 * @param min
-	 *            The minimum random number.
-	 * @param max
-	 *            The maximum random number.
-	 * @return The random training set.
-	 */
-	public static BasicMLDataSet generate(final long seed, 
-			final int count, final int inputCount,
-			final int idealCount, final double min, final double max) {
-		
-		LinearCongruentialGenerator rand = 
-			new LinearCongruentialGenerator(seed);
-		
-		final BasicMLDataSet result = new BasicMLDataSet();
-		for (int i = 0; i < count; i++) {
-			final MLData inputData = new BasicMLData(inputCount);
+    /**
+     * Generate a random training set.
+     * <p/>
+     * @param seed
+     *                   The seed value to use, the same seed value will always produce
+     *                   the same results.
+     * @param count
+     *                   How many training items to generate.
+     * @param inputCount
+     *                   How many input numbers.
+     * @param idealCount
+     *                   How many ideal numbers.
+     * @param min
+     *                   The minimum random number.
+     * @param max
+     *                   The maximum random number.
+     * <p/>
+     * @return The random training set.
+     */
+    public static BasicMLDataSet generate(final long seed,
+                                          final int count, final int inputCount,
+                                          final int idealCount, final double min,
+                                          final double max) {
 
-			for (int j = 0; j < inputCount; j++) {
-				inputData.setData(j, rand.range(min, max));
-			}
+        LinearCongruentialGenerator rand =
+                new LinearCongruentialGenerator(seed);
 
-			final MLData idealData = new BasicMLData(idealCount);
+        final BasicMLDataSet result = new BasicMLDataSet();
+        for (int i = 0; i < count; i++) {
+            final MLData inputData = new BasicMLData(inputCount);
 
-			for (int j = 0; j < idealCount; j++) {
-				idealData.setData(j, rand.range(min, max));
-			}
+            for (int j = 0; j < inputCount; j++) {
+                inputData.setData(j, rand.range(min, max));
+            }
 
-			final BasicMLDataPair pair = new BasicMLDataPair(inputData,
-					idealData);
-			result.add(pair);
+            final MLData idealData = new BasicMLData(idealCount);
 
-		}
-		return result;
-	}
-	
-	/**
-	 * Generate random training into a training set.
-	 * @param training The training set to generate into.
-	 * @param seed The seed to use.
-	 * @param count How much data to generate.
-	 * @param min The low random value.
-	 * @param max The high random value.
-	 */
-	public static void generate(final MLDataSet training, 
-			final long seed,
-			final int count, 
-			final double min, final double max) {
-		
-		LinearCongruentialGenerator rand 
-			= new LinearCongruentialGenerator(seed);
-		
-		int inputCount = training.getInputSize();
-		int idealCount = training.getIdealSize();
-		
-		for (int i = 0; i < count; i++) {
-			final MLData inputData = new BasicMLData(inputCount);
+            for (int j = 0; j < idealCount; j++) {
+                idealData.setData(j, rand.range(min, max));
+            }
 
-			for (int j = 0; j < inputCount; j++) {
-				inputData.setData(j, rand.range(min, max));
-			}
+            final BasicMLDataPair pair = new BasicMLDataPair(inputData,
+                                                             idealData);
+            result.add(pair);
 
-			final MLData idealData = new BasicMLData(idealCount);
+        }
+        return result;
+    }
 
-			for (int j = 0; j < idealCount; j++) {
-				idealData.setData(j, rand.range(min, max));
-			}
+    /**
+     * Generate random training into a training set.
+     * <p/>
+     * @param training The training set to generate into.
+     * @param seed     The seed to use.
+     * @param count    How much data to generate.
+     * @param min      The low random value.
+     * @param max      The high random value.
+     */
+    public static void generate(final MLDataSet training,
+                                final long seed,
+                                final int count,
+                                final double min, final double max) {
 
-			final BasicMLDataPair pair = new BasicMLDataPair(inputData,
-					idealData);
-			training.add(pair);
+        LinearCongruentialGenerator rand = new LinearCongruentialGenerator(seed);
 
-		}
-	}
+        int inputCount = training.getInputSize();
+        int idealCount = training.getIdealSize();
 
+        for (int i = 0; i < count; i++) {
+            final MLData inputData = new BasicMLData(inputCount);
 
-	/**
-	 * Private constructor.
-	 */
-	private RandomTrainingFactory() {
+            for (int j = 0; j < inputCount; j++) {
+                inputData.setData(j, rand.range(min, max));
+            }
 
-	}
+            final MLData idealData = new BasicMLData(idealCount);
+
+            for (int j = 0; j < idealCount; j++) {
+                idealData.setData(j, rand.range(min, max));
+            }
+
+            final BasicMLDataPair pair = new BasicMLDataPair(inputData,
+                                                             idealData);
+            training.add(pair);
+
+        }
+    }
+
+    /**
+     * Private constructor.
+     */
+    private RandomTrainingFactory() {
+    }
 }

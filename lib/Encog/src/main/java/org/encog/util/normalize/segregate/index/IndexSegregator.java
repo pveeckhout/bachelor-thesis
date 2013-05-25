@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,50 +36,49 @@ import org.encog.util.normalize.segregate.Segregator;
  */
 public abstract class IndexSegregator implements Segregator {
 
-	/**
-	 * The current index.  Updated rows are processed.
-	 */
-	private int currentIndex = 0;
+    /**
+     * The current index. Updated rows are processed.
+     */
+    private int currentIndex = 0;
+    /**
+     * THe normalization object this belongs to.
+     */
+    private DataNormalization normalization;
 
-	/**
-	 * THe normalization object this belongs to.
-	 */
-	private DataNormalization normalization;
+    /**
+     * @return The current index.
+     */
+    public int getCurrentIndex() {
+        return this.currentIndex;
+    }
 
-	/**
-	 * @return The current index.
-	 */
-	public int getCurrentIndex() {
-		return this.currentIndex;
-	}
+    /**
+     * @return The normalization object this object will use.
+     */
+    public DataNormalization getNormalization() {
+        return this.normalization;
+    }
 
-	/**
-	 * @return The normalization object this object will use.
-	 */
-	public DataNormalization getNormalization() {
-		return this.normalization;
-	}
+    /**
+     * Setup this class with the specified normalization object.
+     * <p/>
+     * @param normalization Normalization object.
+     */
+    public void init(final DataNormalization normalization) {
+        this.normalization = normalization;
+    }
 
-	/**
-	 * Setup this class with the specified normalization object.
-	 * @param normalization Normalization object.
-	 */
-	public void init(final DataNormalization normalization) {
-		this.normalization = normalization;
-	}
+    /**
+     * Used to increase the current index as data is processed.
+     */
+    public void rollIndex() {
+        this.currentIndex++;
+    }
 
-	/**
-	 * Used to increase the current index as data is processed.
-	 */
-	public void rollIndex() {
-		this.currentIndex++;
-	}
-	
-	/**
-	 * Reset the counter to zero.
-	 */
-	public void passInit() {	
-		this.currentIndex = 0;
-	}
-
+    /**
+     * Reset the counter to zero.
+     */
+    public void passInit() {
+        this.currentIndex = 0;
+    }
 }

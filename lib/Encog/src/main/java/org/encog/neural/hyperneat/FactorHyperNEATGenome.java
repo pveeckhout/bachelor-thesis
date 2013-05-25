@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,28 +34,30 @@ import org.encog.neural.neat.training.NEATLinkGene;
 import org.encog.neural.neat.training.NEATNeuronGene;
 
 public class FactorHyperNEATGenome implements NEATGenomeFactory {
-	@Override
-	public NEATGenome factor() {
-		return new HyperNEATGenome();
-	}
 
-	@Override
-	public Genome factor(final Genome other) {
-		return new HyperNEATGenome((HyperNEATGenome) other);
-	}
+    @Override
+    public NEATGenome factor() {
+        return new HyperNEATGenome();
+    }
 
-	@Override
-	public NEATGenome factor(final List<NEATNeuronGene> neurons,
-			final List<NEATLinkGene> links, final int inputCount,
-			final int outputCount) {
-		return new HyperNEATGenome(neurons, links, inputCount, outputCount);
-	}
+    @Override
+    public Genome factor(final Genome other) {
+        return new HyperNEATGenome((HyperNEATGenome) other);
+    }
 
-	@Override
-	public NEATGenome factor(final Random rnd, final NEATPopulation pop,
-			final int inputCount, final int outputCount,
-			final double connectionDensity) {
-		return new HyperNEATGenome(rnd, pop, inputCount, outputCount,
-				connectionDensity);
-	}
+    @Override
+    public NEATGenome factor(final List<NEATNeuronGene> neurons,
+                             final List<NEATLinkGene> links,
+                             final int inputCount,
+                             final int outputCount) {
+        return new HyperNEATGenome(neurons, links, inputCount, outputCount);
+    }
+
+    @Override
+    public NEATGenome factor(final Random rnd, final NEATPopulation pop,
+                             final int inputCount, final int outputCount,
+                             final double connectionDensity) {
+        return new HyperNEATGenome(rnd, pop, inputCount, outputCount,
+                                   connectionDensity);
+    }
 }

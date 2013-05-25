@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,135 +33,129 @@ import org.encog.ml.ea.species.Species;
  */
 public abstract class BasicGenome implements Genome, Serializable {
 
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * Serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The adjusted score. If unknown, it is set to NaN.
+     */
+    private double adjustedScore = Double.NaN;
+    /**
+     * The score of this genome.
+     */
+    private double score = Double.NaN;
+    /**
+     * The population this genome belongs to.
+     */
+    private Population population;
+    /**
+     * The birth generation for this genome.
+     */
+    private int birthGeneration;
+    /**
+     * The species of this genome.
+     */
+    private Species species;
 
-	/**
-	 * The adjusted score. If unknown, it is set to NaN.
-	 */
-	private double adjustedScore = Double.NaN;
+    /**
+     * @return The adjusted score, which considers bonuses.
+     */
+    @Override
+    public double getAdjustedScore() {
+        return this.adjustedScore;
+    }
 
-	/**
-	 * The score of this genome.
-	 */
-	private double score = Double.NaN;
+    /**
+     * @return the birthGeneration
+     */
+    @Override
+    public int getBirthGeneration() {
+        return this.birthGeneration;
+    }
 
-	/**
-	 * The population this genome belongs to.
-	 */
-	private Population population;
+    /**
+     * @return the population
+     */
+    @Override
+    public Population getPopulation() {
+        return this.population;
+    }
 
-	/**
-	 * The birth generation for this genome.
-	 */
-	private int birthGeneration;
+    /**
+     * @return The score.
+     */
+    @Override
+    public double getScore() {
+        return this.score;
+    }
 
-	/**
-	 * The species of this genome.
-	 */
-	private Species species;
+    /**
+     * Set the adjusted score.
+     * <p/>
+     * @param theAdjustedScore
+     *                         The score.
+     */
+    @Override
+    public void setAdjustedScore(final double theAdjustedScore) {
+        this.adjustedScore = theAdjustedScore;
+    }
 
-	/**
-	 * @return The adjusted score, which considers bonuses.
-	 */
-	@Override
-	public double getAdjustedScore() {
-		return this.adjustedScore;
-	}
+    /**
+     * @param birthGeneration
+     *                        the birthGeneration to set
+     */
+    @Override
+    public void setBirthGeneration(final int birthGeneration) {
+        this.birthGeneration = birthGeneration;
+    }
 
-	/**
-	 * @return the birthGeneration
-	 */
-	@Override
-	public int getBirthGeneration() {
-		return this.birthGeneration;
-	}
+    /**
+     * @param thePopulation
+     *                      the population to set
+     */
+    @Override
+    public void setPopulation(final Population thePopulation) {
+        this.population = thePopulation;
+    }
 
-	/**
-	 * @return the population
-	 */
-	@Override
-	public Population getPopulation() {
-		return this.population;
-	}
+    /**
+     * Set the score.
+     * <p/>
+     * @param theScore
+     *                 Set the score.
+     */
+    @Override
+    public void setScore(final double theScore) {
+        this.score = theScore;
+    }
 
-	/**
-	 * @return The score.
-	 */
-	@Override
-	public double getScore() {
-		return this.score;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        builder.append(this.getClass().getSimpleName());
+        builder.append(": score=");
+        builder.append(getScore());
+        return builder.toString();
+    }
 
-	/**
-	 * Set the adjusted score.
-	 * 
-	 * @param theAdjustedScore
-	 *            The score.
-	 */
-	@Override
-	public void setAdjustedScore(final double theAdjustedScore) {
-		this.adjustedScore = theAdjustedScore;
-	}
+    /**
+     * @return the species
+     */
+    @Override
+    public Species getSpecies() {
+        return species;
+    }
 
-	/**
-	 * @param birthGeneration
-	 *            the birthGeneration to set
-	 */
-	@Override
-	public void setBirthGeneration(final int birthGeneration) {
-		this.birthGeneration = birthGeneration;
-	}
-
-	/**
-	 * @param thePopulation
-	 *            the population to set
-	 */
-	@Override
-	public void setPopulation(final Population thePopulation) {
-		this.population = thePopulation;
-	}
-
-	/**
-	 * Set the score.
-	 * 
-	 * @param theScore
-	 *            Set the score.
-	 */
-	@Override
-	public void setScore(final double theScore) {
-		this.score = theScore;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("[");
-		builder.append(this.getClass().getSimpleName());
-		builder.append(": score=");
-		builder.append(getScore());
-		return builder.toString();
-	}
-	
-	/**
-	 * @return the species
-	 */
-	@Override
-	public Species getSpecies() {
-		return species;
-	}
-
-	/**
-	 * @param s the species to set
-	 */
-	@Override
-	public void setSpecies(Species s) {
-		this.species = s;
-	}
-
+    /**
+     * @param s the species to set
+     */
+    @Override
+    public void setSpecies(Species s) {
+        this.species = s;
+    }
 }

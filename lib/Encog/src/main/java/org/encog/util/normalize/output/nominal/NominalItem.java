@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,75 +32,72 @@ import org.encog.util.normalize.input.InputField;
  */
 public class NominalItem implements Serializable {
 
-	/**
-	 * The low value for the range.
-	 */
-	private double low;
+    /**
+     * The low value for the range.
+     */
+    private double low;
+    /**
+     * The high value for the range.
+     */
+    private double high;
+    /**
+     * The input field used to verify against the range.
+     */
+    private InputField inputField;
 
-	/**
-	 * The high value for the range.
-	 */
-	private double high;
+    /**
+     * Construct a empty range item. Used mainly for reflection.
+     */
+    public NominalItem() {
+    }
 
-	/**
-	 * The input field used to verify against the range.
-	 */
-	private InputField inputField;
+    /**
+     * Create a nominal item.
+     * <p/>
+     * @param inputField The field that this item is based on.
+     * @param high       The high value.
+     * @param low        The low value.
+     */
+    public NominalItem(final InputField inputField, final double low,
+                       final double high) {
+        super();
+        this.high = high;
+        this.low = low;
+        this.inputField = inputField;
+    }
 
-	/**
-	 * Construct a empty range item.  Used mainly for reflection.
-	 */
-	public NominalItem() {
+    /**
+     * Begin a row.
+     */
+    public void beginRow() {
+    }
 
-	}
+    /**
+     * @return the high
+     */
+    public double getHigh() {
+        return this.high;
+    }
 
-	/**
-	 * Create a nominal item.
-	 * @param inputField The field that this item is based on.
-	 * @param high The high value.
-	 * @param low The low value.
-	 */
-	public NominalItem(final InputField inputField, final double low,
-			final double high) {
-		super();
-		this.high = high;
-		this.low = low;
-		this.inputField = inputField;
-	}
+    /**
+     * @return the inputField
+     */
+    public InputField getInputField() {
+        return this.inputField;
+    }
 
-	/**
-	 * Begin a row.
-	 */
-	public void beginRow() {
-	}
+    /**
+     * @return the low
+     */
+    public double getLow() {
+        return this.low;
+    }
 
-	/**
-	 * @return the high
-	 */
-	public double getHigh() {
-		return this.high;
-	}
-
-	/**
-	 * @return the inputField
-	 */
-	public InputField getInputField() {
-		return this.inputField;
-	}
-
-	/**
-	 * @return the low
-	 */
-	public double getLow() {
-		return this.low;
-	}
-
-	/**
-	 * @return True if this item is within range.
-	 */
-	public boolean isInRange() {
-		final double currentValue = this.inputField.getCurrentValue();
-		return ((currentValue >= this.low) && (currentValue <= this.high));
-	}
-
+    /**
+     * @return True if this item is within range.
+     */
+    public boolean isInRange() {
+        final double currentValue = this.inputField.getCurrentValue();
+        return ((currentValue >= this.low) && (currentValue <= this.high));
+    }
 }

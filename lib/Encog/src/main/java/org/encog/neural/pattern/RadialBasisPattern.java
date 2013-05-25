@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,101 +32,99 @@ import org.encog.neural.rbf.RBFNetwork;
  * A radial basis function (RBF) network uses several radial basis functions to
  * provide a more dynamic hidden layer activation function than many other types
  * of neural network. It consists of a input, output and hidden layer.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class RadialBasisPattern implements NeuralNetworkPattern {
 
-	private RBFEnum rbfType = RBFEnum.Gaussian;
-	
-	/**
-	 * The number of input neurons to use. Must be set, default to invalid -1
-	 * value.
-	 */
-	private int inputNeurons = -1;
+    private RBFEnum rbfType = RBFEnum.Gaussian;
+    /**
+     * The number of input neurons to use. Must be set, default to invalid -1
+     * value.
+     */
+    private int inputNeurons = -1;
+    /**
+     * The number of hidden neurons to use. Must be set, default to invalid -1
+     * value.
+     */
+    private int outputNeurons = -1;
+    /**
+     * The number of hidden neurons to use. Must be set, default to invalid -1
+     * value.
+     */
+    private int hiddenNeurons = -1;
 
-	/**
-	 * The number of hidden neurons to use. Must be set, default to invalid -1
-	 * value.
-	 */
-	private int outputNeurons = -1;
+    /**
+     * Add the hidden layer, this should be called once, as a RBF has a single
+     * hidden layer.
+     * <p/>
+     * @param count
+     *              The number of neurons in the hidden layer.
+     */
+    public void addHiddenLayer(final int count) {
+        if (this.hiddenNeurons != -1) {
+            throw new PatternError("A RBF network usually has a single " +
+                    "hidden layer.");
 
-	/**
-	 * The number of hidden neurons to use. Must be set, default to invalid -1
-	 * value.
-	 */
-	private int hiddenNeurons = -1;
+        } else {
+            this.hiddenNeurons = count;
+        }
+    }
 
-	/**
-	 * Add the hidden layer, this should be called once, as a RBF has a single
-	 * hidden layer.
-	 * 
-	 * @param count
-	 *            The number of neurons in the hidden layer.
-	 */
-	public void addHiddenLayer(final int count) {
-		if (this.hiddenNeurons != -1) {
-			throw new PatternError("A RBF network usually has a single "
-					+ "hidden layer.");
+    /**
+     * Clear out any hidden neurons.
+     */
+    public void clear() {
+        this.hiddenNeurons = -1;
+    }
 
-		} else {
-			this.hiddenNeurons = count;
-		}
-	}
+    /**
+     * Generate the RBF network.
+     * <p/>
+     * @return The neural network.
+     */
+    public MLMethod generate() {
 
-	/**
-	 * Clear out any hidden neurons.
-	 */
-	public void clear() {
-		this.hiddenNeurons = -1;
-	}
+        RBFNetwork result = new RBFNetwork(inputNeurons, this.hiddenNeurons,
+                                           outputNeurons, this.rbfType);
+        return result;
+    }
 
-	/**
-	 * Generate the RBF network.
-	 * 
-	 * @return The neural network.
-	 */
-	public MLMethod generate() {
+    /**
+     * Set the activation function, this is an error. The activation function
+     * may not be set on a RBF layer.
+     * <p/>
+     * @param activation
+     *                   The new activation function.
+     */
+    public void setActivationFunction(final ActivationFunction activation) {
+        throw new PatternError("Can't set the activation function for " +
+                "a radial basis function network.");
+    }
 
-		RBFNetwork result = new RBFNetwork(inputNeurons, this.hiddenNeurons ,outputNeurons,this.rbfType);
-		return result;
-	}
+    /**
+     * Set the number of input neurons.
+     * <p/>
+     * @param count
+     *              The number of input neurons.
+     */
+    public void setInputNeurons(final int count) {
+        this.inputNeurons = count;
+    }
 
-	/**
-	 * Set the activation function, this is an error. The activation function
-	 * may not be set on a RBF layer.
-	 * 
-	 * @param activation
-	 *            The new activation function.
-	 */
-	public void setActivationFunction(final ActivationFunction activation) {
-		throw new PatternError( "Can't set the activation function for "
-				+ "a radial basis function network.");
-	}
+    /**
+     * Set the number of output neurons.
+     * <p/>
+     * @param count
+     *              The number of output neurons.
+     */
+    public void setOutputNeurons(final int count) {
+        this.outputNeurons = count;
+    }
 
-	/**
-	 * Set the number of input neurons.
-	 * 
-	 * @param count
-	 *            The number of input neurons.
-	 */
-	public void setInputNeurons(final int count) {
-		this.inputNeurons = count;
-	}
+    public void setRBF(RBFEnum type) {
+        this.rbfType = type;
 
-	/**
-	 * Set the number of output neurons.
-	 * 
-	 * @param count
-	 *            The number of output neurons.
-	 */
-	public void setOutputNeurons(final int count) {
-		this.outputNeurons = count;
-	}
-
-	public void setRBF(RBFEnum type) {
-		this.rbfType = type;
-		
-	}
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -39,140 +39,137 @@ import org.encog.util.EngineArray;
  * Used for Instar training of a CPN neural network. A CPN network is a hybrid
  * supervised/unsupervised network. The Outstar training handles the supervised
  * portion of the training.
- * 
+ * <p/>
  */
 public class TrainOutstar extends BasicTraining implements LearningRate {
 
-	/**
-	 * The learning rate.
-	 */
-	private double learningRate;
+    /**
+     * The learning rate.
+     */
+    private double learningRate;
+    /**
+     * The network being trained.
+     */
+    private final CPN network;
+    /**
+     * The training data. Supervised training, so both input and ideal must be
+     * provided.
+     */
+    private final MLDataSet training;
+    /**
+     * If the weights have not been initialized, then they must be initialized
+     * before training begins. This will be done on the first iteration.
+     */
+    private boolean mustInit = true;
 
-	/**
-	 * The network being trained.
-	 */
-	private final CPN network;
+    /**
+     * Construct the outstar trainer.
+     * <p/>
+     * @param theNetwork
+     *                        The network to train.
+     * @param theTraining
+     *                        The training data, must provide ideal outputs.
+     * @param theLearningRate
+     *                        The learning rate.
+     */
+    public TrainOutstar(final CPN theNetwork, final MLDataSet theTraining,
+                        final double theLearningRate) {
+        super(TrainingImplementationType.Iterative);
+        this.network = theNetwork;
+        this.training = theTraining;
+        this.learningRate = theLearningRate;
+    }
 
-	/**
-	 * The training data. Supervised training, so both input and ideal must be
-	 * provided.
-	 */
-	private final MLDataSet training;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canContinue() {
+        return false;
+    }
 
-	/**
-	 * If the weights have not been initialized, then they must be initialized
-	 * before training begins. This will be done on the first iteration.
-	 */
-	private boolean mustInit = true;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getLearningRate() {
+        return this.learningRate;
+    }
 
-	/**
-	 * Construct the outstar trainer.
-	 * 
-	 * @param theNetwork
-	 *            The network to train.
-	 * @param theTraining
-	 *            The training data, must provide ideal outputs.
-	 * @param theLearningRate
-	 *            The learning rate.
-	 */
-	public TrainOutstar(final CPN theNetwork, final MLDataSet theTraining,
-			final double theLearningRate) {
-		super(TrainingImplementationType.Iterative);
-		this.network = theNetwork;
-		this.training = theTraining;
-		this.learningRate = theLearningRate;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MLMethod getMethod() {
+        return this.network;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean canContinue() {
-		return false;
-	}
+    /**
+     * Approximate the weights based on the input values.
+     */
+    private void initWeight() {
+        for (int i = 0; i < this.network.getOutstarCount(); i++) {
+            int j = 0;
+            for (final MLDataPair pair : this.training) {
+                this.network.getWeightsInstarToOutstar().set(j++, i,
+                                                             pair.getIdeal()
+                        .getData(i));
+            }
+        }
+        this.mustInit = false;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double getLearningRate() {
-		return this.learningRate;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void iteration() {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MLMethod getMethod() {
-		return this.network;
-	}
+        if (this.mustInit) {
+            initWeight();
+        }
 
-	/**
-	 * Approximate the weights based on the input values.
-	 */
-	private void initWeight() {
-		for (int i = 0; i < this.network.getOutstarCount(); i++) {
-			int j = 0;
-			for (final MLDataPair pair : this.training) {
-				this.network.getWeightsInstarToOutstar().set(j++, i,
-						pair.getIdeal().getData(i));
-			}
-		}
-		this.mustInit = false;
-	}
+        final ErrorCalculation error = new ErrorCalculation();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void iteration() {
+        for (final MLDataPair pair : this.training) {
+            final MLData out = this.network.computeInstar(pair.getInput());
 
-		if (this.mustInit) {
-			initWeight();
-		}
+            final int j = EngineArray.indexOfLargest(out.getData());
+            for (int i = 0; i < this.network.getOutstarCount(); i++) {
+                final double delta = this.learningRate *
+                        (pair.getIdeal().getData(i) - this.network
+                        .getWeightsInstarToOutstar().get(j, i));
+                this.network.getWeightsInstarToOutstar().add(j, i, delta);
+            }
 
-		final ErrorCalculation error = new ErrorCalculation();
+            final MLData out2 = this.network.computeOutstar(out);
+            error.updateError(out2.getData(), pair.getIdeal().getData(), pair
+                    .getSignificance());
+        }
 
-		for (final MLDataPair pair : this.training) {
-			final MLData out = this.network.computeInstar(pair.getInput());
+        setError(error.calculate());
+    }
 
-			final int j = EngineArray.indexOfLargest(out.getData());
-			for (int i = 0; i < this.network.getOutstarCount(); i++) {
-				final double delta = this.learningRate
-						* (pair.getIdeal().getData(i) - this.network
-								.getWeightsInstarToOutstar().get(j, i));
-				this.network.getWeightsInstarToOutstar().add(j, i, delta);
-			}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TrainingContinuation pause() {
+        return null;
+    }
 
-			final MLData out2 = this.network.computeOutstar(out);
-			error.updateError(out2.getData(), pair.getIdeal().getData(), pair.getSignificance());
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void resume(final TrainingContinuation state) {
+    }
 
-		setError(error.calculate());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TrainingContinuation pause() {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void resume(final TrainingContinuation state) {
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setLearningRate(final double rate) {
-		this.learningRate = rate;
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setLearningRate(final double rate) {
+        this.learningRate = rate;
+    }
 }

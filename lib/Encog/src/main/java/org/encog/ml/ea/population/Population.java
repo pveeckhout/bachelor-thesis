@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,83 +36,83 @@ import org.encog.ml.ea.species.Species;
  */
 public interface Population extends Serializable, MLMethod {
 
-	/**
-	 * Clear all genomes from this population.
-	 */
-	void clear();
+    /**
+     * Clear all genomes from this population.
+     */
+    void clear();
 
-	/**
-	 * Create a species.
-	 * 
-	 * @return The newly created species.
-	 */
-	Species createSpecies();
+    /**
+     * Create a species.
+     * <p/>
+     * @return The newly created species.
+     */
+    Species createSpecies();
 
-	/**
-	 * Determine which species has the top genome.
-	 * 
-	 * @return The species with the top genome.
-	 */
-	Species determineBestSpecies();
+    /**
+     * Determine which species has the top genome.
+     * <p/>
+     * @return The species with the top genome.
+     */
+    Species determineBestSpecies();
 
-	/**
-	 * Flatten the species into a single list of genomes.
-	 * 
-	 * @return The genomes that make up all species in the population.
-	 */
-	List<Genome> flatten();
+    /**
+     * Flatten the species into a single list of genomes.
+     * <p/>
+     * @return The genomes that make up all species in the population.
+     */
+    List<Genome> flatten();
 
-	/**
-	 * @return The best genome in the population.
-	 */
-	Genome getBestGenome();
+    /**
+     * @return The best genome in the population.
+     */
+    Genome getBestGenome();
 
-	/**
-	 * @return A factory used to create genomes.
-	 */
-	GenomeFactory getGenomeFactory();
+    /**
+     * @return A factory used to create genomes.
+     */
+    GenomeFactory getGenomeFactory();
 
-	/**
-	 * @return The max size that an individual can become.
-	 */
-	int getMaxIndividualSize();
+    /**
+     * @return The max size that an individual can become.
+     */
+    int getMaxIndividualSize();
 
-	/**
-	 * @return The max population size.
-	 */
-	int getPopulationSize();
+    /**
+     * @return The max population size.
+     */
+    int getPopulationSize();
 
-	/**
-	 * @return The species that make up the population.
-	 */
-	List<Species> getSpecies();
+    /**
+     * @return The species that make up the population.
+     */
+    List<Species> getSpecies();
 
-	/**
-	 * Set the best genome.
-	 * 
-	 * @param bestGenome
-	 *            The best genome.
-	 */
-	void setBestGenome(Genome bestGenome);
+    /**
+     * Set the best genome.
+     * <p/>
+     * @param bestGenome
+     *                   The best genome.
+     */
+    void setBestGenome(Genome bestGenome);
 
-	/**
-	 * Set the gnome factory.
-	 * 
-	 * @param factory
-	 *            The genome factory.
-	 */
-	void setGenomeFactory(GenomeFactory factory);
+    /**
+     * Set the gnome factory.
+     * <p/>
+     * @param factory
+     *                The genome factory.
+     */
+    void setGenomeFactory(GenomeFactory factory);
 
-	/**
-	 * Set the max population size.
-	 * 
-	 * @param populationSize
-	 *            The max population size.
-	 */
-	void setPopulationSize(final int populationSize);
+    /**
+     * Set the max population size.
+     * <p/>
+     * @param populationSize
+     *                       The max population size.
+     */
+    void setPopulationSize(final int populationSize);
 
-	/**
-	 * @return The size of the population.
-	 */
-	int size();
+    /**
+     * @return The size of the population.
+     */
+    int size();
 }

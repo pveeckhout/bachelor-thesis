@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,36 +34,39 @@ import org.encog.util.csv.ReadCSV;
 import org.encog.util.file.FileUtil;
 
 public class TestAnalystClassification extends TestCase {
-	public final TempDir TEMP_DIR = new TempDir();
 
-	public void testClassification() throws Exception {
-		File rawFile = TEMP_DIR.createFile("simple.csv");
-		File egaFile = TEMP_DIR.createFile("simple.ega");
-		File outputFile = TEMP_DIR.createFile("simple_output.csv");
+    public final TempDir TEMP_DIR = new TempDir();
 
-		FileUtil.copyResource("org/encog/data/simple.csv", rawFile);
-		FileUtil.copyResource("org/encog/data/simple-c.ega", egaFile);
+    public void testClassification() throws Exception {
+        File rawFile = TEMP_DIR.createFile("simple.csv");
+        File egaFile = TEMP_DIR.createFile("simple.ega");
+        File outputFile = TEMP_DIR.createFile("simple_output.csv");
 
-		EncogAnalyst analyst = new EncogAnalyst();
-		analyst.addAnalystListener(new ConsoleAnalystListener());
-		analyst.load(egaFile);
+        FileUtil.copyResource("org/encog/data/simple.csv", rawFile);
+        FileUtil.copyResource("org/encog/data/simple-c.ega", egaFile);
 
-		analyst.executeTask("task-full");
-		
-		ReadCSV csv = new ReadCSV(outputFile.toString(),true,CSVFormat.ENGLISH);
-		while(csv.next()) {
-			Assert.assertEquals(csv.get(3), csv.get(4));
-		}
-		
-		Assert.assertEquals(4, analyst.getScript().getFields().length );
-		Assert.assertEquals(3, analyst.getScript().getFields()[3].getClassMembers().size());
-		
-		csv.close();
-	}
+        EncogAnalyst analyst = new EncogAnalyst();
+        analyst.addAnalystListener(new ConsoleAnalystListener());
+        analyst.load(egaFile);
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		TEMP_DIR.dispose();
-	}
+        analyst.executeTask("task-full");
+
+        ReadCSV csv =
+                new ReadCSV(outputFile.toString(), true, CSVFormat.ENGLISH);
+        while (csv.next()) {
+            Assert.assertEquals(csv.get(3), csv.get(4));
+        }
+
+        Assert.assertEquals(4, analyst.getScript().getFields().length);
+        Assert.assertEquals(3, analyst.getScript().getFields()[3]
+                .getClassMembers().size());
+
+        csv.close();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        TEMP_DIR.dispose();
+    }
 }

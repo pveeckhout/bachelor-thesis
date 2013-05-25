@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -29,74 +29,75 @@ import org.encog.mathutil.matrices.Matrix;
 
 /**
  * A utility for writing matrixes to the log.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public final class DumpMatrix {
 
-	/**
-	 * Maximum precision.
-	 */
-	public static final int MAX_PRECIS = 3;
+    /**
+     * Maximum precision.
+     */
+    public static final int MAX_PRECIS = 3;
 
-	/**
-	 * Dump an array of numbers to a string.
-	 * 
-	 * @param d
-	 *            The array to dump.
-	 * @return The array as a string.
-	 */
-	public static String dumpArray(final double[] d) {
-		final NumberFormat format = NumberFormat.getNumberInstance();
-		format.setMaximumFractionDigits(DumpMatrix.MAX_PRECIS);
-		format.setMaximumFractionDigits(DumpMatrix.MAX_PRECIS);
+    /**
+     * Dump an array of numbers to a string.
+     * <p/>
+     * @param d
+     *          The array to dump.
+     * <p/>
+     * @return The array as a string.
+     */
+    public static String dumpArray(final double[] d) {
+        final NumberFormat format = NumberFormat.getNumberInstance();
+        format.setMaximumFractionDigits(DumpMatrix.MAX_PRECIS);
+        format.setMaximumFractionDigits(DumpMatrix.MAX_PRECIS);
 
-		final StringBuilder result = new StringBuilder();
-		result.append("[");
-		for (int i = 0; i < d.length; i++) {
-			if (i != 0) {
-				result.append(",");
-			}
-			result.append(format.format(d[i]));
-		}
-		result.append("]");
-		return result.toString();
-	}
+        final StringBuilder result = new StringBuilder();
+        result.append("[");
+        for (int i = 0; i < d.length; i++) {
+            if (i != 0) {
+                result.append(",");
+            }
+            result.append(format.format(d[i]));
+        }
+        result.append("]");
+        return result.toString();
+    }
 
-	/**
-	 * Dump a matrix to a string.
-	 * 
-	 * @param matrix
-	 *            The matrix.
-	 * @return The matrix as a string.
-	 */
-	public static String dumpMatrix(final Matrix matrix) {
-		final NumberFormat format = NumberFormat.getNumberInstance();
-		format.setMaximumFractionDigits(DumpMatrix.MAX_PRECIS);
-		format.setMaximumFractionDigits(DumpMatrix.MAX_PRECIS);
+    /**
+     * Dump a matrix to a string.
+     * <p/>
+     * @param matrix
+     *               The matrix.
+     * <p/>
+     * @return The matrix as a string.
+     */
+    public static String dumpMatrix(final Matrix matrix) {
+        final NumberFormat format = NumberFormat.getNumberInstance();
+        format.setMaximumFractionDigits(DumpMatrix.MAX_PRECIS);
+        format.setMaximumFractionDigits(DumpMatrix.MAX_PRECIS);
 
-		final StringBuilder result = new StringBuilder();
-		result.append("==");
-		result.append(matrix.toString());
-		result.append("==\n");
-		for (int row = 0; row < matrix.getRows(); row++) {
-			result.append("  [");
-			for (int col = 0; col < matrix.getCols(); col++) {
-				if (col != 0) {
-					result.append(",");
-				}
-				result.append(format.format(matrix.get(row, col)));
-			}
-			result.append("]\n");
-		}
-		return result.toString();
-	}
+        final StringBuilder result = new StringBuilder();
+        result.append("==");
+        result.append(matrix.toString());
+        result.append("==\n");
+        for (int row = 0; row < matrix.getRows(); row++) {
+            result.append("  [");
+            for (int col = 0; col < matrix.getCols(); col++) {
+                if (col != 0) {
+                    result.append(",");
+                }
+                result.append(format.format(matrix.get(row, col)));
+            }
+            result.append("]\n");
+        }
+        return result.toString();
+    }
 
-	/**
-	 * Private constructor.
-	 */
-	private DumpMatrix() {
-
-	}
+    /**
+     * Private constructor.
+     */
+    private DumpMatrix() {
+    }
 }

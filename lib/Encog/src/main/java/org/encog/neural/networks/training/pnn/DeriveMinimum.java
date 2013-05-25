@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,260 +30,267 @@ import org.encog.util.logging.EncogLogging;
 /**
  * This class determines optimal values for multiple sigmas in a PNN kernel.
  * This is done using a CJ (conjugate gradient) method.
- * 
- * 
+ * <p/>
+ * <
+ * p/>
  * Some of the algorithms in this class are based on C++ code from:
- * 
+ * <p/>
  * Advanced Algorithms for Neural Networks: A C++ Sourcebook by Timothy Masters
  * John Wiley & Sons Inc (Computers); April 3, 1995 ISBN: 0471105880
  */
 public class DeriveMinimum {
 
-	/**
-	 * Derive the minimum, using a conjugate gradient method.
-	 * 
-	 * @param maxIterations
-	 * 	The max iterations.
-	 * @param maxError
-	 *            Stop at this error rate.
-	 * @param eps
-	 *            The machine's precision.
-	 * @param tol
-	 *            The convergence tolerance.
-	 * @param network
-	 *            The network to get the error from.
-	 * @param n
-	 *            The number of variables.
-	 * @param x
-	 *            The independent variable.
-	 * @param ystart
-	 *            The start for y.
-	 * @param base
-	 *            Work vector, must have n elements.
-	 * @param direc
-	 *            Work vector, must have n elements.
-	 * @param g
-	 *            Work vector, must have n elements.
-	 * @param h
-	 *            Work vector, must have n elements.
-	 * @param deriv2
-	 *            Work vector, must have n elements.
-	 * @return The best error.
-	 */
-	public double calculate(final int maxIterations, final double maxError,
-			final double eps, final double tol, final CalculationCriteria network,
-			final int n, final double[] x, final double ystart,
-			final double[] base, final double[] direc, final double[] g,
-			final double[] h, final double[] deriv2) {
-		double prevBest, toler, gam, improvement;
-		final GlobalMinimumSearch globalMinimum = new GlobalMinimumSearch();
+    /**
+     * Derive the minimum, using a conjugate gradient method.
+     * <p/>
+     * @param maxIterations
+     *                      The max iterations.
+     * @param maxError
+     *                      Stop at this error rate.
+     * @param eps
+     *                      The machine's precision.
+     * @param tol
+     *                      The convergence tolerance.
+     * @param network
+     *                      The network to get the error from.
+     * @param n
+     *                      The number of variables.
+     * @param x
+     *                      The independent variable.
+     * @param ystart
+     *                      The start for y.
+     * @param base
+     *                      Work vector, must have n elements.
+     * @param direc
+     *                      Work vector, must have n elements.
+     * @param g
+     *                      Work vector, must have n elements.
+     * @param h
+     *                      Work vector, must have n elements.
+     * @param deriv2
+     *                      Work vector, must have n elements.
+     * <p/>
+     * @return The best error.
+     */
+    public double calculate(final int maxIterations, final double maxError,
+                            final double eps, final double tol,
+                            final CalculationCriteria network,
+                            final int n, final double[] x, final double ystart,
+                            final double[] base, final double[] direc,
+                            final double[] g,
+                            final double[] h, final double[] deriv2) {
+        double prevBest, toler, gam, improvement;
+        final GlobalMinimumSearch globalMinimum = new GlobalMinimumSearch();
 
-		double fbest = network.calcErrorWithMultipleSigma(x, direc, deriv2, true);
-		prevBest = 1.e30;
-		for (int i = 0; i < n; i++) {
-			direc[i] = -direc[i];
-		}
+        double fbest = network
+                .calcErrorWithMultipleSigma(x, direc, deriv2, true);
+        prevBest = 1.e30;
+        for (int i = 0; i < n; i++) {
+            direc[i] = -direc[i];
+        }
 
-		EngineArray.arrayCopy(direc, g);
-		EngineArray.arrayCopy(direc, h);
+        EngineArray.arrayCopy(direc, g);
+        EngineArray.arrayCopy(direc, h);
 
-		int convergenceCounter = 0;
-		int poorCJ = 0;
+        int convergenceCounter = 0;
+        int poorCJ = 0;
 
-		// Main loop
-		for (int iteration = 0; iteration < maxIterations; iteration++) {			
-			
-			if (fbest < maxError) {
-				break;
-			}
-			
-			EncogLogging.log(EncogLogging.LEVEL_INFO,
-					"Beginning internal Iteration #" + iteration + ", currentError=" + fbest + ",target=" + maxError);
+        // Main loop
+        for (int iteration = 0; iteration < maxIterations; iteration++) {
 
-			// Check for convergence
-			if (prevBest <= 1.0) {
-				toler = tol;
-			} else {
-				toler = tol * prevBest;
-			}
+            if (fbest < maxError) {
+                break;
+            }
 
-			// Stop if there is little improvement
-			if ((prevBest - fbest) <= toler) {
-				if (++convergenceCounter >= 3) {
-					break;
-				}
-			} else {
-				convergenceCounter = 0;
-			}
+            EncogLogging.log(EncogLogging.LEVEL_INFO,
+                             "Beginning internal Iteration #" + iteration +
+                    ", currentError=" + fbest + ",target=" + maxError);
 
-			double dot1 = 0;
-			double dot2 = 0;
-			double dlen = 0;
+            // Check for convergence
+            if (prevBest <= 1.0) {
+                toler = tol;
+            } else {
+                toler = tol * prevBest;
+            }
 
-			dot1 = dot2 = dlen = 0.0;
-			double high = 1.e-4;
-			for (int i = 0; i < n; i++) {
-				base[i] = x[i];
-				if (deriv2[i] > high) {
-					high = deriv2[i];
-				}
-				dot1 += direc[i] * g[i]; // Directional first derivative
-				dot2 += direc[i] * direc[i] * deriv2[i]; // and second
-				dlen += direc[i] * direc[i]; // Length of search vector
-			}
+            // Stop if there is little improvement
+            if ((prevBest - fbest) <= toler) {
+                if (++convergenceCounter >= 3) {
+                    break;
+                }
+            } else {
+                convergenceCounter = 0;
+            }
 
-			dlen = Math.sqrt(dlen);
+            double dot1 = 0;
+            double dot2 = 0;
+            double dlen = 0;
 
-			double scale;
+            dot1 = dot2 = dlen = 0.0;
+            double high = 1.e-4;
+            for (int i = 0; i < n; i++) {
+                base[i] = x[i];
+                if (deriv2[i] > high) {
+                    high = deriv2[i];
+                }
+                dot1 += direc[i] * g[i]; // Directional first derivative
+                dot2 += direc[i] * direc[i] * deriv2[i]; // and second
+                dlen += direc[i] * direc[i]; // Length of search vector
+            }
 
-			if (Math.abs(dot2) < Encog.DEFAULT_DOUBLE_EQUAL) {
-				scale = 0;
-			} else {
-				scale = dot1 / dot2;
-			}
-			high = 1.5 / high;
-			if (high < 1.e-4) {
-				high = 1.e-4;
-			}
+            dlen = Math.sqrt(dlen);
 
-			if (scale < 0.0) {
-				scale = high;
-			} else if (scale < 0.1 * high) {
-				scale = 0.1 * high;
-			} else if (scale > 10.0 * high) {
-				scale = 10.0 * high;
-			}
+            double scale;
 
-			prevBest = fbest;
-			globalMinimum.setY2(fbest);
+            if (Math.abs(dot2) < Encog.DEFAULT_DOUBLE_EQUAL) {
+                scale = 0;
+            } else {
+                scale = dot1 / dot2;
+            }
+            high = 1.5 / high;
+            if (high < 1.e-4) {
+                high = 1.e-4;
+            }
 
-			globalMinimum.findBestRange(0.0, 2.0 * scale, -3, false, maxError,
-					network);
+            if (scale < 0.0) {
+                scale = high;
+            } else if (scale < 0.1 * high) {
+                scale = 0.1 * high;
+            } else if (scale > 10.0 * high) {
+                scale = 10.0 * high;
+            }
 
-			if (globalMinimum.getY2() < maxError) {
-				if (globalMinimum.getY2() < fbest) {
-					for (int i = 0; i < n; i++) {
-						x[i] = base[i] + globalMinimum.getY2() * direc[i];
-						if (x[i] < 1.e-10) {
-							x[i] = 1.e-10;
-						}
-					}
-					fbest = globalMinimum.getY2();
-				} else {
-					System.arraycopy(base, 0, x, 0, n);
-				}
-				break;
-			}
+            prevBest = fbest;
+            globalMinimum.setY2(fbest);
 
-			if (convergenceCounter > 0) {
-				fbest = globalMinimum.brentmin(20, maxError, eps, 1.e-7,
-						network, globalMinimum.getY2());
-			} else {
-				fbest = globalMinimum.brentmin(10, maxError, 1.e-6, 1.e-5,
-						network, globalMinimum.getY2());
-			}
+            globalMinimum.findBestRange(0.0, 2.0 * scale, -3, false, maxError,
+                                        network);
 
-			for (int i = 0; i < n; i++) {
-				x[i] = base[i] + globalMinimum.getX2() * direc[i];
-				if (x[i] < 1.e-10) {
-					x[i] = 1.e-10;
-				}
-			}
+            if (globalMinimum.getY2() < maxError) {
+                if (globalMinimum.getY2() < fbest) {
+                    for (int i = 0; i < n; i++) {
+                        x[i] = base[i] + globalMinimum.getY2() * direc[i];
+                        if (x[i] < 1.e-10) {
+                            x[i] = 1.e-10;
+                        }
+                    }
+                    fbest = globalMinimum.getY2();
+                } else {
+                    System.arraycopy(base, 0, x, 0, n);
+                }
+                break;
+            }
 
-			improvement = (prevBest - fbest) / prevBest;
+            if (convergenceCounter > 0) {
+                fbest = globalMinimum.brentmin(20, maxError, eps, 1.e-7,
+                                               network, globalMinimum.getY2());
+            } else {
+                fbest = globalMinimum.brentmin(10, maxError, 1.e-6, 1.e-5,
+                                               network, globalMinimum.getY2());
+            }
 
-			if (fbest < maxError) {
-				break;
-			}
+            for (int i = 0; i < n; i++) {
+                x[i] = base[i] + globalMinimum.getX2() * direc[i];
+                if (x[i] < 1.e-10) {
+                    x[i] = 1.e-10;
+                }
+            }
 
-			for (int i = 0; i < n; i++) {
-				direc[i] = -direc[i]; // negative gradient
-			}
+            improvement = (prevBest - fbest) / prevBest;
 
-			gam = gamma(n, g, direc);
+            if (fbest < maxError) {
+                break;
+            }
 
-			if (gam < 0.0) {
-				gam = 0.0;
-			}
+            for (int i = 0; i < n; i++) {
+                direc[i] = -direc[i]; // negative gradient
+            }
 
-			if (gam > 10.0) {
-				gam = 10.0;
-			}
+            gam = gamma(n, g, direc);
 
-			if (improvement < 0.001) {
-				++poorCJ;
-			} else {
-				poorCJ = 0;
-			}
+            if (gam < 0.0) {
+                gam = 0.0;
+            }
 
-			if (poorCJ >= 2) {
-				if (gam > 1.0) {
-					gam = 1.0;
-				}
-			}
+            if (gam > 10.0) {
+                gam = 10.0;
+            }
 
-			if (poorCJ >= 6) {
-				poorCJ = 0;
-				gam = 0.0;
-			}
+            if (improvement < 0.001) {
+                ++poorCJ;
+            } else {
+                poorCJ = 0;
+            }
 
-			findNewDir(n, gam, g, h, direc);
+            if (poorCJ >= 2) {
+                if (gam > 1.0) {
+                    gam = 1.0;
+                }
+            }
 
-		}
+            if (poorCJ >= 6) {
+                poorCJ = 0;
+                gam = 0.0;
+            }
 
-		return fbest;
-	}
+            findNewDir(n, gam, g, h, direc);
 
-	/**
-	 * Find gamma.
-	 * 
-	 * @param n
-	 *            The number of variables.
-	 * @param gam
-	 *            The gamma value.
-	 * @param g
-	 *            The "g" value, used for CJ algorithm.
-	 * @param h
-	 *            The "h" value, used for CJ algorithm.
-	 * @param grad
-	 *            The gradients.
-	 */
-	private void findNewDir(final int n, final double gam, final double[] g,
-			final double[] h, final double[] grad) {
-		int i;
+        }
 
-		System.arraycopy(grad, 0, g, 0, n);
-		for (i = 0; i < n; i++) {
-			grad[i] = h[i] = g[i] + gam * h[i];
-		}
-	}
+        return fbest;
+    }
 
-	/**
-	 * Find correction for next iteration.
-	 * 
-	 * @param n
-	 *            The number of variables.
-	 * @param g
-	 *            The "g" value, used for CJ algorithm.
-	 * @param grad
-	 *            The gradients.
-	 * @return The correction for the next iteration.
-	 */
-	private double gamma(final int n, final double[] g, final double[] grad) {
-		int i;
-		double denom, numer;
+    /**
+     * Find gamma.
+     * <p/>
+     * @param n
+     *             The number of variables.
+     * @param gam
+     *             The gamma value.
+     * @param g
+     *             The "g" value, used for CJ algorithm.
+     * @param h
+     *             The "h" value, used for CJ algorithm.
+     * @param grad
+     *             The gradients.
+     */
+    private void findNewDir(final int n, final double gam, final double[] g,
+                            final double[] h, final double[] grad) {
+        int i;
 
-		numer = denom = 0.0;
+        System.arraycopy(grad, 0, g, 0, n);
+        for (i = 0; i < n; i++) {
+            grad[i] = h[i] = g[i] + gam * h[i];
+        }
+    }
 
-		for (i = 0; i < n; i++) {
-			denom += g[i] * g[i];
-			numer += (grad[i] - g[i]) * grad[i]; // Grad is neg gradient
-		}
+    /**
+     * Find correction for next iteration.
+     * <p/>
+     * @param n
+     *             The number of variables.
+     * @param g
+     *             The "g" value, used for CJ algorithm.
+     * @param grad
+     *             The gradients.
+     * <p/>
+     * @return The correction for the next iteration.
+     */
+    private double gamma(final int n, final double[] g, final double[] grad) {
+        int i;
+        double denom, numer;
 
-		if (denom == 0.0) {
-			return 0.0;
-		} else {
-			return numer / denom;
-		}
-	}
+        numer = denom = 0.0;
+
+        for (i = 0; i < n; i++) {
+            denom += g[i] * g[i];
+            numer += (grad[i] - g[i]) * grad[i]; // Grad is neg gradient
+        }
+
+        if (denom == 0.0) {
+            return 0.0;
+        } else {
+            return numer / denom;
+        }
+    }
 }

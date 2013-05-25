@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,38 +32,38 @@ import org.encog.neural.networks.training.concurrent.jobs.RPROPJob;
 import org.encog.neural.networks.training.concurrent.jobs.TrainingJob;
 
 public class TestConcurrent extends TestCase {
-	private void internalTest(boolean splitCores) {
-		ConcurrentTrainingManager ctm = ConcurrentTrainingManager.getInstance();
-		ctm.clearPerformers();
-		ctm.detectPerformers(splitCores);
-		
-		// create a RPROP job
-		TrainingJob job1 = new RPROPJob(
-				XOR.createUnTrainedXOR(),
-				XOR.createXORDataSet(),true);
-		job1.getStrategies().add(new EndMaxErrorStrategy(0.01));
-		ctm.addTrainingJob(job1);
-		
-		// create a BPROP job
-		TrainingJob job2 = new BPROPJob(
-				XOR.createUnTrainedXOR(),
-				XOR.createXORDataSet(),true, 0.07, 0.07);
-		job2.getStrategies().add(new EndMaxErrorStrategy(0.01));
-		ctm.addTrainingJob(job2);
-		
-		ctm.start();
-		ctm.join();
-		
-		XOR.verifyXOR(job1.getNetwork(), 0.1);
-		XOR.verifyXOR(job2.getNetwork(), 0.1);	
-	}
-	
-	
-	public void testSingleThreaded() {
-		internalTest(true);		
-	}
-	
-	public void testMultiThreaded() {
-		internalTest(false);		
-	}
+
+    private void internalTest(boolean splitCores) {
+        ConcurrentTrainingManager ctm = ConcurrentTrainingManager.getInstance();
+        ctm.clearPerformers();
+        ctm.detectPerformers(splitCores);
+
+        // create a RPROP job
+        TrainingJob job1 = new RPROPJob(
+                XOR.createUnTrainedXOR(),
+                XOR.createXORDataSet(), true);
+        job1.getStrategies().add(new EndMaxErrorStrategy(0.01));
+        ctm.addTrainingJob(job1);
+
+        // create a BPROP job
+        TrainingJob job2 = new BPROPJob(
+                XOR.createUnTrainedXOR(),
+                XOR.createXORDataSet(), true, 0.07, 0.07);
+        job2.getStrategies().add(new EndMaxErrorStrategy(0.01));
+        ctm.addTrainingJob(job2);
+
+        ctm.start();
+        ctm.join();
+
+        XOR.verifyXOR(job1.getNetwork(), 0.1);
+        XOR.verifyXOR(job2.getNetwork(), 0.1);
+    }
+
+    public void testSingleThreaded() {
+        internalTest(true);
+    }
+
+    public void testMultiThreaded() {
+        internalTest(false);
+    }
 }

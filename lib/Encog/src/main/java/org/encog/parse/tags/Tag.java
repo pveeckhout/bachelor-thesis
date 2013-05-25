@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,189 +36,188 @@ import org.encog.parse.ParseError;
  */
 public class Tag implements Cloneable {
 
-	/**
-	 * Tag types.
-	 * 
-	 * @author jheaton
-	 */
-	public enum Type {
-		/**
-		 * A beginning tag.
-		 */
-		BEGIN,
-		/**
-		 * An ending tag.
-		 */
-		END,
-		/**
-		 * A comment.
-		 */
-		COMMENT,
-		/**
-		 * A CDATA section.
-		 */
-		CDATA
-	};
+    /**
+     * Tag types.
+     * <p/>
+     * @author jheaton
+     */
+    public enum Type {
 
-	/**
-	 * The attributes.
-	 */
-	private final Map<String, String> attributes = 
-		new HashMap<String, String>();
+        /**
+         * A beginning tag.
+         */
+        BEGIN,
+        /**
+         * An ending tag.
+         */
+        END,
+        /**
+         * A comment.
+         */
+        COMMENT,
+        /**
+         * A CDATA section.
+         */
+        CDATA
+    };
+    /**
+     * The attributes.
+     */
+    private final Map<String, String> attributes =
+            new HashMap<String, String>();
+    /**
+     * The tag name.
+     */
+    private String name = "";
+    /**
+     * The tag type.
+     */
+    private Type type;
 
-	/**
-	 * The tag name.
-	 */
-	private String name = "";
+    /**
+     * Clear the name, type and attributes.
+     */
+    public void clear() {
+        this.attributes.clear();
+        this.name = "";
+        this.type = Type.BEGIN;
+    }
 
-	/**
-	 * The tag type.
-	 */
-	private Type type;
+    /**
+     * @return A cloned copy of the object.
+     */
+    @Override
+    public Tag clone() {
+        final Tag result = new Tag();
+        result.setName(getName());
+        result.setType(getType());
+        for (final String key : this.attributes.keySet()) {
+            final String value = this.attributes.get(key);
+            result.setAttribute(key, value);
+        }
+        return result;
+    }
 
-	/**
-	 * Clear the name, type and attributes.
-	 */
-	public void clear() {
-		this.attributes.clear();
-		this.name = "";
-		this.type = Type.BEGIN;
-	}
+    /**
+     * Get the specified attribute as an integer.
+     * <p/>
+     * @param attributeId
+     *                    The attribute name.
+     * <p/>
+     * @return The attribute value.
+     */
+    public int getAttributeInt(final String attributeId) {
+        try {
+            final String str = getAttributeValue(attributeId);
+            return Integer.parseInt(str);
+        } catch (final NumberFormatException e) {
+            throw new ParseError(e);
+        }
 
-	/**
-	 * @return A cloned copy of the object.
-	 */
-	@Override
-	public Tag clone() {
-		final Tag result = new Tag();
-		result.setName(getName());
-		result.setType(getType());
-		for (final String key : this.attributes.keySet()) {
-			final String value = this.attributes.get(key);
-			result.setAttribute(key, value);
-		}
-		return result;
-	}
+    }
 
-	/**
-	 * Get the specified attribute as an integer.
-	 * 
-	 * @param attributeId
-	 *            The attribute name.
-	 * @return The attribute value.
-	 */
-	public int getAttributeInt(final String attributeId) {
-		try {
-			final String str = getAttributeValue(attributeId);
-			return Integer.parseInt(str);
-		} catch (final NumberFormatException e) {
-			throw new ParseError(e);
-		}
+    /**
+     * Get a map of all attributes.
+     * <p/>
+     * @return The attributes.
+     */
+    public Map<String, String> getAttributes() {
+        return this.attributes;
+    }
 
-	}
+    /**
+     * Get the value of the specified attribute.
+     * <p/>
+     * @param name
+     *             The name of an attribute.
+     * <p/>
+     * @return The value of the specified attribute.
+     */
+    public String getAttributeValue(final String name) {
+        return this.attributes.get(name);
+    }
 
-	/**
-	 * Get a map of all attributes.
-	 * 
-	 * @return The attributes.
-	 */
-	public Map<String, String> getAttributes() {
-		return this.attributes;
-	}
+    /**
+     * @return Get the tag name.
+     */
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Get the value of the specified attribute.
-	 * 
-	 * @param name
-	 *            The name of an attribute.
-	 * @return The value of the specified attribute.
-	 */
-	public String getAttributeValue(final String name) {
-		return this.attributes.get(name);
-	}
+    /**
+     * @return Get the tag type.
+     */
+    public Type getType() {
+        return this.type;
+    }
 
-	/**
-	 * @return Get the tag name.
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Set a HTML attribute.
+     * <p/>
+     * @param name
+     *              The name of the attribute.
+     * @param value
+     *              The value of the attribute.
+     */
+    public void setAttribute(final String name, final String value) {
+        this.attributes.put(name, value);
+    }
 
-	/**
-	 * @return Get the tag type.
-	 */
-	public Type getType() {
-		return this.type;
-	}
+    /**
+     * Set the tag name.
+     * <p/>
+     * @param s
+     *          The name.
+     */
+    public void setName(final String s) {
+        this.name = s;
+    }
 
-	/**
-	 * Set a HTML attribute.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * @param value
-	 *            The value of the attribute.
-	 */
-	public void setAttribute(final String name, final String value) {
-		this.attributes.put(name, value);
-	}
+    /**
+     * Set the tag type.
+     * <p/>
+     * @param type
+     *             The tag type.
+     */
+    public void setType(final Type type) {
+        this.type = type;
+    }
 
-	/**
-	 * Set the tag name.
-	 * 
-	 * @param s
-	 *            The name.
-	 */
-	public void setName(final String s) {
-		this.name = s;
-	}
+    /**
+     * Convert this tag back into string form, with the beginning < and ending
+     * >.
+     * <p/>
+     * @return The Attribute object that was found.
+     */
+    @Override
+    public String toString() {
+        final StringBuilder buffer = new StringBuilder("<");
 
-	/**
-	 * Set the tag type.
-	 * 
-	 * @param type
-	 *            The tag type.
-	 */
-	public void setType(final Type type) {
-		this.type = type;
-	}
+        if (this.type == Type.END) {
+            buffer.append("/");
+        }
 
-	/**
-	 * Convert this tag back into string form, with the beginning < and ending
-	 * >.
-	 * 
-	 * @return The Attribute object that was found.
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder buffer = new StringBuilder("<");
+        buffer.append(this.name);
 
-		if (this.type == Type.END) {
-			buffer.append("/");
-		}
+        final Set<String> set = this.attributes.keySet();
+        for (final String key : set) {
+            final String value = this.attributes.get(key);
+            buffer.append(' ');
 
-		buffer.append(this.name);
+            if (value == null) {
+                buffer.append("\"");
+                buffer.append(key);
+                buffer.append("\"");
+            } else {
+                buffer.append(key);
+                buffer.append("=\"");
+                buffer.append(value);
+                buffer.append("\"");
+            }
 
-		final Set<String> set = this.attributes.keySet();
-		for (final String key : set) {
-			final String value = this.attributes.get(key);
-			buffer.append(' ');
+        }
 
-			if (value == null) {
-				buffer.append("\"");
-				buffer.append(key);
-				buffer.append("\"");
-			} else {
-				buffer.append(key);
-				buffer.append("=\"");
-				buffer.append(value);
-				buffer.append("\"");
-			}
-
-		}
-
-		buffer.append(">");
-		return buffer.toString();
-	}
-
+        buffer.append(">");
+        return buffer.toString();
+    }
 }

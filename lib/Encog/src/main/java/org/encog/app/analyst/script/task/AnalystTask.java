@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,61 +28,61 @@ import java.util.List;
 
 /**
  * Holds a task in the script. A task is a named set of commands.
- * 
+ * <p/>
  */
 public class AnalystTask {
 
-	/**
-	 * The name of the task.
-	 */
-	private String name;
+    /**
+     * The name of the task.
+     */
+    private String name;
+    /**
+     * The "source code" for this task.
+     */
+    private final List<String> lines = new ArrayList<String>();
 
-	/**
-	 * The "source code" for this task.
-	 */
-	private final List<String> lines = new ArrayList<String>();
+    /**
+     * Construct an analyst task.
+     * <p/>
+     * @param theName
+     *                The name of this task.
+     */
+    public AnalystTask(final String theName) {
+        this.name = theName;
+    }
 
-	/**
-	 * Construct an analyst task.
-	 * 
-	 * @param theName
-	 *            The name of this task.
-	 */
-	public AnalystTask(final String theName) {
-		this.name = theName;
-	}
+    /**
+     * @return the lines
+     */
+    public List<String> getLines() {
+        return this.lines;
+    }
 
-	/**
-	 * @return the lines
-	 */
-	public List<String> getLines() {
-		return this.lines;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * @param theName
+     *                the name to set
+     */
+    public void setName(final String theName) {
+        this.name = theName;
+    }
 
-	/**
-	 * @param theName
-	 *            the name to set
-	 */
-	public void setName(final String theName) {
-		this.name = theName;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		final StringBuilder result = new StringBuilder("[");
-		result.append(getClass().getSimpleName());
-		result.append(" name=");
-		result.append(this.name);
-		result.append("]");
-		return result.toString();
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder("[");
+        result.append(getClass().getSimpleName());
+        result.append(" name=");
+        result.append(this.name);
+        result.append("]");
+        return result.toString();
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -44,76 +44,81 @@ import org.encog.neural.thermal.PersistBoltzmann;
 import org.encog.neural.thermal.PersistHopfield;
 
 /**
- * Registry to hold persistors.  This is a singleton.
+ * Registry to hold persistors. This is a singleton.
  */
 public final class PersistorRegistry {
 
-	/**
-	 * The instance.
-	 */
-	private static PersistorRegistry instance;
+    /**
+     * The instance.
+     */
+    private static PersistorRegistry instance;
 
-	/**
-	 * @return The singleton instance.
-	 */
-	public static PersistorRegistry getInstance() {
-		if (PersistorRegistry.instance == null) {
-			PersistorRegistry.instance = new PersistorRegistry();
-		}
+    /**
+     * @return The singleton instance.
+     */
+    public static PersistorRegistry getInstance() {
+        if (PersistorRegistry.instance == null) {
+            PersistorRegistry.instance = new PersistorRegistry();
+        }
 
-		return PersistorRegistry.instance;
-	}
+        return PersistorRegistry.instance;
+    }
+    /**
+     * The mapping between name and persistor.
+     */
+    private final Map<String, EncogPersistor> map =
+            new HashMap<String, EncogPersistor>();
 
-	/**
-	 * The mapping between name and persistor.
-	 */
-	private final Map<String, EncogPersistor> map = new HashMap<String, EncogPersistor>();
+    /**
+     * Construct the object.
+     */
+    private PersistorRegistry() {
+        add(new PersistSVM());
+        add(new PersistHopfield());
+        add(new PersistBoltzmann());
+        add(new PersistART1());
+        add(new PersistBAM());
+        add(new PersistBasicNetwork());
+        add(new PersistRBFNetwork());
+        add(new PersistSOM());
+        add(new PersistNEATPopulation());
+        add(new PersistBasicPNN());
+        add(new PersistCPN());
+        add(new PersistTrainingContinuation());
+        add(new PersistBayes());
+        add(new PersistHMM());
+        add(new PersistBasicUniverse());
+        add(new PersistPrgPopulation());
+    }
 
-	/**
-	 * Construct the object.
-	 */
-	private PersistorRegistry() {
-		add(new PersistSVM());
-		add(new PersistHopfield());
-		add(new PersistBoltzmann());
-		add(new PersistART1());
-		add(new PersistBAM());
-		add(new PersistBasicNetwork());
-		add(new PersistRBFNetwork());
-		add(new PersistSOM());
-		add(new PersistNEATPopulation());
-		add(new PersistBasicPNN());
-		add(new PersistCPN());
-		add(new PersistTrainingContinuation());
-		add(new PersistBayes());
-		add(new PersistHMM());
-		add(new PersistBasicUniverse());
-		add(new PersistPrgPopulation());
-	}
+    /**
+     * Add a persistor.
+     * <p/>
+     * @param persistor The persistor to add.
+     */
+    public void add(final EncogPersistor persistor) {
+        this.map.put(persistor.getPersistClassString(), persistor);
+    }
 
-	/**
-	 * Add a persistor.
-	 * @param persistor The persistor to add.
-	 */
-	public void add(final EncogPersistor persistor) {
-		this.map.put(persistor.getPersistClassString(), persistor);
-	}
+    /**
+     * Get a persistor.
+     * <p/>
+     * @param clazz The class to get the persistor for.
+     * <p/>
+     * @return Return the persistor.
+     */
+    public EncogPersistor getPersistor(final Class<?> clazz) {
+        return getPersistor(clazz.getSimpleName());
+    }
 
-	/**
-	 * Get a persistor.
-	 * @param clazz The class to get the persistor for.
-	 * @return Return the persistor.
-	 */
-	public EncogPersistor getPersistor(final Class<?> clazz) {
-		return getPersistor(clazz.getSimpleName());
-	}
-
-	/**
-	 * Get the persistor by name.
-	 * @param name The name of the persistor.
-	 * @return The persistor.
-	 */
-	public EncogPersistor getPersistor(final String name) {
-		return this.map.get(name);
-	}
+    /**
+     * Get the persistor by name.
+     * <p/>
+     * @param name The name of the persistor.
+     * <p/>
+     * @return The persistor.
+     */
+    public EncogPersistor getPersistor(final String name) {
+        return this.map.get(name);
+    }
 }

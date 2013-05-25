@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -27,13 +27,13 @@ import org.encog.util.concurrency.EngineTask;
 
 /**
  * PSO multi-treaded worker.
- * It allows PSO to offload all of the individual 
+ * It allows PSO to offload all of the individual
  * particle calculations to a separate thread.
- * 
+ * <p/>
  * Contributed by:
  * Geoffroy Noel
- * https://github.com/goffer-looney 
- * 
+ * https://github.com/goffer-looney
+ * <p/>
  * @author Geoffroy Noel
  */
 public class NeuralPSOWorker implements EngineTask {
@@ -44,11 +44,11 @@ public class NeuralPSOWorker implements EngineTask {
 
     /**
      * Constructor.
-     * 
+     * <p/>
      * @param neuralPSO     the training algorithm
      * @param particleIndex the index of the particle in the swarm
-     * @param init          true for an initialisation iteration 
-     * 
+     * @param init          true for an initialisation iteration
+     * <p/>
      */
     public NeuralPSOWorker(NeuralPSO neuralPSO, int particleIndex, boolean init) {
         m_neuralPSO = neuralPSO;
@@ -62,5 +62,4 @@ public class NeuralPSOWorker implements EngineTask {
     public final void run() {
         m_neuralPSO.updateParticle(m_particleIndex, m_init);
     }
-
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -39,32 +39,35 @@ import org.encog.neural.networks.XOR;
 
 public class TestBagging extends TestCase {
 
-	int numSplits = 1;
-	int dataSetSize = 100;
-	MLDataSet trainingData;
+    int numSplits = 1;
+    int dataSetSize = 100;
+    MLDataSet trainingData;
 
-
-	public void testBagging() {
-		trainingData = XOR.createXORDataSet();
-		XOR.testXORDataSet(trainingData);
-		trainingData = new EnsembleDataSet(trainingData);
-		assertEquals(1,trainingData.getIdealSize());
-		assertEquals(2,trainingData.getInputSize());
-		EnsembleTrainFactory trainingStrategy = new ResilientPropagationFactory();
-		MultiLayerPerceptronFactory mlpFactory = new MultiLayerPerceptronFactory();
-		ArrayList<Integer> middleLayers = new ArrayList<Integer>();
-		middleLayers.add(4);
-		mlpFactory.setParameters(middleLayers, new ActivationSigmoid());
-		MajorityVoting mv = new MajorityVoting();
-		Bagging testBagging = new Bagging(numSplits, dataSetSize, mlpFactory, trainingStrategy, mv);
-		testBagging.setTrainingData(trainingData);
-		testBagging.train(1E-2,1E-2,(EnsembleDataSet) trainingData);
-		for (int j = 0; j < trainingData.size(); j++) {
-			MLData input = trainingData.get(j).getInput();
-			MLData result = testBagging.compute(input);
-			MLData should = trainingData.get(j).getIdeal();
-			for (int i = 0; i < trainingData.getIdealSize(); i++)
-				assertEquals(should.getData()[i],result.getData()[i]);
-		}
-	}
+    public void testBagging() {
+        trainingData = XOR.createXORDataSet();
+        XOR.testXORDataSet(trainingData);
+        trainingData = new EnsembleDataSet(trainingData);
+        assertEquals(1, trainingData.getIdealSize());
+        assertEquals(2, trainingData.getInputSize());
+        EnsembleTrainFactory trainingStrategy =
+                new ResilientPropagationFactory();
+        MultiLayerPerceptronFactory mlpFactory =
+                new MultiLayerPerceptronFactory();
+        ArrayList<Integer> middleLayers = new ArrayList<Integer>();
+        middleLayers.add(4);
+        mlpFactory.setParameters(middleLayers, new ActivationSigmoid());
+        MajorityVoting mv = new MajorityVoting();
+        Bagging testBagging = new Bagging(numSplits, dataSetSize, mlpFactory,
+                                          trainingStrategy, mv);
+        testBagging.setTrainingData(trainingData);
+        testBagging.train(1E-2, 1E-2, (EnsembleDataSet) trainingData);
+        for (int j = 0; j < trainingData.size(); j++) {
+            MLData input = trainingData.get(j).getInput();
+            MLData result = testBagging.compute(input);
+            MLData should = trainingData.get(j).getIdeal();
+            for (int i = 0; i < trainingData.getIdealSize(); i++) {
+                assertEquals(should.getData()[i], result.getData()[i]);
+            }
+        }
+    }
 }

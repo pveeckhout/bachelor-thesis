@@ -12,9 +12,9 @@
     <import file="nbproject/build-impl.xml"/>
     <!--
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
+    There exist several targets which are by default empty and which can be
+    used for execution of your tasks. These targets are usually executed
+    before and after some main targets. They are:
 
       -pre-init:                 called before initialization of project properties
       -post-init:                called after initialization of project properties
@@ -40,12 +40,12 @@
             </obfuscate>
         </target>
 
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
+    For list of available properties check the imported
+    nbproject/build-impl.xml file.
 
 
     Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
+    The targets of interest are:
 
       -init-macrodef-javac:     defines macro for javac compilation
       -init-macrodef-junit:     defines macro for junit execution
@@ -53,7 +53,7 @@
       -init-macrodef-java:      defines macro for class execution
       -do-jar-with-manifest:    JAR building (if you are using a manifest)
       -do-jar-without-manifest: JAR building (if you are not using a manifest)
-      run:                      execution of project 
+      run:                      execution of project
       -javadoc-build:           Javadoc generation
       test-report:              JUnit report generation
 
@@ -65,23 +65,23 @@
             </exec>
         </target>
 
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
+    Notice that the overridden target depends on the jar target and not only on
+    the compile target as the regular run target does. Again, for a list of available
     properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
+    nbproject/build-impl.xml file.
 
     -->
-	<target name="-post-jar" depends="package-sources, package-doc, build-package-dependecies" />
-	
-	<target description="bundle sources in a jar" name="package-sources">
-		<jar basedir="src" destfile="dist/${ant.project.name}-sources.jar"/>
-	</target>
-	
-	<target depends="-javadoc-build" description="bundle javadoc in a jar" name="package-doc">
-		<jar basedir="dist/javadoc" destfile="dist/${ant.project.name}-javadoc.jar"/>
-	</target>
+    <target name="-post-jar" depends="package-sources, package-doc, build-package-dependecies" />
 
-	<target description="bundles the code and its dependent libraries into a single jar" name="build-package-dependecies">
+    <target description="bundle sources in a jar" name="package-sources">
+        <jar basedir="src" destfile="dist/${ant.project.name}-sources.jar"/>
+    </target>
+
+    <target depends="-javadoc-build" description="bundle javadoc in a jar" name="package-doc">
+        <jar basedir="dist/javadoc" destfile="dist/${ant.project.name}-javadoc.jar"/>
+    </target>
+
+    <target description="bundles the code and its dependent libraries into a single jar" name="build-package-dependecies">
 
         <!-- Change the value of this property to be the name of your JAR,
              minus the .jar extension. It should not have spaces.
@@ -111,16 +111,16 @@
 
         <zip destfile="${store.jar}">
             <zipfileset src="${store.dir}/temp_final.jar"
-            excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
+                        excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
         </zip>
 
         <delete file="${store.dir}/temp_final.jar"/>
-		
-		<copy todir="dist">
-			<fileset dir="${store.dir}" includes="${store.jar.name}.jar"/>
-		</copy>
-		
-		<delete dir="${store.dir}"/>
+
+        <copy todir="dist">
+            <fileset dir="${store.dir}" includes="${store.jar.name}.jar"/>
+        </copy>
+
+        <delete dir="${store.dir}"/>
 
     </target>
 </project>

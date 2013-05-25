@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -25,57 +25,54 @@ package org.encog.util.normalize.input;
 
 public class InputFieldEncogCollection extends BasicInputField {
 
-	private String resourceName;
-	private int offset;
+    private String resourceName;
+    private int offset;
 
+    public InputFieldEncogCollection() {
+    }
 
-	public InputFieldEncogCollection()
-	{
+    public InputFieldEncogCollection(String resourceName, int offset) {
+        super();
+        this.resourceName = resourceName;
+        this.offset = offset;
+    }
 
-	}
+    /**
+     * @return the resourceName
+     */
+    public String getResourceName() {
+        return resourceName;
+    }
 
-	public InputFieldEncogCollection(String resourceName, int offset) {
-		super();
-		this.resourceName = resourceName;
-		this.offset = offset;
-	}
+    /**
+     * @param resourceName the resourceName to set
+     */
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+    }
 
-	/**
-	 * @return the resourceName
-	 */
-	public String getResourceName() {
-		return resourceName;
-	}
-	/**
-	 * @param resourceName the resourceName to set
-	 */
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
-	/**
-	 * @return the offset
-	 */
-	public int getOffset() {
-		return offset;
-	}
-	/**
-	 * @param offset the offset to set
-	 */
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
+    /**
+     * @return the offset
+     */
+    public int getOffset() {
+        return offset;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString()
-	{
-		StringBuilder result = new StringBuilder();
-		result.append(getResourceName());
-		result.append(" : Offset ");
-		result.append(getOffset());
-		return result.toString();
-	}
+    /**
+     * @param offset the offset to set
+     */
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append(getResourceName());
+        result.append(" : Offset ");
+        result.append(getOffset());
+        return result.toString();
+    }
 }

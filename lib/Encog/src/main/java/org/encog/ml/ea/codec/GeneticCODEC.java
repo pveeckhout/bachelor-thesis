@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,23 +33,25 @@ import org.encog.ml.ea.genome.Genome;
  */
 public interface GeneticCODEC {
 
-	/**
-	 * Decode the specified genome into a phenome. A phenome is an actual
-	 * instance of a genome that you can query.
-	 * 
-	 * @param genome
-	 *            The genome to decode.
-	 * @return The phenome.
-	 */
-	MLMethod decode(Genome genome);
+    /**
+     * Decode the specified genome into a phenome. A phenome is an actual
+     * instance of a genome that you can query.
+     * <p/>
+     * @param genome
+     *               The genome to decode.
+     * <p/>
+     * @return The phenome.
+     */
+    MLMethod decode(Genome genome);
 
-	/**
-	 * Attempt to build a genome from a phenome. Note: not all CODEC's support
-	 * this. If it is unsupported, an exception will be thrown.
-	 * 
-	 * @param phenotype
-	 *            The phenotype.
-	 * @return The genome.
-	 */
-	Genome encode(MLMethod phenotype);
+    /**
+     * Attempt to build a genome from a phenome. Note: not all CODEC's support
+     * this. If it is unsupported, an exception will be thrown.
+     * <p/>
+     * @param phenotype
+     *                  The phenotype.
+     * <p/>
+     * @return The genome.
+     */
+    Genome encode(MLMethod phenotype);
 }

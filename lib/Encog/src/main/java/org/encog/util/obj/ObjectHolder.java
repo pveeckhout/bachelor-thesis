@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -25,27 +25,27 @@ package org.encog.util.obj;
 
 import java.io.Serializable;
 
-
 public class ObjectHolder<T> implements Serializable {
-	private final T obj;
-	private final double probability;
-	
-	public ObjectHolder(T theObj, double probability) {
-		this.obj = theObj;
-		this.probability = probability;
-	}
 
-	/**
-	 * @return the opp
-	 */
-	public T getObj() {
-		return this.obj;
-	}
+    private final T obj;
+    private final double probability;
 
-	/**
-	 * @return the probability
-	 */
-	public double getProbability() {
-		return probability;
-	}
+    public ObjectHolder(T theObj, double probability) {
+        this.obj = theObj;
+        this.probability = probability;
+    }
+
+    /**
+     * @return the opp
+     */
+    public T getObj() {
+        return this.obj;
+    }
+
+    /**
+     * @return the probability
+     */
+    public double getProbability() {
+        return probability;
+    }
 }

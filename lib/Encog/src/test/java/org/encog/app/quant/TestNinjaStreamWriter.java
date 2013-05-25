@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -36,28 +36,27 @@ import org.encog.util.csv.CSVFormat;
 
 public class TestNinjaStreamWriter extends TestCase {
 
-	public void testWrite() throws IOException {
-		NinjaStreamWriter nsw = new NinjaStreamWriter();
+    public void testWrite() throws IOException {
+        NinjaStreamWriter nsw = new NinjaStreamWriter();
 
-		nsw.open("test.csv", true, CSVFormat.ENGLISH);
+        nsw.open("test.csv", true, CSVFormat.ENGLISH);
 
-		nsw.beginBar(new GregorianCalendar(2010, 00, 01).getTime());
-		nsw.storeColumn("close", 10);
-		nsw.endBar();
+        nsw.beginBar(new GregorianCalendar(2010, 00, 01).getTime());
+        nsw.storeColumn("close", 10);
+        nsw.endBar();
 
-		nsw.beginBar(new GregorianCalendar(2010, 00, 02).getTime());
-		nsw.storeColumn("close", 11);
-		nsw.endBar();
+        nsw.beginBar(new GregorianCalendar(2010, 00, 02).getTime());
+        nsw.storeColumn("close", 11);
+        nsw.endBar();
 
-		nsw.close();
+        nsw.close();
 
-		BufferedReader tr = new BufferedReader(new FileReader("test.csv"));
+        BufferedReader tr = new BufferedReader(new FileReader("test.csv"));
 
-		Assert.assertEquals("date,time,\"close\"", tr.readLine());
-		Assert.assertEquals("20100101,0,10", tr.readLine());
-		Assert.assertEquals("20100102,0,11", tr.readLine());
+        Assert.assertEquals("date,time,\"close\"", tr.readLine());
+        Assert.assertEquals("20100101,0,10", tr.readLine());
+        Assert.assertEquals("20100102,0,11", tr.readLine());
 
-		tr.close();
-	}
-
+        tr.close();
+    }
 }

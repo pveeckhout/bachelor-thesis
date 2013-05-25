@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,73 +31,73 @@ import org.encog.ml.data.MLDataPair;
 /**
  * Simple holder class used internally for Encog.
  * Used as a holder for a:
- * 
- *  NeuralDataPair
- *  Iterator
- *  InputFieldNeuralDataSet
+ * <p/>
+ * NeuralDataPair
+ * Iterator
+ * InputFieldNeuralDataSet
  */
 public class MLDataFieldHolder implements Serializable {
-	
-	/**
-	 * A neural data pair.
-	 */
-	private MLDataPair pair;
-	
-	/**
-	 * An iterator.
-	 */
-	private final Iterator<MLDataPair> iterator;
-	
-	/**
-	 * A field.
-	 */
-	private final InputFieldMLDataSet field;
 
-	/**
-	 * Construct the class.
-	 * @param iterator An iterator.
-	 * @param field A field.
-	 */
-	public MLDataFieldHolder(final Iterator<MLDataPair> iterator,
-			final InputFieldMLDataSet field) {
-		super();
-		this.iterator = iterator;
-		this.field = field;
-	}
+    /**
+     * A neural data pair.
+     */
+    private MLDataPair pair;
+    /**
+     * An iterator.
+     */
+    private final Iterator<MLDataPair> iterator;
+    /**
+     * A field.
+     */
+    private final InputFieldMLDataSet field;
 
-	/**
-	 * @return The field.
-	 */
-	public InputFieldMLDataSet getField() {
-		return this.field;
-	}
+    /**
+     * Construct the class.
+     * <p/>
+     * @param iterator An iterator.
+     * @param field    A field.
+     */
+    public MLDataFieldHolder(final Iterator<MLDataPair> iterator,
+                             final InputFieldMLDataSet field) {
+        super();
+        this.iterator = iterator;
+        this.field = field;
+    }
 
-	/**
-	 * @return The iterator.
-	 */
-	public Iterator<MLDataPair> getIterator() {
-		return this.iterator;
-	}
+    /**
+     * @return The field.
+     */
+    public InputFieldMLDataSet getField() {
+        return this.field;
+    }
 
-	/**
-	 * @return The pair.
-	 */
-	public MLDataPair getPair() {
-		return this.pair;
-	}
+    /**
+     * @return The iterator.
+     */
+    public Iterator<MLDataPair> getIterator() {
+        return this.iterator;
+    }
 
-	/**
-	 * Obtain the next pair.
-	 */
-	public void obtainPair() {
-		this.pair = this.iterator.next();
-	}
+    /**
+     * @return The pair.
+     */
+    public MLDataPair getPair() {
+        return this.pair;
+    }
 
-	/**
-	 * Set the pair.
-	 * @param pair The pair.
-	 */
-	public void setPair(final MLDataPair pair) {
-		this.pair = pair;
-	}
+    /**
+     * Obtain the next pair.
+     */
+    public void obtainPair() {
+        this.pair = this.iterator.next();
+    }
+
+    /**
+     * Set the pair.
+     * <p/>
+     * @param pair The pair.
+     */
+    public void setPair(final MLDataPair pair) {
+        this.pair = pair;
+    }
 }

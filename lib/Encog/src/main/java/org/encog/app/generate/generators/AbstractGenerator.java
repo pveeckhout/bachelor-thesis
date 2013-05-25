@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,118 +35,115 @@ import java.util.TreeSet;
  * allows for includes and code indentation.
  */
 public abstract class AbstractGenerator implements ProgramGenerator {
-	/**
-	 * Default number of indent spaces.
-	 */
-	public static final int INDENT_SPACES = 4;
 
-	/**
-	 * The contents of this file.
-	 */
-	private final StringBuilder contents = new StringBuilder();
+    /**
+     * Default number of indent spaces.
+     */
+    public static final int INDENT_SPACES = 4;
+    /**
+     * The contents of this file.
+     */
+    private final StringBuilder contents = new StringBuilder();
+    /**
+     * The current indent level.
+     */
+    private int currentIndent = 0;
+    /**
+     * The includes.
+     */
+    private final Set<String> includes = new TreeSet<String>();
 
-	/**
-	 * The current indent level.
-	 */
-	private int currentIndent = 0;
+    /**
+     * Add a line break;
+     */
+    public void addBreak() {
+        this.contents.append("\n");
+    }
 
-	/**
-	 * The includes.
-	 */
-	private final Set<String> includes = new TreeSet<String>();
+    /**
+     * Add an include.
+     * <p/>
+     * @param str
+     *            The include to add.
+     */
+    public void addInclude(final String str) {
+        this.includes.add(str);
+    }
 
-	/**
-	 * Add a line break;
-	 */
-	public void addBreak() {
-		this.contents.append("\n");
-	}
+    /**
+     * Add a line of code, indent proper.
+     * <p/>
+     * @param line
+     *             The line of code to add.
+     */
+    public void addLine(final String line) {
+        for (int i = 0; i < this.currentIndent; i++) {
+            this.contents.append(' ');
+        }
+        this.contents.append(line);
+        this.contents.append("\n");
+    }
 
-	/**
-	 * Add an include.
-	 * 
-	 * @param str
-	 *            The include to add.
-	 */
-	public void addInclude(final String str) {
-		this.includes.add(str);
-	}
+    /**
+     * Add to the beginning of the file. This is good for includes.
+     * <p/>
+     * @param str
+     */
+    public void addToBeginning(final String str) {
+        this.contents.insert(0, str);
+    }
 
-	/**
-	 * Add a line of code, indent proper.
-	 * 
-	 * @param line
-	 *            The line of code to add.
-	 */
-	public void addLine(final String line) {
-		for (int i = 0; i < this.currentIndent; i++) {
-			this.contents.append(' ');
-		}
-		this.contents.append(line);
-		this.contents.append("\n");
-	}
+    /**
+     * Get the contents.
+     * <p/>
+     * @return The contents.
+     */
+    @Override
+    public String getContents() {
+        return this.contents.toString();
+    }
 
-	/**
-	 * Add to the beginning of the file. This is good for includes.
-	 * 
-	 * @param str
-	 */
-	public void addToBeginning(final String str) {
-		this.contents.insert(0, str);
-	}
+    /**
+     * @return The includes.
+     */
+    public Set<String> getIncludes() {
+        return this.includes;
+    }
 
-	/**
-	 * Get the contents.
-	 * 
-	 * @return The contents.
-	 */
-	@Override
-	public String getContents() {
-		return this.contents.toString();
-	}
+    /**
+     * Indent a line. The line after dis one will be indented.
+     * <p/>
+     * @param line
+     *             The line to indent.
+     */
+    public void indentLine(final String line) {
+        addLine(line);
+        this.currentIndent += AbstractGenerator.INDENT_SPACES;
+    }
 
-	/**
-	 * @return The includes.
-	 */
-	public Set<String> getIncludes() {
-		return this.includes;
-	}
+    /**
+     * Unindent and then add this line.
+     * <p/>
+     * @param line
+     *             The line to add.
+     */
+    public void unIndentLine(final String line) {
+        this.currentIndent -= AbstractGenerator.INDENT_SPACES;
+        addLine(line);
+    }
 
-	/**
-	 * Indent a line. The line after dis one will be indented.
-	 * 
-	 * @param line
-	 *            The line to indent.
-	 */
-	public void indentLine(final String line) {
-		addLine(line);
-		this.currentIndent += AbstractGenerator.INDENT_SPACES;
-	}
-
-	/**
-	 * Unindent and then add this line.
-	 * 
-	 * @param line
-	 *            The line to add.
-	 */
-	public void unIndentLine(final String line) {
-		this.currentIndent -= AbstractGenerator.INDENT_SPACES;
-		addLine(line);
-	}
-
-	/**
-	 * Write the contents to the specified file.
-	 */
-	@Override
-	public void writeContents(final File targetFile) {
-		try {
-			final FileWriter outFile = new FileWriter(targetFile);
-			final PrintWriter out = new PrintWriter(outFile);
-			out.print(this.contents.toString());
-			out.close();
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+    /**
+     * Write the contents to the specified file.
+     */
+    @Override
+    public void writeContents(final File targetFile) {
+        try {
+            final FileWriter outFile = new FileWriter(targetFile);
+            final PrintWriter out = new PrintWriter(outFile);
+            out.print(this.contents.toString());
+            out.close();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

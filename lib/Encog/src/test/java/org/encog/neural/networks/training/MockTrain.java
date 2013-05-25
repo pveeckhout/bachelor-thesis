@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -32,88 +32,79 @@ import org.encog.neural.networks.training.propagation.TrainingContinuation;
 
 public class MockTrain extends BasicTraining implements LearningRate, Momentum {
 
-	public MockTrain() {
-		super(TrainingImplementationType.Iterative);
-	}
+    public MockTrain() {
+        super(TrainingImplementationType.Iterative);
+    }
+    private BasicNetwork network;
+    private boolean wasUsed;
+    private double momentum;
+    private double learningRate;
 
-	private BasicNetwork network;
-	private boolean wasUsed;
-	private double momentum;
-	private double learningRate;
+    public MLMethod getMethod() {
+        return this.network;
+    }
 
-	
-	public MLMethod getMethod() {
-		return this.network;
-	}
-	
-	public void setNetwork(BasicNetwork network)
-	{
-		this.network = network;
-	}
+    public void setNetwork(BasicNetwork network) {
+        this.network = network;
+    }
 
-	public void simulate(double newError, double firstValue) {
-		preIteration();
-		MockTrain.setFirstElement(firstValue, this.network);
-		setError(newError);
-		postIteration();
-		this.wasUsed = true;
-	}
-	
-	public void iteration() {
-		preIteration();
-		postIteration();
-		this.wasUsed = true;
-	}
-	
-	public static void setFirstElement(double value, BasicNetwork network)
-	{
-		double[] d = NetworkCODEC.networkToArray(network);
-		d[0] = value;
-		NetworkCODEC.arrayToNetwork(d, network);
-	}
-	
-	public static double getFirstElement(BasicNetwork network)
-	{
-		double[] d = NetworkCODEC.networkToArray(network);
-		return d[0];
-	}
+    public void simulate(double newError, double firstValue) {
+        preIteration();
+        MockTrain.setFirstElement(firstValue, this.network);
+        setError(newError);
+        postIteration();
+        this.wasUsed = true;
+    }
 
-	public boolean wasUsed() {
-		return wasUsed;
-	}
+    public void iteration() {
+        preIteration();
+        postIteration();
+        this.wasUsed = true;
+    }
 
-	public double getLearningRate() {
-		return this.learningRate;
-	}
+    public static void setFirstElement(double value, BasicNetwork network) {
+        double[] d = NetworkCODEC.networkToArray(network);
+        d[0] = value;
+        NetworkCODEC.arrayToNetwork(d, network);
+    }
 
-	public void setLearningRate(double rate) {
-		this.learningRate = rate;
-	}
+    public static double getFirstElement(BasicNetwork network) {
+        double[] d = NetworkCODEC.networkToArray(network);
+        return d[0];
+    }
 
-	public double getMomentum() {
-		return this.momentum;
-	}
+    public boolean wasUsed() {
+        return wasUsed;
+    }
 
-	public void setMomentum(double m) {
-		this.momentum = m;
-		
-	}
+    public double getLearningRate() {
+        return this.learningRate;
+    }
 
-	@Override
-	public boolean canContinue() {
-		return false;
-	}
+    public void setLearningRate(double rate) {
+        this.learningRate = rate;
+    }
 
-	@Override
-	public TrainingContinuation pause() {
-		return null;
-	}
+    public double getMomentum() {
+        return this.momentum;
+    }
 
-	@Override
-	public void resume(TrainingContinuation state) {
-		
-	}
+    public void setMomentum(double m) {
+        this.momentum = m;
 
+    }
 
+    @Override
+    public boolean canContinue() {
+        return false;
+    }
 
+    @Override
+    public TrainingContinuation pause() {
+        return null;
+    }
+
+    @Override
+    public void resume(TrainingContinuation state) {
+    }
 }

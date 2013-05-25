@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,42 +31,41 @@ import org.encog.neural.freeform.basic.BasicFreeformNeuron;
  */
 public class FreeformContextNeuron extends BasicFreeformNeuron {
 
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * The context source.
-	 */
-	private FreeformNeuron contextSource;
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The context source.
+     */
+    private FreeformNeuron contextSource;
 
-	/**
-	 * Construct the context neuron.
-	 * @param theContextSource The context source.
-	 */
-	public FreeformContextNeuron(final FreeformNeuron theContextSource) {
-		super(null);
-	}
+    /**
+     * Construct the context neuron.
+     * <p/>
+     * @param theContextSource The context source.
+     */
+    public FreeformContextNeuron(final FreeformNeuron theContextSource) {
+        super(null);
+    }
 
-	/**
-	 * @return the contextSource
-	 */
-	public FreeformNeuron getContextSource() {
-		return this.contextSource;
-	}
+    /**
+     * @return the contextSource
+     */
+    public FreeformNeuron getContextSource() {
+        return this.contextSource;
+    }
 
-	/**
-	 * @param contextSource
-	 *            the contextSource to set
-	 */
-	public void setContextSource(final FreeformNeuron contextSource) {
-		this.contextSource = contextSource;
-	}
+    /**
+     * @param contextSource
+     *                      the contextSource to set
+     */
+    public void setContextSource(final FreeformNeuron contextSource) {
+        this.contextSource = contextSource;
+    }
 
-	@Override
-	public void updateContext() {
-		setActivation(this.contextSource.getActivation());
-	}
-
+    @Override
+    public void updateContext() {
+        setActivation(this.contextSource.getActivation());
+    }
 }

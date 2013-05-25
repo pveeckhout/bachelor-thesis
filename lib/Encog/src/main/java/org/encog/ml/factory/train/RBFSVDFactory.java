@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,28 +35,28 @@ import org.encog.neural.rbf.training.SVDTraining;
  */
 public class RBFSVDFactory {
 
-	/**
-	 * Create a RBF-SVD trainer.
-	 * 
-	 * @param method
-	 *            The method to use.
-	 * @param training
-	 *            The training data to use.
-	 * @param args
-	 *            The arguments to use.
-	 * @return The newly created trainer.
-	 */
-	public MLTrain create(final MLMethod method, 
-			final MLDataSet training,
-			final String args) {
+    /**
+     * Create a RBF-SVD trainer.
+     * <p/>
+     * @param method
+     *                 The method to use.
+     * @param training
+     *                 The training data to use.
+     * @param args
+     *                 The arguments to use.
+     * <p/>
+     * @return The newly created trainer.
+     */
+    public MLTrain create(final MLMethod method,
+                          final MLDataSet training,
+                          final String args) {
 
-		if (!(method instanceof RBFNetwork)) {
-			throw new EncogError(
-					"RBF-SVD training cannot be used on a method of type: "
-							+ method.getClass().getName());
-		}
+        if (!(method instanceof RBFNetwork)) {
+            throw new EncogError(
+                    "RBF-SVD training cannot be used on a method of type: " +
+                    method.getClass().getName());
+        }
 
-		return new SVDTraining((RBFNetwork) method, training);
-	}
-
+        return new SVDTraining((RBFNetwork) method, training);
+    }
 }

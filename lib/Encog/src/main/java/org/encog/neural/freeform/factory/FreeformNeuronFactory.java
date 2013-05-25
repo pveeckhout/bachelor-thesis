@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,18 +30,22 @@ import org.encog.neural.freeform.InputSummation;
  * A factory that creates neurons.
  */
 public interface FreeformNeuronFactory {
-	
-	/**
-	 * Create a context neuron.
-	 * @param neuron The source neuron.
-	 * @return The newly created neuron.
-	 */
-	FreeformNeuron factorContext(FreeformNeuron neuron);
 
-	/**
-	 * Create a regular neuron.
-	 * @param object The summation function.
-	 * @return The newly created neuron.
-	 */
-	FreeformNeuron factorRegular(InputSummation object);
+    /**
+     * Create a context neuron.
+     * <p/>
+     * @param neuron The source neuron.
+     * <p/>
+     * @return The newly created neuron.
+     */
+    FreeformNeuron factorContext(FreeformNeuron neuron);
+
+    /**
+     * Create a regular neuron.
+     * <p/>
+     * @param object The summation function.
+     * <p/>
+     * @return The newly created neuron.
+     */
+    FreeformNeuron factorRegular(InputSummation object);
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,203 +40,198 @@ import org.encog.neural.networks.layers.Layer;
  * a very good performance boost since the neural network does not need to
  * traverse itself each time a complete collection of layers or synapses is
  * needed.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class NeuralStructure implements Serializable {
 
-	/**
-	 * The serial ID.
-	 */
-	private static final long serialVersionUID = -2929683885395737817L;
+    /**
+     * The serial ID.
+     */
+    private static final long serialVersionUID = -2929683885395737817L;
+    /**
+     * The layers in this neural network.
+     */
+    private final List<Layer> layers = new ArrayList<Layer>();
+    /**
+     * The neural network this class belongs to.
+     */
+    private final BasicNetwork network;
+    /**
+     * The limit, below which a connection is treated as zero.
+     */
+    private double connectionLimit;
+    /**
+     * Are connections limited?
+     */
+    private boolean connectionLimited;
+    /**
+     * The flattened form of the network.
+     */
+    private FlatNetwork flat;
 
-	/**
-	 * The layers in this neural network.
-	 */
-	private final List<Layer> layers = new ArrayList<Layer>();
+    /**
+     * Construct a structure object for the specified network.
+     * <p/>
+     * @param network
+     *                The network to construct a structure for.
+     */
+    public NeuralStructure(final BasicNetwork network) {
+        this.network = network;
+    }
 
-	/**
-	 * The neural network this class belongs to.
-	 */
-	private final BasicNetwork network;
+    /**
+     * Calculate the size that an array should be to hold all of the weights and
+     * bias values.
+     * <p/>
+     * @return The size of the calculated array.
+     */
+    public final int calculateSize() {
+        return NetworkCODEC.networkSize(this.network);
+    }
 
-	/**
-	 * The limit, below which a connection is treated as zero.
-	 */
-	private double connectionLimit;
+    /**
+     * Enforce that all connections are above the connection limit. Any
+     * connections below this limit will be severed.
+     */
+    public final void enforceLimit() {
+        if (!this.connectionLimited) {
+            return;
+        }
 
-	/**
-	 * Are connections limited?
-	 */
-	private boolean connectionLimited;
+        final double[] weights = this.flat.getWeights();
 
-	/**
-	 * The flattened form of the network.
-	 */
-	private FlatNetwork flat;
+        for (int i = 0; i < weights.length; i++) {
+            if (Math.abs(weights[i]) < this.connectionLimit) {
+                weights[i] = 0;
+            }
+        }
+    }
 
-	/**
-	 * Construct a structure object for the specified network.
-	 * 
-	 * @param network
-	 *            The network to construct a structure for.
-	 */
-	public NeuralStructure(final BasicNetwork network) {
-		this.network = network;
-	}
+    /**
+     * Parse/finalize the limit value for connections.
+     */
+    public void finalizeLimit() {
+        // see if there is a connection limit imposed
+        final String limit = this.network
+                .getPropertyString(BasicNetwork.TAG_LIMIT);
+        if (limit != null) {
+            try {
+                this.connectionLimited = true;
+                this.connectionLimit = Double.parseDouble(limit);
+                enforceLimit();
+            } catch (final NumberFormatException e) {
+                throw new NeuralNetworkError("Invalid property(" +
+                        BasicNetwork.TAG_LIMIT + "):" + limit);
+            }
+        } else {
+            this.connectionLimited = false;
+            this.connectionLimit = 0;
+        }
+    }
 
-	/**
-	 * Calculate the size that an array should be to hold all of the weights and
-	 * bias values.
-	 * 
-	 * @return The size of the calculated array.
-	 */
-	public final int calculateSize() {
-		return NetworkCODEC.networkSize(this.network);
-	}
+    /**
+     * Build the synapse and layer structure. This method should be called after
+     * you are done adding layers to a network, or change the network's logic
+     * property.
+     */
+    public final void finalizeStructure() {
 
-	/**
-	 * Enforce that all connections are above the connection limit. Any
-	 * connections below this limit will be severed.
-	 */
-	public final void enforceLimit() {
-		if (!this.connectionLimited) {
-			return;
-		}
+        if (this.layers.size() < 2) {
+            throw new NeuralNetworkError(
+                    "There must be at least two layers before the structure is finalized.");
+        }
 
-		final double[] weights = this.flat.getWeights();
+        final FlatLayer[] flatLayers = new FlatLayer[this.layers.size()];
 
-		for (int i = 0; i < weights.length; i++) {
-			if (Math.abs(weights[i]) < this.connectionLimit) {
-				weights[i] = 0;
-			}
-		}
-	}
+        for (int i = 0; i < this.layers.size(); i++) {
+            final BasicLayer layer = (BasicLayer) this.layers.get(i);
+            if (layer.getActivation() == null) {
+                layer.setActivation(new ActivationLinear());
+            }
 
-	/**
-	 * Parse/finalize the limit value for connections.
-	 */
-	public void finalizeLimit() {
-		// see if there is a connection limit imposed
-		final String limit = this.network
-				.getPropertyString(BasicNetwork.TAG_LIMIT);
-		if (limit != null) {
-			try {
-				this.connectionLimited = true;
-				this.connectionLimit = Double.parseDouble(limit);
-				enforceLimit();
-			} catch (final NumberFormatException e) {
-				throw new NeuralNetworkError("Invalid property("
-						+ BasicNetwork.TAG_LIMIT + "):" + limit);
-			}
-		} else {
-			this.connectionLimited = false;
-			this.connectionLimit = 0;
-		}
-	}
+            flatLayers[i] = layer;
+        }
 
-	/**
-	 * Build the synapse and layer structure. This method should be called after
-	 * you are done adding layers to a network, or change the network's logic
-	 * property.
-	 */
-	public final void finalizeStructure() {
+        this.flat = new FlatNetwork(flatLayers);
 
-		if (this.layers.size() < 2) {
-			throw new NeuralNetworkError(
-					"There must be at least two layers before the structure is finalized.");
-		}
+        finalizeLimit();
+        this.layers.clear();
+        enforceLimit();
+    }
 
-		final FlatLayer[] flatLayers = new FlatLayer[this.layers.size()];
+    /**
+     * @return The connection limit.
+     */
+    public final double getConnectionLimit() {
+        return this.connectionLimit;
+    }
 
-		for (int i = 0; i < this.layers.size(); i++) {
-			final BasicLayer layer = (BasicLayer) this.layers.get(i);
-			if (layer.getActivation() == null) {
-				layer.setActivation(new ActivationLinear());
-			}
+    /**
+     * @return The flat network.
+     */
+    public final FlatNetwork getFlat() {
+        requireFlat();
+        return this.flat;
+    }
 
-			flatLayers[i] = layer;
-		}
+    /**
+     * @return The layers in this neural network.
+     */
+    public final List<Layer> getLayers() {
+        return this.layers;
+    }
 
-		this.flat = new FlatNetwork(flatLayers);
+    /**
+     * @return The network this structure belongs to.
+     */
+    public final BasicNetwork getNetwork() {
+        return this.network;
+    }
 
-		finalizeLimit();
-		this.layers.clear();
-		enforceLimit();
-	}
+    /**
+     * @return True if this is not a fully connected feedforward network.
+     */
+    public final boolean isConnectionLimited() {
+        return this.connectionLimited;
+    }
 
-	/**
-	 * @return The connection limit.
-	 */
-	public final double getConnectionLimit() {
-		return this.connectionLimit;
-	}
+    /**
+     * Throw an error if there is no flat network.
+     */
+    public final void requireFlat() {
+        if (this.flat == null) {
+            throw new NeuralNetworkError(
+                    "Must call finalizeStructure before using this network.");
+        }
+    }
 
-	/**
-	 * @return The flat network.
-	 */
-	public final FlatNetwork getFlat() {
-		requireFlat();
-		return this.flat;
-	}
+    /**
+     * Set the flat network.
+     * <p/>
+     * @param flat The flat network.
+     */
+    public final void setFlat(final FlatNetwork flat) {
+        this.flat = flat;
+    }
 
-	/**
-	 * @return The layers in this neural network.
-	 */
-	public final List<Layer> getLayers() {
-		return this.layers;
-	}
+    /**
+     * Update any properties from the property map.
+     */
+    public final void updateProperties() {
+        if (this.network.getProperties().containsKey(BasicNetwork.TAG_LIMIT)) {
+            this.connectionLimit = this.network
+                    .getPropertyDouble(BasicNetwork.TAG_LIMIT);
+            this.connectionLimited = true;
+        } else {
+            this.connectionLimited = false;
+            this.connectionLimit = 0;
+        }
 
-	/**
-	 * @return The network this structure belongs to.
-	 */
-	public final BasicNetwork getNetwork() {
-		return this.network;
-	}
+        if (this.flat != null) {
+            this.flat.setConnectionLimit(this.connectionLimit);
+        }
 
-	/**
-	 * @return True if this is not a fully connected feedforward network.
-	 */
-	public final boolean isConnectionLimited() {
-		return this.connectionLimited;
-	}
-
-	/**
-	 * Throw an error if there is no flat network.
-	 */
-	public final void requireFlat() {
-		if (this.flat == null) {
-			throw new NeuralNetworkError(
-					"Must call finalizeStructure before using this network.");
-		}
-	}
-
-	/**
-	 * Set the flat network.
-	 * @param flat The flat network.
-	 */
-	public final void setFlat(final FlatNetwork flat) {
-		this.flat = flat;
-	}
-
-	/**
-	 * Update any properties from the property map.
-	 */
-	public final void updateProperties() {
-		if (this.network.getProperties().containsKey(BasicNetwork.TAG_LIMIT)) {
-			this.connectionLimit = this.network
-					.getPropertyDouble(BasicNetwork.TAG_LIMIT);
-			this.connectionLimited = true;
-		} else {
-			this.connectionLimited = false;
-			this.connectionLimit = 0;
-		}
-
-		if (this.flat != null) {
-			this.flat.setConnectionLimit(this.connectionLimit);
-		}
-
-	}
-
+    }
 }

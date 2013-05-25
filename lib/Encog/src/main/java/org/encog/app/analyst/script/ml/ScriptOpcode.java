@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -26,48 +26,45 @@ package org.encog.app.analyst.script.ml;
 import org.encog.ml.prg.extension.ProgramExtensionTemplate;
 
 public class ScriptOpcode {
-	private String name;
-	private int argCount;
-	
-	public ScriptOpcode(String name, int argCount) {
-		super();
-		this.name = name;
-		this.argCount = argCount;
-	}
 
-	public ScriptOpcode(ProgramExtensionTemplate temp) {
-		this(temp.getName(),temp.getChildNodeCount());
-	}
+    private String name;
+    private int argCount;
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    public ScriptOpcode(String name, int argCount) {
+        super();
+        this.name = name;
+        this.argCount = argCount;
+    }
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    public ScriptOpcode(ProgramExtensionTemplate temp) {
+        this(temp.getName(), temp.getChildNodeCount());
+    }
 
-	/**
-	 * @return the argCount
-	 */
-	public int getArgCount() {
-		return argCount;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @param argCount the argCount to set
-	 */
-	public void setArgCount(int argCount) {
-		this.argCount = argCount;
-	}
-	
-	
-	
-	
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the argCount
+     */
+    public int getArgCount() {
+        return argCount;
+    }
+
+    /**
+     * @param argCount the argCount to set
+     */
+    public void setArgCount(int argCount) {
+        this.argCount = argCount;
+    }
 }

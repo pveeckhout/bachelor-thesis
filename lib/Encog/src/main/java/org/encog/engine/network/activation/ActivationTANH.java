@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,93 +31,92 @@ import org.encog.util.obj.ActivationUtil;
  * hyperbolic tangent. This activation function produces both positive and
  * negative output. Use this activation function if both negative and positive
  * output is desired.
- * 
+ * <p/>
  */
 public class ActivationTANH implements ActivationFunction {
 
-	/**
-	 * Serial id for this class.
-	 */
-	private static final long serialVersionUID = 9121998892720207643L;
+    /**
+     * Serial id for this class.
+     */
+    private static final long serialVersionUID = 9121998892720207643L;
+    /**
+     * The parameters.
+     */
+    private final double[] params;
 
-	/**
-	 * The parameters.
-	 */
-	private final double[] params;
+    /**
+     * Construct a basic HTAN activation function, with a slope of 1.
+     */
+    public ActivationTANH() {
+        this.params = new double[0];
+    }
 
-	/**
-	 * Construct a basic HTAN activation function, with a slope of 1.
-	 */
-	public ActivationTANH() {
-		this.params = new double[0];
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void activationFunction(final double[] x, final int start,
+                                         final int size) {
+        for (int i = start; i < start + size; i++) {
+            x[i] = Math.tanh(x[i]);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final void activationFunction(final double[] x, final int start,
-			final int size) {
-		for (int i = start; i < start + size; i++) {
-			x[i] = Math.tanh(x[i]);
-		}
-	}
+    /**
+     * @return The object cloned;
+     */
+    @Override
+    public final ActivationFunction clone() {
+        return new ActivationTANH();
+    }
 
-	/**
-	 * @return The object cloned;
-	 */
-	@Override
-	public final ActivationFunction clone() {
-		return new ActivationTANH();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final double derivativeFunction(final double b, final double a) {
+        return (1.0 - a * a);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final double derivativeFunction(final double b, final double a) {
-		return (1.0 - a * a);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String[] getParamNames() {
+        final String[] result = {};
+        return result;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final String[] getParamNames() {
-		final String[] result = {};
-		return result;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final double[] getParams() {
+        return this.params;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final double[] getParams() {
-		return this.params;
-	}
+    /**
+     * @return Return true, TANH has a derivative.
+     */
+    @Override
+    public final boolean hasDerivative() {
+        return true;
+    }
 
-	/**
-	 * @return Return true, TANH has a derivative.
-	 */
-	@Override
-	public final boolean hasDerivative() {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void setParam(final int index, final double value) {
+        this.params[index] = value;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final void setParam(final int index, final double value) {
-		this.params[index] = value;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getFactoryCode() {
-		return ActivationUtil.generateActivationFactory(MLActivationFactory.AF_TANH, this);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFactoryCode() {
+        return ActivationUtil.generateActivationFactory(
+                MLActivationFactory.AF_TANH, this);
+    }
 }

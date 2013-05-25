@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -43,330 +43,330 @@ import org.encog.util.Format;
 /**
  * Implements a NEAT genome. This is a "blueprint" for creating a neural
  * network.
- * 
+ * <p/>
  * -----------------------------------------------------------------------------
  * http://www.cs.ucf.edu/~kstanley/ Encog's NEAT implementation was drawn from
  * the following three Journal Articles. For more complete BibTeX sources, see
  * NEATNetwork.java.
- * 
+ * <p/>
  * Evolving Neural Networks Through Augmenting Topologies
- * 
+ * <p/>
  * Generating Large-Scale Neural Networks Through Discovering Geometric
  * Regularities
- * 
+ * <p/>
  * Automatic feature selection in neuroevolution
- * 
+ * <p/>
  */
 public class NEATGenome extends BasicGenome implements Cloneable, Serializable {
 
-	/**
-	 * Serial id.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * Serial id.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The number of inputs.
+     */
+    private int inputCount;
+    /**
+     * The list that holds the links.
+     */
+    private final List<NEATLinkGene> linksList = new ArrayList<NEATLinkGene>();
+    /**
+     * THe network depth.
+     */
+    private int networkDepth;
+    /**
+     * The list that holds the neurons.
+     */
+    private final List<NEATNeuronGene> neuronsList =
+            new ArrayList<NEATNeuronGene>();
+    /**
+     * The number of outputs.
+     */
+    private int outputCount;
 
-	/**
-	 * The number of inputs.
-	 */
-	private int inputCount;
+    /**
+     * Construct a genome by copying another.
+     * <p/>
+     * @param other
+     *              The other genome.
+     */
+    public NEATGenome(final NEATGenome other) {
+        this.networkDepth = other.networkDepth;
+        this.setPopulation(other.getPopulation());
+        setScore(other.getScore());
+        setAdjustedScore(other.getAdjustedScore());
+        this.inputCount = other.inputCount;
+        this.outputCount = other.outputCount;
+        this.setSpecies(other.getSpecies());
 
-	/**
-	 * The list that holds the links.
-	 */
-	private final List<NEATLinkGene> linksList = new ArrayList<NEATLinkGene>();
+        // copy neurons
+        for (final NEATNeuronGene oldGene : other.getNeuronsChromosome()) {
+            final NEATNeuronGene newGene = new NEATNeuronGene(oldGene);
+            this.neuronsList.add(newGene);
+        }
 
-	/**
-	 * THe network depth.
-	 */
-	private int networkDepth;
+        // copy links
+        for (final NEATLinkGene oldGene : other.getLinksChromosome()) {
+            final NEATLinkGene newGene = new NEATLinkGene(
+                    oldGene.getFromNeuronID(), oldGene.getToNeuronID(),
+                    oldGene.isEnabled(), oldGene.getInnovationId(),
+                    oldGene.getWeight());
+            this.linksList.add(newGene);
+        }
 
-	/**
-	 * The list that holds the neurons.
-	 */
-	private final List<NEATNeuronGene> neuronsList = new ArrayList<NEATNeuronGene>();
+    }
 
-	/**
-	 * The number of outputs.
-	 */
-	private int outputCount;
+    /**
+     * Create a NEAT gnome. Neuron genes will be added by reference, links will
+     * be copied.
+     * <p/>
+     * @param neurons
+     *                    The neurons to create.
+     * @param links
+     *                    The links to create.
+     * @param inputCount
+     *                    The input count.
+     * @param outputCount
+     *                    The output count.
+     */
+    public NEATGenome(final List<NEATNeuronGene> neurons,
+                      final List<NEATLinkGene> links, final int inputCount,
+                      final int outputCount) {
+        setAdjustedScore(0);
+        this.inputCount = inputCount;
+        this.outputCount = outputCount;
 
-	/**
-	 * Construct a genome by copying another.
-	 * 
-	 * @param other
-	 *            The other genome.
-	 */
-	public NEATGenome(final NEATGenome other) {
-		this.networkDepth = other.networkDepth;
-		this.setPopulation(other.getPopulation());
-		setScore(other.getScore());
-		setAdjustedScore(other.getAdjustedScore());
-		this.inputCount = other.inputCount;
-		this.outputCount = other.outputCount;
-		this.setSpecies(other.getSpecies());
+        for (NEATLinkGene gene : links) {
+            this.linksList.add(new NEATLinkGene(gene));
+        }
 
-		// copy neurons
-		for (final NEATNeuronGene oldGene : other.getNeuronsChromosome()) {
-			final NEATNeuronGene newGene = new NEATNeuronGene(oldGene);
-			this.neuronsList.add(newGene);
-		}
+        this.neuronsList.addAll(neurons);
+    }
 
-		// copy links
-		for (final NEATLinkGene oldGene : other.getLinksChromosome()) {
-			final NEATLinkGene newGene = new NEATLinkGene(
-					oldGene.getFromNeuronID(), oldGene.getToNeuronID(),
-					oldGene.isEnabled(), oldGene.getInnovationId(),
-					oldGene.getWeight());
-			this.linksList.add(newGene);
-		}
+    /**
+     * Create a new genome with the specified connection density. This
+     * constructor is typically used to create the initial population.
+     * <p/>
+     * @param rnd               Random number generator.
+     * @param pop               The population.
+     * @param inputCount        The input count.
+     * @param outputCount       The output count.
+     * @param connectionDensity The connection density.
+     */
+    public NEATGenome(final Random rnd, final NEATPopulation pop,
+                      final int inputCount, final int outputCount,
+                      double connectionDensity) {
+        setAdjustedScore(0);
+        this.inputCount = inputCount;
+        this.outputCount = outputCount;
 
-	}
+        // get the activation function
+        ActivationFunction af = pop.getActivationFunctions().pickFirst();
 
-	/**
-	 * Create a NEAT gnome. Neuron genes will be added by reference, links will
-	 * be copied.
-	 * 
-	 * @param neurons
-	 *            The neurons to create.
-	 * @param links
-	 *            The links to create.
-	 * @param inputCount
-	 *            The input count.
-	 * @param outputCount
-	 *            The output count.
-	 */
-	public NEATGenome(final List<NEATNeuronGene> neurons,
-			final List<NEATLinkGene> links, final int inputCount,
-			final int outputCount) {
-		setAdjustedScore(0);
-		this.inputCount = inputCount;
-		this.outputCount = outputCount;
+        // first bias
+        int innovationID = 0;
+        NEATNeuronGene biasGene = new NEATNeuronGene(NEATNeuronType.Bias, af,
+                                                     inputCount, innovationID++);
+        this.neuronsList.add(biasGene);
 
-		for (NEATLinkGene gene : links) {
-			this.linksList.add(new NEATLinkGene(gene));
-		}
+        // then inputs
 
-		this.neuronsList.addAll(neurons);
-	}
+        for (int i = 0; i < inputCount; i++) {
+            NEATNeuronGene gene = new NEATNeuronGene(NEATNeuronType.Input, af,
+                                                     i, innovationID++);
+            this.neuronsList.add(gene);
+        }
 
-	/**
-	 * Create a new genome with the specified connection density. This
-	 * constructor is typically used to create the initial population.
-	 * @param rnd Random number generator.
-	 * @param pop The population.
-	 * @param inputCount The input count.
-	 * @param outputCount The output count.
-	 * @param connectionDensity The connection density.
-	 */
-	public NEATGenome(final Random rnd, final NEATPopulation pop,
-			final int inputCount, final int outputCount,
-			double connectionDensity) {
-		setAdjustedScore(0);
-		this.inputCount = inputCount;
-		this.outputCount = outputCount;
+        // then outputs
 
-		// get the activation function
-		ActivationFunction af = pop.getActivationFunctions().pickFirst();
+        for (int i = 0; i < outputCount; i++) {
+            NEATNeuronGene gene = new NEATNeuronGene(NEATNeuronType.Output, af,
+                                                     i + inputCount + 1,
+                                                     innovationID++);
+            this.neuronsList.add(gene);
+        }
 
-		// first bias
-		int innovationID = 0;
-		NEATNeuronGene biasGene = new NEATNeuronGene(NEATNeuronType.Bias, af,
-				inputCount, innovationID++);
-		this.neuronsList.add(biasGene);
+        // and now links
+        for (int i = 0; i < inputCount + 1; i++) {
+            for (int j = 0; j < outputCount; j++) {
+                // make sure we have at least one connection
+                if (this.linksList.size() < 1 ||
+                        rnd.nextDouble() < connectionDensity) {
+                    long fromID = this.neuronsList.get(i).getId();
+                    long toID = this.neuronsList.get(inputCount + j + 1)
+                            .getId();
+                    double w = RangeRandomizer.randomize(rnd,
+                                                         -pop.getWeightRange(),
+                                                         pop.getWeightRange());
+                    NEATLinkGene gene = new NEATLinkGene(fromID, toID, true,
+                                                         innovationID++, w);
+                    this.linksList.add(gene);
+                }
+            }
+        }
 
-		// then inputs
+    }
 
-		for (int i = 0; i < inputCount; i++) {
-			NEATNeuronGene gene = new NEATNeuronGene(NEATNeuronType.Input, af,
-					i, innovationID++);
-			this.neuronsList.add(gene);
-		}
+    /**
+     * Empty constructor for persistence.
+     */
+    public NEATGenome() {
+    }
 
-		// then outputs
+    /**
+     * @return The number of input neurons.
+     */
+    public int getInputCount() {
+        return this.inputCount;
+    }
 
-		for (int i = 0; i < outputCount; i++) {
-			NEATNeuronGene gene = new NEATNeuronGene(NEATNeuronType.Output, af,
-					i + inputCount + 1, innovationID++);
-			this.neuronsList.add(gene);
-		}
+    /**
+     * @return The network depth.
+     */
+    public int getNetworkDepth() {
+        return this.networkDepth;
+    }
 
-		// and now links
-		for (int i = 0; i < inputCount + 1; i++) {
-			for (int j = 0; j < outputCount; j++) {
-				// make sure we have at least one connection
-				if (this.linksList.size() < 1
-						|| rnd.nextDouble() < connectionDensity) {
-					long fromID = this.neuronsList.get(i).getId();
-					long toID = this.neuronsList.get(inputCount + j + 1)
-							.getId();
-					double w = RangeRandomizer.randomize(rnd,
-							-pop.getWeightRange(), pop.getWeightRange());
-					NEATLinkGene gene = new NEATLinkGene(fromID, toID, true,
-							innovationID++, w);
-					this.linksList.add(gene);
-				}
-			}
-		}
+    /**
+     * @return The number of genes in the links chromosome.
+     */
+    public int getNumGenes() {
+        return this.linksList.size();
+    }
 
-	}
+    /**
+     * @return The output count.
+     */
+    public int getOutputCount() {
+        return this.outputCount;
+    }
 
-	/**
-	 * Empty constructor for persistence.
-	 */
-	public NEATGenome() {
+    /**
+     * @param networkDepth
+     *                     the networkDepth to set
+     */
+    public void setNetworkDepth(final int networkDepth) {
+        this.networkDepth = networkDepth;
+    }
 
-	}
+    /**
+     * Sort the genes.
+     */
+    public void sortGenes() {
+        Collections.sort(this.linksList);
+    }
 
-	/**
-	 * @return The number of input neurons.
-	 */
-	public int getInputCount() {
-		return this.inputCount;
-	}
+    /**
+     * @return the linksChromosome
+     */
+    public List<NEATLinkGene> getLinksChromosome() {
+        return this.linksList;
+    }
 
-	/**
-	 * @return The network depth.
-	 */
-	public int getNetworkDepth() {
-		return this.networkDepth;
-	}
+    /**
+     * @return the neuronsChromosome
+     */
+    public List<NEATNeuronGene> getNeuronsChromosome() {
+        return this.neuronsList;
+    }
 
-	/**
-	 * @return The number of genes in the links chromosome.
-	 */
-	public int getNumGenes() {
-		return this.linksList.size();
-	}
+    /**
+     * @param inputCount
+     *                   the inputCount to set
+     */
+    public void setInputCount(int inputCount) {
+        this.inputCount = inputCount;
+    }
 
-	/**
-	 * @return The output count.
-	 */
-	public int getOutputCount() {
-		return this.outputCount;
-	}
+    /**
+     * @param outputCount
+     *                    the outputCount to set
+     */
+    public void setOutputCount(int outputCount) {
+        this.outputCount = outputCount;
+    }
 
-	/**
-	 * @param networkDepth
-	 *            the networkDepth to set
-	 */
-	public void setNetworkDepth(final int networkDepth) {
-		this.networkDepth = networkDepth;
-	}
+    /**
+     * Validate the structure of this genome.
+     */
+    public void validate() {
 
-	/**
-	 * Sort the genes.
-	 */
-	public void sortGenes() {
-		Collections.sort(this.linksList);
-	}
+        // make sure that the bias neuron is where it should be
+        NEATNeuronGene g = this.neuronsList.get(0);
+        if (g.getNeuronType() != NEATNeuronType.Bias) {
+            throw new EncogError("NEAT Neuron Gene 0 should be a bias gene.");
+        }
 
-	/**
-	 * @return the linksChromosome
-	 */
-	public List<NEATLinkGene> getLinksChromosome() {
-		return this.linksList;
-	}
+        // make sure all input neurons are at the beginning
+        for (int i = 1; i <= this.inputCount; i++) {
+            NEATNeuronGene gene = this.neuronsList.get(i);
+            if (gene.getNeuronType() != NEATNeuronType.Input) {
+                throw new EncogError("NEAT Neuron Gene " + i +
+                        " should be an input gene.");
+            }
+        }
 
-	/**
-	 * @return the neuronsChromosome
-	 */
-	public List<NEATNeuronGene> getNeuronsChromosome() {
-		return this.neuronsList;
-	}
+        // make sure that there are no double links
+        Map<String, NEATLinkGene> map = new HashMap<String, NEATLinkGene>();
+        for (NEATLinkGene nlg : this.linksList) {
+            String key = nlg.getFromNeuronID() + "->" + nlg.getToNeuronID();
+            if (map.containsKey(key)) {
+                throw new EncogError("Double link found: " + key);
+            }
+            map.put(key, nlg);
+        }
+    }
 
-	/**
-	 * @param inputCount
-	 *            the inputCount to set
-	 */
-	public void setInputCount(int inputCount) {
-		this.inputCount = inputCount;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void copy(Genome source) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @param outputCount
-	 *            the outputCount to set
-	 */
-	public void setOutputCount(int outputCount) {
-		this.outputCount = outputCount;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int size() {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * Validate the structure of this genome.
-	 */
-	public void validate() {
+    /**
+     * Find the neuron with the specified nodeID.
+     * <p/>
+     * @param nodeID
+     *               The nodeID to look for.
+     * <p/>
+     * @return The neuron, if found, otherwise null.
+     */
+    public NEATNeuronGene findNeuron(long nodeID) {
+        for (NEATNeuronGene gene : this.neuronsList) {
+            if (gene.getId() == nodeID) {
+                return gene;
+            }
+        }
+        return null;
+    }
 
-		// make sure that the bias neuron is where it should be
-		NEATNeuronGene g = this.neuronsList.get(0);
-		if (g.getNeuronType() != NEATNeuronType.Bias) {
-			throw new EncogError("NEAT Neuron Gene 0 should be a bias gene.");
-		}
-
-		// make sure all input neurons are at the beginning
-		for (int i = 1; i <= this.inputCount; i++) {
-			NEATNeuronGene gene = this.neuronsList.get(i);
-			if (gene.getNeuronType() != NEATNeuronType.Input) {
-				throw new EncogError("NEAT Neuron Gene " + i
-						+ " should be an input gene.");
-			}
-		}
-
-		// make sure that there are no double links
-		Map<String, NEATLinkGene> map = new HashMap<String, NEATLinkGene>();
-		for (NEATLinkGene nlg : this.linksList) {
-			String key = nlg.getFromNeuronID() + "->" + nlg.getToNeuronID();
-			if (map.containsKey(key)) {
-				throw new EncogError("Double link found: " + key);
-			}
-			map.put(key, nlg);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void copy(Genome source) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int size() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Find the neuron with the specified nodeID.
-	 * 
-	 * @param nodeID
-	 *            The nodeID to look for.
-	 * @return The neuron, if found, otherwise null.
-	 */
-	public NEATNeuronGene findNeuron(long nodeID) {
-		for (NEATNeuronGene gene : this.neuronsList) {
-			if (gene.getId() == nodeID)
-				return gene;
-		}
-		return null;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append("[");
-		result.append(this.getClass().getSimpleName());
-		result.append(",score=");
-		result.append(Format.formatDouble(this.getScore(), 2));
-		result.append(",adjusted score=");
-		result.append(Format.formatDouble(this.getAdjustedScore(), 2));
-		result.append(",birth generation=");
-		result.append(this.getBirthGeneration());
-		result.append(",neurons=");
-		result.append(this.neuronsList.size());
-		result.append(",links=");
-		result.append(this.linksList.size());
-		result.append("]");
-		return result.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("[");
+        result.append(this.getClass().getSimpleName());
+        result.append(",score=");
+        result.append(Format.formatDouble(this.getScore(), 2));
+        result.append(",adjusted score=");
+        result.append(Format.formatDouble(this.getAdjustedScore(), 2));
+        result.append(",birth generation=");
+        result.append(this.getBirthGeneration());
+        result.append(",neurons=");
+        result.append(this.neuronsList.size());
+        result.append(",links=");
+        result.append(this.linksList.size());
+        result.append("]");
+        return result.toString();
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,109 +33,108 @@ package org.encog.ml.data.temporal;
  */
 public class TemporalPoint implements Comparable<TemporalPoint> {
 
-	/**
-	 * The sequence number for this point.
-	 */
-	private int sequence;
+    /**
+     * The sequence number for this point.
+     */
+    private int sequence;
+    /**
+     * The data for this point.
+     */
+    private double[] data;
 
-	/**
-	 * The data for this point.
-	 */
-	private double[] data;
+    /**
+     * Construct a temporal point of the specified size.
+     *
+     * @param size
+     *             The size to create the temporal point for.
+     */
+    public TemporalPoint(final int size) {
+        this.data = new double[size];
+    }
 
-	/**
-	 * Construct a temporal point of the specified size.
-	 *
-	 * @param size
-	 *            The size to create the temporal point for.
-	 */
-	public TemporalPoint(final int size) {
-		this.data = new double[size];
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public int compareTo(final TemporalPoint that) {
+        if (getSequence() == that.getSequence()) {
+            return 0;
+        } else if (getSequence() < that.getSequence()) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public int compareTo(final TemporalPoint that) {
-		if (getSequence() == that.getSequence()) {
-			return 0;
-		} else if (getSequence() < that.getSequence()) {
-			return -1;
-		} else {
-			return 1;
-		}
-	}
+    /**
+     * @return the data
+     */
+    public double[] getData() {
+        return this.data;
+    }
 
-	/**
-	 * @return the data
-	 */
-	public double[] getData() {
-		return this.data;
-	}
+    /**
+     * Get the data at the specified index.
+     *
+     * @param index
+     *              The index to get the data at.
+     * <p/>
+     * @return The data at the specified index.
+     */
+    public double getData(final int index) {
+        return this.data[index];
+    }
 
-	/**
-	 * Get the data at the specified index.
-	 *
-	 * @param index
-	 *            The index to get the data at.
-	 * @return The data at the specified index.
-	 */
-	public double getData(final int index) {
-		return this.data[index];
-	}
+    /**
+     * @return The sequence for this point.
+     */
+    public int getSequence() {
+        return this.sequence;
+    }
 
-	/**
-	 * @return The sequence for this point.
-	 */
-	public int getSequence() {
-		return this.sequence;
-	}
+    /**
+     * @param data
+     *             the data to set
+     */
+    public void setData(final double[] data) {
+        this.data = data;
+    }
 
-	/**
-	 * @param data
-	 *            the data to set
-	 */
-	public void setData(final double[] data) {
-		this.data = data;
-	}
+    /**
+     * Set the data at the specified index.
+     *
+     * @param index
+     *              The index to set the data at.
+     * @param d
+     *              The data to set.
+     */
+    public void setData(final int index, final double d) {
+        this.data[index] = d;
+    }
 
-	/**
-	 * Set the data at the specified index.
-	 *
-	 * @param index
-	 *            The index to set the data at.
-	 * @param d
-	 *            The data to set.
-	 */
-	public void setData(final int index, final double d) {
-		this.data[index] = d;
-	}
+    /**
+     * @param sequence
+     *                 the sequence to set
+     */
+    public void setSequence(final int sequence) {
+        this.sequence = sequence;
+    }
 
-	/**
-	 * @param sequence
-	 *            the sequence to set
-	 */
-	public void setSequence(final int sequence) {
-		this.sequence = sequence;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder("[TemporalPoint:");
-		builder.append("Seq:");
-		builder.append(this.sequence);
-		builder.append(",Data:");
-		for (int i = 0; i < this.data.length; i++) {
-			if (i > 0) {
-				builder.append(',');
-			}
-			builder.append(this.data[i]);
-		}
-		builder.append("]");
-		return builder.toString();
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder("[TemporalPoint:");
+        builder.append("Seq:");
+        builder.append(this.sequence);
+        builder.append(",Data:");
+        for (int i = 0; i < this.data.length; i++) {
+            if (i > 0) {
+                builder.append(',');
+            }
+            builder.append(this.data[i]);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

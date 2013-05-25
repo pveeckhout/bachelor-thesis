@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -39,168 +39,166 @@ import org.encog.util.EngineArray;
  * Used for Instar training of a CPN neural network. A CPN network is a hybrid
  * supervised/unsupervised network. The Instar training handles the unsupervised
  * portion of the training.
- * 
+ * <p/>
  */
 public class TrainInstar extends BasicTraining implements LearningRate {
 
-	/**
-	 * The network being trained.
-	 */
-	private final CPN network;
+    /**
+     * The network being trained.
+     */
+    private final CPN network;
+    /**
+     * The training data. This is unsupervised training, so only the input
+     * portion of the training data will be used.
+     */
+    private final MLDataSet training;
+    /**
+     * The learning rate.
+     */
+    private double learningRate;
+    /**
+     * If the weights have not been initialized, then they can be initialized
+     * before training begins. This will be done on the first iteration.
+     */
+    private boolean mustInit;
 
-	/**
-	 * The training data. This is unsupervised training, so only the input
-	 * portion of the training data will be used.
-	 */
-	private final MLDataSet training;
+    /**
+     * Construct the instar training object.
+     * <p/>
+     * @param theNetwork
+     *                        The network to be trained.
+     * @param theTraining
+     *                        The training data.
+     * @param theLearningRate
+     *                        The learning rate.
+     * @param theInitWeights
+     *                        True, if the weights should be initialized from the training
+     *                        data. If set to true, then you must have the same number of
+     *                        training elements as instar neurons.
+     */
+    public TrainInstar(final CPN theNetwork, final MLDataSet theTraining,
+                       final double theLearningRate,
+                       final boolean theInitWeights) {
+        super(TrainingImplementationType.Iterative);
+        this.network = theNetwork;
+        this.training = theTraining;
+        this.learningRate = theLearningRate;
+        this.mustInit = theInitWeights;
+    }
 
-	/**
-	 * The learning rate.
-	 */
-	private double learningRate;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canContinue() {
+        return false;
+    }
 
-	/**
-	 * If the weights have not been initialized, then they can be initialized
-	 * before training begins. This will be done on the first iteration.
-	 */
-	private boolean mustInit;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getLearningRate() {
+        return this.learningRate;
+    }
 
-	/**
-	 * Construct the instar training object.
-	 * 
-	 * @param theNetwork
-	 *            The network to be trained.
-	 * @param theTraining
-	 *            The training data.
-	 * @param theLearningRate
-	 *            The learning rate.
-	 * @param theInitWeights
-	 *            True, if the weights should be initialized from the training
-	 *            data. If set to true, then you must have the same number of
-	 *            training elements as instar neurons.
-	 */
-	public TrainInstar(final CPN theNetwork, final MLDataSet theTraining,
-			final double theLearningRate, final boolean theInitWeights) {
-		super(TrainingImplementationType.Iterative);
-		this.network = theNetwork;
-		this.training = theTraining;
-		this.learningRate = theLearningRate;
-		this.mustInit = theInitWeights;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CPN getMethod() {
+        return this.network;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean canContinue() {
-		return false;
-	}
+    /**
+     * Approximate the weights based on the input values.
+     */
+    private void initWeights() {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double getLearningRate() {
-		return this.learningRate;
-	}
+        if (this.training.getRecordCount() != this.network.getInstarCount()) {
+            throw new NeuralNetworkError(
+                    "If the weights are to be set from the " +
+                    "training data, then there must be one instar " +
+                    "neuron for each training element.");
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CPN getMethod() {
-		return this.network;
-	}
+        int i = 0;
+        for (final MLDataPair pair : this.training) {
+            for (int j = 0; j < this.network.getInputCount(); j++) {
+                this.network.getWeightsInputToInstar().set(j, i,
+                                                           pair.getInput()
+                        .getData(j));
+            }
+            i++;
+        }
+        this.mustInit = false;
+    }
 
-	/**
-	 * Approximate the weights based on the input values.
-	 */
-	private void initWeights() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void iteration() {
 
-		if (this.training.getRecordCount() != this.network.getInstarCount()) {
-			throw new NeuralNetworkError(
-					"If the weights are to be set from the " 
-					+ "training data, then there must be one instar " 
-					+ "neuron for each training element.");
-		}
+        if (this.mustInit) {
+            initWeights();
+        }
 
-		int i = 0;
-		for (final MLDataPair pair : this.training) {
-			for (int j = 0; j < this.network.getInputCount(); j++) {
-				this.network.getWeightsInputToInstar().set(j, i,
-						pair.getInput().getData(j));
-			}
-			i++;
-		}
-		this.mustInit = false;
-	}
+        double worstDistance = Double.NEGATIVE_INFINITY;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void iteration() {
+        for (final MLDataPair pair : this.training) {
+            final MLData out = this.network.computeInstar(pair.getInput());
 
-		if (this.mustInit) {
-			initWeights();
-		}
+            // determine winner
+            final int winner = EngineArray.indexOfLargest(out.getData());
 
-		double worstDistance = Double.NEGATIVE_INFINITY;
+            // calculate the distance
+            double distance = 0;
+            for (int i = 0; i < pair.getInput().size(); i++) {
+                final double diff = pair.getInput().getData(i) -
+                        this.network.getWeightsInputToInstar().get(i, winner);
+                distance += diff * diff;
+            }
+            distance = BoundMath.sqrt(distance);
 
-		for (final MLDataPair pair : this.training) {
-			final MLData out = this.network.computeInstar(pair.getInput());
+            if (distance > worstDistance) {
+                worstDistance = distance;
+            }
 
-			// determine winner
-			final int winner = EngineArray.indexOfLargest(out.getData());
+            // train
+            for (int j = 0; j < this.network.getInputCount(); j++) {
+                final double delta = this.learningRate *
+                        (pair.getInput().getData(j) - this.network
+                        .getWeightsInputToInstar().get(j, winner));
 
-			// calculate the distance
-			double distance = 0;
-			for (int i = 0; i < pair.getInput().size(); i++) {
-				final double diff = pair.getInput().getData(i)
-						- this.network.getWeightsInputToInstar().get(i, winner);
-				distance += diff * diff;
-			}
-			distance = BoundMath.sqrt(distance);
+                this.network.getWeightsInputToInstar().add(j, winner, delta);
 
-			if (distance > worstDistance) {
-				worstDistance = distance;
-			}
+            }
+        }
 
-			// train
-			for (int j = 0; j < this.network.getInputCount(); j++) {
-				final double delta = this.learningRate
-						* (pair.getInput().getData(j) - this.network
-								.getWeightsInputToInstar().get(j, winner));
+        setError(worstDistance);
+    }
 
-				this.network.getWeightsInputToInstar().add(j, winner, delta);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TrainingContinuation pause() {
+        return null;
+    }
 
-			}
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void resume(final TrainingContinuation state) {
+    }
 
-		setError(worstDistance);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TrainingContinuation pause() {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void resume(final TrainingContinuation state) {
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setLearningRate(final double rate) {
-		this.learningRate = rate;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setLearningRate(final double rate) {
+        this.learningRate = rate;
+    }
 }

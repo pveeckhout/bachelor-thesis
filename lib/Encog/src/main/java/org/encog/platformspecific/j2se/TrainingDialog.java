@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -41,151 +41,149 @@ import org.encog.neural.networks.training.propagation.Propagation;
 import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation;
 import org.encog.util.Format;
 
-
 /**
  * Display a training dialog.
  */
 public class TrainingDialog extends JDialog implements ActionListener {
 
-	/**
-	 * The serial id.
-	 */
-	private static final long serialVersionUID = -6847676575773420316L;
+    /**
+     * The serial id.
+     */
+    private static final long serialVersionUID = -6847676575773420316L;
+    /**
+     * Holds the current error.
+     */
+    private JLabel labelError;
+    /**
+     * Holds the iteration count.
+     */
+    private JLabel labelIterations;
+    /**
+     * Holds the current total training time.
+     */
+    private JLabel labelTime;
+    /**
+     * The stop button.
+     */
+    private JButton buttonStop;
+    /**
+     * Set to true if the network should stop after the current iteration.
+     */
+    private boolean shouldStop = false;
 
-	/**
-	 * Holds the current error.
-	 */
-	private JLabel labelError;
+    /**
+     * Construct the training dialog.
+     */
+    public TrainingDialog() {
+        this.setSize(320, 100);
+        setTitle("Training");
+        final Container content = getContentPane();
+        content.setLayout(new BorderLayout());
+        final JPanel statsPanel = new JPanel();
+        statsPanel.setLayout(new GridLayout(3, 2));
 
-	/**
-	 * Holds the iteration count.
-	 */
-	private JLabel labelIterations;
-	
-	/**
-	 * Holds the current total training time.
-	 */
-	private JLabel labelTime;
-	
-	/**
-	 * The stop button.
-	 */
-	private JButton buttonStop;
-	
-	/**
-	 * Set to true if the network should stop after the current iteration.
-	 */
-	private boolean shouldStop = false;
+        statsPanel.add(new JLabel("Current Error:"));
+        statsPanel.add(this.labelError = new JLabel("Starting..."));
+        statsPanel.add(new JLabel("Iterations:"));
+        statsPanel.add(this.labelIterations = new JLabel(""));
+        statsPanel.add(new JLabel("Training Time:"));
+        statsPanel.add(this.labelTime = new JLabel(""));
+        content.add(this.buttonStop = new JButton("Stop"), BorderLayout.SOUTH);
+        content.add(statsPanel, BorderLayout.CENTER);
+        this.buttonStop.addActionListener(this);
+    }
 
-	/**
-	 * Construct the training dialog.
-	 */
-	public TrainingDialog() {
-		this.setSize(320, 100);
-		setTitle("Training");
-		final Container content = getContentPane();
-		content.setLayout(new BorderLayout());
-		final JPanel statsPanel = new JPanel();
-		statsPanel.setLayout(new GridLayout(3, 2));
+    /**
+     * Called when the user clicks the stop button.
+     * <p/>
+     * @param e The action event.
+     */
+    public void actionPerformed(final ActionEvent e) {
+        if (e.getSource() == this.buttonStop) {
+            this.buttonStop.setEnabled(false);
+            this.buttonStop.setText("Stopping...");
+            this.shouldStop = true;
+        }
+    }
 
-		statsPanel.add(new JLabel("Current Error:"));
-		statsPanel.add(this.labelError = new JLabel("Starting..."));
-		statsPanel.add(new JLabel("Iterations:"));
-		statsPanel.add(this.labelIterations = new JLabel(""));
-		statsPanel.add(new JLabel("Training Time:"));
-		statsPanel.add(this.labelTime = new JLabel(""));
-		content.add(this.buttonStop = new JButton("Stop"), BorderLayout.SOUTH);
-		content.add(statsPanel, BorderLayout.CENTER);
-		this.buttonStop.addActionListener(this);
-	}
+    /**
+     * Set the current error.
+     * <p/>
+     * @param e The current error.
+     */
+    public void setError(final double e) {
+        this.labelError.setText(Format.formatPercent(e));
+    }
 
-	/**
-	 * Called when the user clicks the stop button.
-	 * @param e The action event.
-	 */
-	public void actionPerformed(final ActionEvent e) {
-		if (e.getSource() == this.buttonStop) {
-			this.buttonStop.setEnabled(false);
-			this.buttonStop.setText("Stopping...");
-			this.shouldStop = true;
-		}
-	}
+    /**
+     * Set the number of iterations.
+     * <p/>
+     * @param iteration The current iteration.
+     */
+    public void setIterations(final int iteration) {
+        this.labelIterations.setText(Format.formatInteger(iteration));
+    }
 
-	/**
-	 * Set the current error.
-	 * @param e The current error.
-	 */
-	public void setError(final double e) {
-		this.labelError.setText(Format.formatPercent(e));
-	}
+    /**
+     * Set the time.
+     * <p/>
+     * @param seconds The time in seconds.
+     */
+    public void setTime(final int seconds) {
+        this.labelTime.setText(Format.formatTimeSpan(seconds));
+    }
 
-	/**
-	 * Set the number of iterations.
-	 * @param iteration The current iteration.
-	 */
-	public void setIterations(final int iteration) {
-		this.labelIterations.setText(Format.formatInteger(iteration));
-	}
+    /**
+     * @return True if training should stop after current iteration.
+     */
+    public boolean shouldStop() {
+        return this.shouldStop;
+    }
 
-	/**
-	 * Set the time.
-	 * @param seconds The time in seconds.
-	 */
-	public void setTime(final int seconds) {
-		this.labelTime.setText(Format.formatTimeSpan(seconds));
-	}
+    /**
+     * Train, using the specified training method, display progress to a dialog
+     * box.
+     * <p/>
+     * @param train
+     *                    The training method to use.
+     * @param network
+     *                    The network to train.
+     * @param trainingSet
+     *                    The training set to use.
+     */
+    public static void trainDialog(final MLTrain train,
+                                   final BasicNetwork network,
+                                   final MLDataSet trainingSet) {
 
-	/**
-	 * @return True if training should stop after current iteration.
-	 */
-	public boolean shouldStop() {
-		return this.shouldStop;
-	}
-	
-	/**
-	 * Train, using the specified training method, display progress to a dialog
-	 * box.
-	 * 
-	 * @param train
-	 *            The training method to use.
-	 * @param network
-	 *            The network to train.
-	 * @param trainingSet
-	 *            The training set to use.
-	 */
-	public static void trainDialog(final MLTrain train,
-			final BasicNetwork network, final MLDataSet trainingSet) {
+        final TrainingDialog dialog = new TrainingDialog();
+        dialog.setVisible(true);
 
-		final TrainingDialog dialog = new TrainingDialog();
-		dialog.setVisible(true);
+        final long start = System.currentTimeMillis();
+        do {
+            train.iteration();
+            int iteration = train.getIteration();
+            final long current = System.currentTimeMillis();
+            final long elapsed = (current - start) / 1000;// seconds
+            dialog.setIterations(iteration);
+            dialog.setError(train.getError());
+            dialog.setTime((int) elapsed);
+        } while (!dialog.shouldStop());
+        train.finishTraining();
+        dialog.dispose();
+    }
 
-		final long start = System.currentTimeMillis();
-		do {
-			train.iteration();
-			int iteration = train.getIteration();
-			final long current = System.currentTimeMillis();
-			final long elapsed = (current - start) / 1000;// seconds
-			dialog.setIterations(iteration);
-			dialog.setError(train.getError());
-			dialog.setTime((int) elapsed);
-		} while (!dialog.shouldStop());
-		train.finishTraining();
-		dialog.dispose();
-	}
-
-	/**
-	 * Train using SCG and display progress to a dialog box.
-	 * 
-	 * @param network
-	 *            The network to train.
-	 * @param trainingSet
-	 *            The training set to use.
-	 */
-	public static void trainDialog(final BasicNetwork network,
-			final MLDataSet trainingSet) {
-		final Propagation train = new ResilientPropagation(network, trainingSet);
-		train.setThreadCount(0);
-		TrainingDialog.trainDialog(train, network, trainingSet);
-	}
-
+    /**
+     * Train using SCG and display progress to a dialog box.
+     * <p/>
+     * @param network
+     *                    The network to train.
+     * @param trainingSet
+     *                    The training set to use.
+     */
+    public static void trainDialog(final BasicNetwork network,
+                                   final MLDataSet trainingSet) {
+        final Propagation train = new ResilientPropagation(network, trainingSet);
+        train.setThreadCount(0);
+        TrainingDialog.trainDialog(train, network, trainingSet);
+    }
 }

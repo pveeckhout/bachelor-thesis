@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -25,90 +25,91 @@ package org.encog.mathutil.dimension;
 
 /**
  * Specifies a constraint for dimensions, using a lower and upper bound.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class DimensionConstraint {
 
-	/**
-	 * The lower bound for each dimension.
-	 */
-	private final MultiDimension lower;
+    /**
+     * The lower bound for each dimension.
+     */
+    private final MultiDimension lower;
+    /**
+     * The upper bound for each dimension.
+     */
+    private final MultiDimension upper;
 
-	/**
-	 * The upper bound for each dimension.
-	 */
-	private final MultiDimension upper;
+    /**
+     * Construct the constraint.
+     * <p/>
+     * @param n
+     *                 The number of dimensions.
+     * @param theLower
+     * @param theUpper
+     */
+    public DimensionConstraint(int n, int theLower, int theUpper) {
+        this.lower = new MultiDimension(n);
+        this.upper = new MultiDimension(n);
 
-	/**
-	 * Construct the constraint.
-	 * 
-	 * @param n
-	 *            The number of dimensions.
-	 * @param theLower
-	 * @param theUpper
-	 */
-	public DimensionConstraint(int n, int theLower, int theUpper) {
-		this.lower = new MultiDimension(n);
-		this.upper = new MultiDimension(n);
+        for (int i = 0; i < n; i++) {
+            this.lower.setDimension(i, theLower);
+            this.upper.setDimension(i, theUpper);
+        }
+    }
 
-		for (int i = 0; i < n; i++) {
-			this.lower.setDimension(i, theLower);
-			this.upper.setDimension(i, theUpper);
-		}
-	}
+    /**
+     * @return The lower bound for each dimension.
+     */
+    public MultiDimension getLower() {
+        return lower;
+    }
 
-	/**
-	 * @return The lower bound for each dimension.
-	 */
-	public MultiDimension getLower() {
-		return lower;
-	}
+    /**
+     * @return The upper bound for each dimension.
+     */
+    public MultiDimension getUpper() {
+        return upper;
+    }
 
-	/**
-	 * @return The upper bound for each dimension.
-	 */
-	public MultiDimension getUpper() {
-		return upper;
-	}
+    /**
+     * Get the lower bound for a specific dimension.
+     * <p/>
+     * @param d
+     *          The dimension.
+     * <p/>
+     * @return The lower bound for the specified dimension.
+     */
+    public int getLower(int d) {
+        return lower.getDimension(d);
+    }
 
-	/**
-	 * Get the lower bound for a specific dimension.
-	 * 
-	 * @param d
-	 *            The dimension.
-	 * @return The lower bound for the specified dimension.
-	 */
-	public int getLower(int d) {
-		return lower.getDimension(d);
-	}
+    /**
+     * Get the upper bound for a specific dimension.
+     * <p/>
+     * @param d
+     *          The dimension.
+     * <p/>
+     * @return The upper bound for the specified dimension.
+     */
+    public int getUpper(int d) {
+        return upper.getDimension(d);
+    }
 
-	/**
-	 * Get the upper bound for a specific dimension.
-	 * 
-	 * @param d
-	 *            The dimension.
-	 * @return The upper bound for the specified dimension.
-	 */
-	public int getUpper(int d) {
-		return upper.getDimension(d);
-	}
+    /**
+     * Get the range (between upper and lower bound) for the specified
+     * dimension.
+     * <p/>
+     * @param d
+     *          The dimension.
+     * <p/>
+     * @return The range for the specified dimension.
+     */
+    public int getRange(int d) {
+        return (upper.getDimension(d) - lower.getDimension(d)) + 1;
+    }
 
-	/**
-	 * Get the range (between upper and lower bound) for the specified
-	 * dimension.
-	 * 
-	 * @param d
-	 *            The dimension.
-	 * @return The range for the specified dimension.
-	 */
-	public int getRange(int d) {
-		return (upper.getDimension(d) - lower.getDimension(d))+1;
-	}
-
-	public int getMiddle(int d) {
-		return getRange(d)/2;
-	}
-
+    public int getMiddle(int d) {
+        return getRange(d) / 2;
+    }
 }

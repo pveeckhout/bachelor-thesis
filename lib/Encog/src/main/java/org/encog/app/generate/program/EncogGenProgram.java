@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -29,26 +29,27 @@ package org.encog.app.generate.program;
  */
 public class EncogGenProgram extends EncogTreeNode {
 
-	/**
-	 * Construct the program.
-	 */
-	public EncogGenProgram() {
-		super(null, null);
-		setProgram(this);
-	}
+    /**
+     * Construct the program.
+     */
+    public EncogGenProgram() {
+        super(null, null);
+        setProgram(this);
+    }
 
-	/**
-	 * Create a new class.
-	 * 
-	 * @param className
-	 *            The class name.
-	 * @return The newly created class.
-	 */
-	public EncogProgramNode createClass(final String className) {
-		final EncogProgramNode node = new EncogProgramNode(this, this,
-				NodeType.Class, className);
-		getChildren().add(node);
-		return node;
-	}
-
+    /**
+     * Create a new class.
+     * <p/>
+     * @param className
+     *                  The class name.
+     * <p/>
+     * @return The newly created class.
+     */
+    public EncogProgramNode createClass(final String className) {
+        final EncogProgramNode node = new EncogProgramNode(this, this,
+                                                           NodeType.Class,
+                                                           className);
+        getChildren().add(node);
+        return node;
+    }
 }

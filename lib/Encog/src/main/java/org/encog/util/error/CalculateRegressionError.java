@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -31,22 +31,22 @@ import org.encog.ml.data.MLDataPair;
 import org.encog.ml.data.MLDataSet;
 
 public class CalculateRegressionError {
-	
-	public static double calculateError(final MLRegression method, 
-			final MLDataSet data) {
-		final ErrorCalculation errorCalculation = new ErrorCalculation();
-		
-		// clear context
-		if( method instanceof MLContext ) {
-			((MLContext)method).clearContext();
-		}
 
-		// calculate error
-		for (final MLDataPair pair : data) {
-			final MLData actual = method.compute(pair.getInput());
-			errorCalculation.updateError(actual.getData(), pair.getIdeal()
-					.getData(),pair.getSignificance());
-		}
-		return errorCalculation.calculate();
-	}
+    public static double calculateError(final MLRegression method,
+                                        final MLDataSet data) {
+        final ErrorCalculation errorCalculation = new ErrorCalculation();
+
+        // clear context
+        if (method instanceof MLContext) {
+            ((MLContext) method).clearContext();
+        }
+
+        // calculate error
+        for (final MLDataPair pair : data) {
+            final MLData actual = method.compute(pair.getInput());
+            errorCalculation.updateError(actual.getData(), pair.getIdeal()
+                    .getData(), pair.getSignificance());
+        }
+        return errorCalculation.calculate();
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -27,69 +27,69 @@ package org.encog.neural.som.training.basic.neighborhood;
  * A neighborhood function that uses a simple bubble. A radius is defined, and
  * any neuron that is plus or minus that width from the winning neuron will be
  * updated as a result of training.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class NeighborhoodBubble implements NeighborhoodFunction {
 
-	/**
-	 * The radius of the bubble.
-	 */
-	private double radius;
+    /**
+     * The radius of the bubble.
+     */
+    private double radius;
 
-	/**
-	 * Create a bubble neighborhood function that will return 1.0 (full update)
-	 * for any neuron that is plus or minus the width distance from the winning
-	 * neuron.
-	 * 
-	 * @param radius
-	 *            The width of the bubble, this is the distance that the neuron
-	 *            can be from the winning neuron. The true width, across the
-	 *            bubble, is actually two times this parameter.
-	 */
-	public NeighborhoodBubble(final int radius) {
-		this.radius = radius;
-	}
+    /**
+     * Create a bubble neighborhood function that will return 1.0 (full update)
+     * for any neuron that is plus or minus the width distance from the winning
+     * neuron.
+     * <p/>
+     * @param radius
+     *               The width of the bubble, this is the distance that the neuron
+     *               can be from the winning neuron. The true width, across the
+     *               bubble, is actually two times this parameter.
+     */
+    public NeighborhoodBubble(final int radius) {
+        this.radius = radius;
+    }
 
-	/**
-	 * Determine how much the current neuron should be affected by training
-	 * based on its proximity to the winning neuron.
-	 * 
-	 * @param currentNeuron
-	 *            THe current neuron being evaluated.
-	 * @param bestNeuron
-	 *            The winning neuron.
-	 * @return The ratio for this neuron's adjustment.
-	 */
-	@Override
-	public double function(final int currentNeuron, 
-			final int bestNeuron) {
-		final int distance = Math.abs(bestNeuron - currentNeuron);
-		if (distance <= this.radius) {
-			return 1.0;
-		} else {
-			return 0.0;
-		}
-	}
+    /**
+     * Determine how much the current neuron should be affected by training
+     * based on its proximity to the winning neuron.
+     * <p/>
+     * @param currentNeuron
+     *                      THe current neuron being evaluated.
+     * @param bestNeuron
+     *                      The winning neuron.
+     * <p/>
+     * @return The ratio for this neuron's adjustment.
+     */
+    @Override
+    public double function(final int currentNeuron,
+                           final int bestNeuron) {
+        final int distance = Math.abs(bestNeuron - currentNeuron);
+        if (distance <= this.radius) {
+            return 1.0;
+        } else {
+            return 0.0;
+        }
+    }
 
-	/**
-	 * @return The radius.
-	 */
-	@Override
-	public double getRadius() {
-		return this.radius;
-	}
+    /**
+     * @return The radius.
+     */
+    @Override
+    public double getRadius() {
+        return this.radius;
+    }
 
-	/**
-	 * Set the radius.
-	 * 
-	 * @param radius
-	 *            The new radius.
-	 */
-	@Override
-	public void setRadius(final double radius) {
-		this.radius = radius;
-	}
-
+    /**
+     * Set the radius.
+     * <p/>
+     * @param radius
+     *               The new radius.
+     */
+    @Override
+    public void setRadius(final double radius) {
+        this.radius = radius;
+    }
 }

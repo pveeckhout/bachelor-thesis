@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,66 +34,65 @@ import org.encog.app.quant.indicators.Indicator;
  */
 public class BestClose extends Indicator {
 
-	/**
-	 * The name of this indicator.
-	 */
-	public static final String NAME = "PredictBestClose";
+    /**
+     * The name of this indicator.
+     */
+    public static final String NAME = "PredictBestClose";
+    /**
+     * The number of periods this indicator is for.
+     */
+    private final int periods;
 
-	/**
-	 * The number of periods this indicator is for.
-	 */
-	private final int periods;
+    /**
+     * Construct the object.
+     * <p/>
+     * @param thePeriods
+     *                   The number of periods.
+     * @param output
+     *                   True, if this indicator is to be predicted.
+     */
+    public BestClose(final int thePeriods, final boolean output) {
+        super(BestClose.NAME, false, output);
+        this.periods = thePeriods;
+        setOutput(output);
+    }
 
-	/**
-	 * Construct the object.
-	 * 
-	 * @param thePeriods
-	 *            The number of periods.
-	 * @param output
-	 *            True, if this indicator is to be predicted.
-	 */
-	public BestClose(final int thePeriods, final boolean output) {
-		super(BestClose.NAME, false, output);
-		this.periods = thePeriods;
-		setOutput(output);
-	}
+    /**
+     * Calculate the indicator.
+     * <p/>
+     * @param data
+     *               The data available to the indicator.
+     * @param length
+     *               The length available to the indicator.
+     */
+    @Override
+    public final void calculate(final Map<String, BaseCachedColumn> data,
+                                final int length) {
+        final double[] close = data.get(FileData.CLOSE).getData();
+        final double[] output = getData();
 
-	/**
-	 * Calculate the indicator.
-	 * 
-	 * @param data
-	 *            The data available to the indicator.
-	 * @param length
-	 *            The length available to the indicator.
-	 */
-	@Override
-	public final void calculate(final Map<String, BaseCachedColumn> data,
-			final int length) {
-		final double[] close = data.get(FileData.CLOSE).getData();
-		final double[] output = getData();
+        final int stop = length - this.periods;
+        for (int i = 0; i < stop; i++) {
+            double bestClose = Double.MIN_VALUE;
+            for (int j = 1; j <= this.periods; j++) {
+                bestClose = Math.max(close[i + j], bestClose);
+            }
+            output[i] = bestClose;
+        }
 
-		final int stop = length - this.periods;
-		for (int i = 0; i < stop; i++) {
-			double bestClose = Double.MIN_VALUE;
-			for (int j = 1; j <= this.periods; j++) {
-				bestClose = Math.max(close[i + j], bestClose);
-			}
-			output[i] = bestClose;
-		}
+        for (int i = length - this.periods; i < length; i++) {
+            output[i] = 0;
+        }
 
-		for (int i = length - this.periods; i < length; i++) {
-			output[i] = 0;
-		}
+        setBeginningIndex(0);
+        setEndingIndex(length - this.periods - 1);
+    }
 
-		setBeginningIndex(0);
-		setEndingIndex(length - this.periods - 1);
-	}
-
-	/**
-	 * @return The number of periods.
-	 */
-	@Override
-	public final int getPeriods() {
-		return this.periods;
-	}
+    /**
+     * @return The number of periods.
+     */
+    @Override
+    public final int getPeriods() {
+        return this.periods;
+    }
 }

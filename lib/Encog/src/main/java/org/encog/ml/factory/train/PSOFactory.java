@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,35 +40,37 @@ import org.encog.util.ParamsHolder;
 
 /**
  * A factory for quick propagation training.
- * 
+ * <p/>
  */
 public class PSOFactory {
 
-	/**
-	 * Create a PSO trainer.
-	 * 
-	 * @param method
-	 *            The method to use.
-	 * @param training
-	 *            The training data to use.
-	 * @param argsStr
-	 *            The arguments to use.
-	 * @return The newly created trainer.
-	 */
-	public MLTrain create(final MLMethod method,
-			final MLDataSet training, final String argsStr) {
+    /**
+     * Create a PSO trainer.
+     * <p/>
+     * @param method
+     *                 The method to use.
+     * @param training
+     *                 The training data to use.
+     * @param argsStr
+     *                 The arguments to use.
+     * <p/>
+     * @return The newly created trainer.
+     */
+    public MLTrain create(final MLMethod method,
+                          final MLDataSet training, final String argsStr) {
 
-		final Map<String, String> args = ArchitectureParse.parseParams(argsStr);
-		final ParamsHolder holder = new ParamsHolder(args);
+        final Map<String, String> args = ArchitectureParse.parseParams(argsStr);
+        final ParamsHolder holder = new ParamsHolder(args);
 
-		final int particles = holder.getInt(
-				MLTrainFactory.PROPERTY_PARTICLES, false, 20);
-		
-		CalculateScore score = new TrainingSetScore(training);
-		Randomizer randomizer = new NguyenWidrowRandomizer();
-		
-		final MLTrain train = new NeuralPSO((BasicNetwork)method,randomizer,score,particles);
-		
-		return train;
-	}
+        final int particles = holder.getInt(
+                MLTrainFactory.PROPERTY_PARTICLES, false, 20);
+
+        CalculateScore score = new TrainingSetScore(training);
+        Randomizer randomizer = new NguyenWidrowRandomizer();
+
+        final MLTrain train = new NeuralPSO((BasicNetwork) method, randomizer,
+                                            score, particles);
+
+        return train;
+    }
 }

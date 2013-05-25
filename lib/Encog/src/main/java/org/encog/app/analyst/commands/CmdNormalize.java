@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,69 +35,68 @@ import org.encog.util.logging.EncogLogging;
 /**
  * The normalize command is used to normalize data. Data normalization generally
  * maps values from one number range to another, typically to -1 to 1.
- * 
+ * <p/>
  */
 public class CmdNormalize extends Cmd {
 
-	/**
-	 * The name of this command.
-	 */
-	public static final String COMMAND_NAME = "NORMALIZE";
+    /**
+     * The name of this command.
+     */
+    public static final String COMMAND_NAME = "NORMALIZE";
 
-	/**
-	 * Construct the normalize command.
-	 * 
-	 * @param theAnalyst
-	 *            The analyst to use.
-	 */
-	public CmdNormalize(final EncogAnalyst theAnalyst) {
-		super(theAnalyst);
-	}
+    /**
+     * Construct the normalize command.
+     * <p/>
+     * @param theAnalyst
+     *                   The analyst to use.
+     */
+    public CmdNormalize(final EncogAnalyst theAnalyst) {
+        super(theAnalyst);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean executeCommand(final String args) {
-		// get filenames
-		final String sourceID = getProp().getPropertyString(
-				ScriptProperties.NORMALIZE_CONFIG_SOURCE_FILE);
-		final String targetID = getProp().getPropertyString(
-				ScriptProperties.NORMALIZE_CONFIG_TARGET_FILE);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean executeCommand(final String args) {
+        // get filenames
+        final String sourceID = getProp().getPropertyString(
+                ScriptProperties.NORMALIZE_CONFIG_SOURCE_FILE);
+        final String targetID = getProp().getPropertyString(
+                ScriptProperties.NORMALIZE_CONFIG_TARGET_FILE);
 
-		final File sourceFile = getScript().resolveFilename(sourceID);
-		final File targetFile = getScript().resolveFilename(targetID);
+        final File sourceFile = getScript().resolveFilename(sourceID);
+        final File targetFile = getScript().resolveFilename(targetID);
 
-		EncogLogging.log(EncogLogging.LEVEL_DEBUG, "Beginning normalize");
-		EncogLogging.log(EncogLogging.LEVEL_DEBUG, "source file:" + sourceID);
-		EncogLogging.log(EncogLogging.LEVEL_DEBUG, "target file:" + targetID);
+        EncogLogging.log(EncogLogging.LEVEL_DEBUG, "Beginning normalize");
+        EncogLogging.log(EncogLogging.LEVEL_DEBUG, "source file:" + sourceID);
+        EncogLogging.log(EncogLogging.LEVEL_DEBUG, "target file:" + targetID);
 
-		// mark generated
-		getScript().markGenerated(targetID);
+        // mark generated
+        getScript().markGenerated(targetID);
 
-		// get formats
-		final CSVFormat format = getScript().determineFormat();
+        // get formats
+        final CSVFormat format = getScript().determineFormat();
 
-		// prepare to normalize
-		final AnalystNormalizeCSV norm = new AnalystNormalizeCSV();
-		norm.setScript(getScript());
-		getAnalyst().setCurrentQuantTask(norm);
-		norm.setReport(new AnalystReportBridge(getAnalyst()));
+        // prepare to normalize
+        final AnalystNormalizeCSV norm = new AnalystNormalizeCSV();
+        norm.setScript(getScript());
+        getAnalyst().setCurrentQuantTask(norm);
+        norm.setReport(new AnalystReportBridge(getAnalyst()));
 
-		final boolean headers = getScript().expectInputHeaders(sourceID);
-		norm.analyze(sourceFile, headers, format, getAnalyst());
-		norm.setProduceOutputHeaders(true);
-		norm.normalize(targetFile);
-		getAnalyst().setCurrentQuantTask(null);
-		return norm.shouldStop();
-	}
+        final boolean headers = getScript().expectInputHeaders(sourceID);
+        norm.analyze(sourceFile, headers, format, getAnalyst());
+        norm.setProduceOutputHeaders(true);
+        norm.normalize(targetFile);
+        getAnalyst().setCurrentQuantTask(null);
+        return norm.shouldStop();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getName() {
-		return CmdNormalize.COMMAND_NAME;
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName() {
+        return CmdNormalize.COMMAND_NAME;
+    }
 }

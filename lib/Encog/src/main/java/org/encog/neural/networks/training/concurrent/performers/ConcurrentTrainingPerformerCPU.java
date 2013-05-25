@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -34,116 +34,113 @@ import org.encog.util.concurrency.EngineConcurrency;
 
 /**
  * This performer allows jobs to be performed by the CPU.
- * 
+ * <p/>
  */
 public class ConcurrentTrainingPerformerCPU implements
-		ConcurrentTrainingPerformer, Runnable {
+        ConcurrentTrainingPerformer, Runnable {
 
-	/**
-	 * True, if this performer is ready for more work.
-	 */
-	private final AtomicBoolean ready = new AtomicBoolean(true);
+    /**
+     * True, if this performer is ready for more work.
+     */
+    private final AtomicBoolean ready = new AtomicBoolean(true);
+    /**
+     * The current job.
+     */
+    private TrainingJob currentJob;
+    /**
+     * The manager.
+     */
+    private ConcurrentTrainingManager manager;
+    /**
+     * The job number.
+     */
+    private final int number;
 
-	/**
-	 * The current job.
-	 */
-	private TrainingJob currentJob;
+    /**
+     * Construct the performer.
+     * <p/>
+     * @param number
+     */
+    public ConcurrentTrainingPerformerCPU(final int number) {
+        this.number = number;
+    }
 
-	/**
-	 * The manager.
-	 */
-	private ConcurrentTrainingManager manager;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ConcurrentTrainingManager getManager() {
+        return this.manager;
+    }
 
-	/**
-	 * The job number.
-	 */
-	private final int number;
+    public int getNumber() {
+        return this.number;
+    }
 
-	/**
-	 * Construct the performer.
-	 * @param number
-	 */
-	public ConcurrentTrainingPerformerCPU(final int number) {
-		this.number = number;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void perform(final TrainingJob job) {
+        if (!this.ready.get()) {
+            throw new NeuralNetworkError(
+                    "Performer is already performing a job.");
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ConcurrentTrainingManager getManager() {
-		return this.manager;
-	}
+        this.ready.set(false);
+        this.currentJob = job;
 
-	public int getNumber() {
-		return this.number;
-	}
+        final PerformerTask task = new PerformerTask(this);
+        EngineConcurrency.getInstance().processTask(task);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void perform(final TrainingJob job) {
-		if (!this.ready.get()) {
-			throw new NeuralNetworkError(
-					"Performer is already performing a job.");
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean ready() {
+        return this.ready.get();
+    }
 
-		this.ready.set(false);
-		this.currentJob = job;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        final Stopwatch watch = new Stopwatch();
+        try {
+            watch.start();
 
-		final PerformerTask task = new PerformerTask(this);
-		EngineConcurrency.getInstance().processTask(task);
-	}
+            this.currentJob.createTrainer(this.manager.isSingleThreaded());
+            final MLTrain train = this.currentJob.getTrain();
+            int interation = 1;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean ready() {
-		return this.ready.get();
-	}
+            while (this.currentJob.shouldContinue()) {
+                train.iteration();
+                interation++;
+            }
+            watch.stop();
+        } catch (final Throwable t) {
+            this.currentJob.setError(t);
+        } finally {
+            this.ready.set(true);
+            this.manager.jobDone(watch.getElapsedMilliseconds(), this);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void run() {
-		final Stopwatch watch = new Stopwatch();
-		try {
-			watch.start();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setManager(final ConcurrentTrainingManager manager) {
+        this.manager = manager;
+    }
 
-			this.currentJob.createTrainer(this.manager.isSingleThreaded());
-			final MLTrain train = this.currentJob.getTrain();
-			int interation = 1;
-
-			while (this.currentJob.shouldContinue()) {
-				train.iteration();
-				interation++;
-			}
-			watch.stop();
-		} catch (final Throwable t) {
-			this.currentJob.setError(t);
-		} finally {
-			this.ready.set(true);
-			this.manager.jobDone(watch.getElapsedMilliseconds(), this);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setManager(final ConcurrentTrainingManager manager) {
-		this.manager = manager;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return "[CPU-Performer: " + this.number + "]";
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "[CPU-Performer: " + this.number + "]";
+    }
 }

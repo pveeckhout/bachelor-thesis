@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -33,51 +33,50 @@ import org.encog.neural.data.NeuralDataSet;
  * This is an alias class for Encog 2.5 compatibility. This class aliases
  * BasicMLDataSet. Newer code should use BasicMLDataSet in place of this class.
  */
-public class BasicNeuralDataSet extends BasicMLDataSet 
-	implements NeuralDataSet {
+public class BasicNeuralDataSet extends BasicMLDataSet
+        implements NeuralDataSet {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8916242559498280598L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8916242559498280598L;
 
-	/**
-	 * Construct empty.
-	 */
-	public BasicNeuralDataSet() {
-		super();
-	}
+    /**
+     * Construct empty.
+     */
+    public BasicNeuralDataSet() {
+        super();
+    }
 
-	/**
-	 * Construct from 2d arrays.
-	 * 
-	 * @param input
-	 *            The input.
-	 * @param ideal
-	 *            The ideal.
-	 */
-	public BasicNeuralDataSet(final double[][] input, final double[][] ideal) {
-		super(input, ideal);
-	}
+    /**
+     * Construct from 2d arrays.
+     * <p/>
+     * @param input
+     *              The input.
+     * @param ideal
+     *              The ideal.
+     */
+    public BasicNeuralDataSet(final double[][] input, final double[][] ideal) {
+        super(input, ideal);
+    }
 
-	/**
-	 * Construct from another list.
-	 * 
-	 * @param theData
-	 *            The other list.
-	 */
-	public BasicNeuralDataSet(final List<MLDataPair> theData) {
-		super(theData);
-	}
+    /**
+     * Construct from another list.
+     * <p/>
+     * @param theData
+     *                The other list.
+     */
+    public BasicNeuralDataSet(final List<MLDataPair> theData) {
+        super(theData);
+    }
 
-	/**
-	 * Construct from another object.
-	 * 
-	 * @param set
-	 *            The other object.
-	 */
-	public BasicNeuralDataSet(final NeuralDataSet set) {
-		super(set);
-	}
-
+    /**
+     * Construct from another object.
+     * <p/>
+     * @param set
+     *            The other object.
+     */
+    public BasicNeuralDataSet(final NeuralDataSet set) {
+        super(set);
+    }
 }

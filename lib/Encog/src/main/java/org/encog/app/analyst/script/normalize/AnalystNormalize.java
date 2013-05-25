@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -41,149 +41,154 @@ import org.encog.util.arrayutil.NormalizationAction;
 /**
  * This class holds information about the fields that the Encog Analyst will
  * normalize.
- * 
+ * <p/>
  */
 public class AnalystNormalize {
 
-	/**
-	 * The normalized fields.  These fields define the order and format 
-	 * that data will be presented to the ML method.
-	 */
-	private final List<AnalystField> normalizedFields 
-		= new ArrayList<AnalystField>();
-	
-	/**
-	 * The parent script.
-	 */
-	private AnalystScript script;
+    /**
+     * The normalized fields. These fields define the order and format
+     * that data will be presented to the ML method.
+     */
+    private final List<AnalystField> normalizedFields =
+            new ArrayList<AnalystField>();
+    /**
+     * The parent script.
+     */
+    private AnalystScript script;
 
-	/**
-	 * Construct the object.
-	 * @param theScript The script.
-	 */
-	public AnalystNormalize(AnalystScript theScript) {
-		this.script = theScript;
-	}
-	
-	/**
-	 * @return Calculate the input columns.
-	 */
-	public int calculateInputColumns() {
-		int result = 0;
-		for (final AnalystField field : this.normalizedFields) {
-			if (field.isInput()) {
-				result += field.getColumnsNeeded();
-			}
-		}
-		return result;
-	}
+    /**
+     * Construct the object.
+     * <p/>
+     * @param theScript The script.
+     */
+    public AnalystNormalize(AnalystScript theScript) {
+        this.script = theScript;
+    }
 
-	/**
-	 * Calculate the output columns.
-	 * @return The output columns.
-	 */
-	public int calculateOutputColumns() {
-		int result = 0;
-		for (final AnalystField field : this.normalizedFields) {
-			if (field.isOutput()) {
-				result += field.getColumnsNeeded();
-			}
-		}
-		return result;
-	}
+    /**
+     * @return Calculate the input columns.
+     */
+    public int calculateInputColumns() {
+        int result = 0;
+        for (final AnalystField field : this.normalizedFields) {
+            if (field.isInput()) {
+                result += field.getColumnsNeeded();
+            }
+        }
+        return result;
+    }
 
-	/**
-	 * @return Count the active fields.
-	 */
-	public int countActiveFields() {
-		int result = 0;
-		for (final AnalystField field : this.normalizedFields) {
-			if (field.getAction() != NormalizationAction.Ignore) {
-				result++;
-			}
-		}
-		return result;
-	}
+    /**
+     * Calculate the output columns.
+     * <p/>
+     * @return The output columns.
+     */
+    public int calculateOutputColumns() {
+        int result = 0;
+        for (final AnalystField field : this.normalizedFields) {
+            if (field.isOutput()) {
+                result += field.getColumnsNeeded();
+            }
+        }
+        return result;
+    }
 
-	/**
-	 * @return the normalizedFields
-	 */
-	public List<AnalystField> getNormalizedFields() {
-		return this.normalizedFields;
-	}
+    /**
+     * @return Count the active fields.
+     */
+    public int countActiveFields() {
+        int result = 0;
+        for (final AnalystField field : this.normalizedFields) {
+            if (field.getAction() != NormalizationAction.Ignore) {
+                result++;
+            }
+        }
+        return result;
+    }
 
-	/**
-	 * Init the normalized fields.
-	 * @param script The script.
-	 */
-	public void init(final AnalystScript script) {
+    /**
+     * @return the normalizedFields
+     */
+    public List<AnalystField> getNormalizedFields() {
+        return this.normalizedFields;
+    }
 
-		if (this.normalizedFields == null) {
-			return;
-		}
+    /**
+     * Init the normalized fields.
+     * <p/>
+     * @param script The script.
+     */
+    public void init(final AnalystScript script) {
 
-		for (final AnalystField norm : this.normalizedFields) {
-			final DataField f = script.findDataField(norm.getName());
+        if (this.normalizedFields == null) {
+            return;
+        }
 
-			if (f == null) {
-				throw new AnalystError("Normalize specifies unknown field: "
-						+ norm.getName());
-			}
+        for (final AnalystField norm : this.normalizedFields) {
+            final DataField f = script.findDataField(norm.getName());
 
-			if (norm.getAction() == NormalizationAction.Normalize) {
-				norm.setActualHigh(f.getMax());
-				norm.setActualLow(f.getMin());
-			}
+            if (f == null) {
+                throw new AnalystError("Normalize specifies unknown field: " +
+                        norm.getName());
+            }
 
-			if ((norm.getAction() == NormalizationAction.Equilateral)
-					|| (norm.getAction() == NormalizationAction.OneOf)
-					|| (norm.getAction() == NormalizationAction.SingleField)) {
+            if (norm.getAction() == NormalizationAction.Normalize) {
+                norm.setActualHigh(f.getMax());
+                norm.setActualLow(f.getMin());
+            }
 
-				int index = 0;
-				for (final AnalystClassItem item : f.getClassMembers()) {
-					norm.getClasses().add(
-							new ClassItem(item.getName(), index++));
-				}
-			}
-		}
-	}
+            if ((norm.getAction() == NormalizationAction.Equilateral) ||
+                    (norm.getAction() == NormalizationAction.OneOf) ||
+                    (norm.getAction() == NormalizationAction.SingleField)) {
 
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		final StringBuilder result = new StringBuilder("[");
-		result.append(getClass().getSimpleName());
-		result.append(": ");
-		if (this.normalizedFields != null) {
-			result.append(this.normalizedFields.toString());
-		}
-		result.append("]");
-		return result.toString();
-	}
+                int index = 0;
+                for (final AnalystClassItem item : f.getClassMembers()) {
+                    norm.getClasses().add(
+                            new ClassItem(item.getName(), index++));
+                }
+            }
+        }
+    }
 
-	/**
-	 * @return the missingValues
-	 */
-	public HandleMissingValues getMissingValues() {
-		final String type = this.script.getProperties().getPropertyString(
-				ScriptProperties.ML_CONFIG_TYPE);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder("[");
+        result.append(getClass().getSimpleName());
+        result.append(": ");
+        if (this.normalizedFields != null) {
+            result.append(this.normalizedFields.toString());
+        }
+        result.append("]");
+        return result.toString();
+    }
 
-		if( type.equals("DiscardMissing") ) {
-			return new DiscardMissing();
-		} else if( type.equals("MeanAndModeMissing") ) {
-			return new MeanAndModeMissing();
-		} else if( type.equals("NegateMissing") ) {
-			return new NegateMissing();
-		} else {
-			return new DiscardMissing();
-		}
-	}
+    /**
+     * @return the missingValues
+     */
+    public HandleMissingValues getMissingValues() {
+        final String type = this.script.getProperties().getPropertyString(
+                ScriptProperties.ML_CONFIG_TYPE);
 
-	/**
-	 * @param missingValues the missingValues to set
-	 */
-	public void setMissingValues(HandleMissingValues missingValues) {
-		this.script.getProperties().setProperty(
-				ScriptProperties.NORMALIZE_MISSING_VALUES, missingValues.getClass().getSimpleName());		
-	}	
+        if (type.equals("DiscardMissing")) {
+            return new DiscardMissing();
+        } else if (type.equals("MeanAndModeMissing")) {
+            return new MeanAndModeMissing();
+        } else if (type.equals("NegateMissing")) {
+            return new NegateMissing();
+        } else {
+            return new DiscardMissing();
+        }
+    }
+
+    /**
+     * @param missingValues the missingValues to set
+     */
+    public void setMissingValues(HandleMissingValues missingValues) {
+        this.script.getProperties().setProperty(
+                ScriptProperties.NORMALIZE_MISSING_VALUES, missingValues
+                .getClass().getSimpleName());
+    }
 }

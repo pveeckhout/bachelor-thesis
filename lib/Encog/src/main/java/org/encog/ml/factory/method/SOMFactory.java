@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,33 +35,36 @@ import org.encog.neural.pattern.SOMPattern;
  * A factory that is used to produce self-organizing maps.
  */
 public class SOMFactory {
-	/**
-	 * Create a SOM.
-	 * @param architecture The architecture string.
-	 * @param input The input count.
-	 * @param output The output count.
-	 * @return The newly created SOM.
-	 */
-	public MLMethod create(final String architecture, final int input,
-			final int output) {
 
-		final List<String> layers = ArchitectureParse.parseLayers(architecture);
-		if (layers.size() != 2) {
-			throw new EncogError(
-					"SOM's must have exactly two elements, separated by ->.");
-		}
+    /**
+     * Create a SOM.
+     * <p/>
+     * @param architecture The architecture string.
+     * @param input        The input count.
+     * @param output       The output count.
+     * <p/>
+     * @return The newly created SOM.
+     */
+    public MLMethod create(final String architecture, final int input,
+                           final int output) {
 
-		final ArchitectureLayer inputLayer = ArchitectureParse.parseLayer(
-				layers.get(0), input);
-		final ArchitectureLayer outputLayer = ArchitectureParse.parseLayer(
-				layers.get(1), output);
+        final List<String> layers = ArchitectureParse.parseLayers(architecture);
+        if (layers.size() != 2) {
+            throw new EncogError(
+                    "SOM's must have exactly two elements, separated by ->.");
+        }
 
-		final int inputCount = inputLayer.getCount();
-		final int outputCount = outputLayer.getCount();
+        final ArchitectureLayer inputLayer = ArchitectureParse.parseLayer(
+                layers.get(0), input);
+        final ArchitectureLayer outputLayer = ArchitectureParse.parseLayer(
+                layers.get(1), output);
 
-		final SOMPattern pattern = new SOMPattern();
-		pattern.setInputNeurons(inputCount);
-		pattern.setOutputNeurons(outputCount);
-		return pattern.generate();
-	}
+        final int inputCount = inputLayer.getCount();
+        final int outputCount = outputLayer.getCount();
+
+        final SOMPattern pattern = new SOMPattern();
+        pattern.setInputNeurons(inputCount);
+        pattern.setOutputNeurons(outputCount);
+        return pattern.generate();
+    }
 }

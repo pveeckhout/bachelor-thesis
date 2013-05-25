@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -38,90 +38,90 @@ import org.encog.util.TempDir;
 import org.encog.util.obj.SerializeObject;
 
 public class TestPersistBasicNetwork extends TestCase {
-	
-	public final TempDir TEMP_DIR = new TempDir();
-	public final File EG_FILENAME = TEMP_DIR.createFile("encogtest.eg");
-	public final File SERIAL_FILENAME = TEMP_DIR.createFile("encogtest.ser");
-		
-	public BasicNetwork create()
-	{
-		BasicNetwork network = XOR.createTrainedXOR();
-		XOR.verifyXOR(network, 0.1);
-		
-		network.setProperty("test", "test2");
 
-		
-		return network;
-	}
-	
-	public void validate(BasicNetwork network)
-	{
-		network.clearContext();
-		XOR.verifyXOR(network, 0.1);
-	}
-	
-	public void testPersistEG()
-	{
-		BasicNetwork network = create();
+    public final TempDir TEMP_DIR = new TempDir();
+    public final File EG_FILENAME = TEMP_DIR.createFile("encogtest.eg");
+    public final File SERIAL_FILENAME = TEMP_DIR.createFile("encogtest.ser");
 
-		EncogDirectoryPersistence.saveObject(EG_FILENAME, network);
-		BasicNetwork network2 = (BasicNetwork)EncogDirectoryPersistence.loadObject(EG_FILENAME);
+    public BasicNetwork create() {
+        BasicNetwork network = XOR.createTrainedXOR();
+        XOR.verifyXOR(network, 0.1);
 
-		validate(network2);
-	}
-	
-	public void testPersistMediumEG()
-	{
-		BasicNetwork network = new BasicNetwork();
-		network.addLayer(new BasicLayer(null,true,10));
-		network.addLayer(new BasicLayer(new ActivationSigmoid(),true,10));
-		network.addLayer(new BasicLayer(new ActivationSigmoid(),false,10));
-		network.getStructure().finalizeStructure();
-		network.reset();
+        network.setProperty("test", "test2");
 
-		EncogDirectoryPersistence.saveObject(EG_FILENAME, network);
-		BasicNetwork network2 = (BasicNetwork)EncogDirectoryPersistence.loadObject(EG_FILENAME);
 
-		double d = EngineArray.euclideanDistance(network.getStructure().getFlat().getWeights(), 
-				network2.getStructure().getFlat().getWeights());
-		
-		Assert.assertTrue(d<0.01);
-	}
-	
-	public void testPersistLargeEG()
-	{
-		BasicNetwork network = new BasicNetwork();
-		network.addLayer(new BasicLayer(null,true,200));
-		network.addLayer(new BasicLayer(new ActivationSigmoid(),true,200));
-		network.addLayer(new BasicLayer(new ActivationSigmoid(),true,200));
-		network.addLayer(new BasicLayer(new ActivationSigmoid(),false,200));
-		network.getStructure().finalizeStructure();
-		network.reset();
+        return network;
+    }
 
-		EncogDirectoryPersistence.saveObject(EG_FILENAME, network);
-		BasicNetwork network2 = (BasicNetwork)EncogDirectoryPersistence.loadObject(EG_FILENAME);
+    public void validate(BasicNetwork network) {
+        network.clearContext();
+        XOR.verifyXOR(network, 0.1);
+    }
 
-		double d = EngineArray.euclideanDistance(network.getStructure().getFlat().getWeights(), 
-				network2.getStructure().getFlat().getWeights());
-		
-		Assert.assertTrue(d<0.01);
-	}
-	
-	public void testPersistSerial() throws IOException, ClassNotFoundException
-	{
-		BasicNetwork network = create();
-		
-		SerializeObject.save(SERIAL_FILENAME, network);
-		BasicNetwork network2 = (BasicNetwork)SerializeObject.load(SERIAL_FILENAME);
-				
-		validate(network2);
-	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		TEMP_DIR.dispose();
-	}
+    public void testPersistEG() {
+        BasicNetwork network = create();
 
-	
+        EncogDirectoryPersistence.saveObject(EG_FILENAME, network);
+        BasicNetwork network2 = (BasicNetwork) EncogDirectoryPersistence
+                .loadObject(EG_FILENAME);
+
+        validate(network2);
+    }
+
+    public void testPersistMediumEG() {
+        BasicNetwork network = new BasicNetwork();
+        network.addLayer(new BasicLayer(null, true, 10));
+        network.addLayer(new BasicLayer(new ActivationSigmoid(), true, 10));
+        network.addLayer(new BasicLayer(new ActivationSigmoid(), false, 10));
+        network.getStructure().finalizeStructure();
+        network.reset();
+
+        EncogDirectoryPersistence.saveObject(EG_FILENAME, network);
+        BasicNetwork network2 = (BasicNetwork) EncogDirectoryPersistence
+                .loadObject(EG_FILENAME);
+
+        double d = EngineArray.euclideanDistance(network.getStructure()
+                .getFlat().getWeights(),
+                                                 network2.getStructure()
+                .getFlat().getWeights());
+
+        Assert.assertTrue(d < 0.01);
+    }
+
+    public void testPersistLargeEG() {
+        BasicNetwork network = new BasicNetwork();
+        network.addLayer(new BasicLayer(null, true, 200));
+        network.addLayer(new BasicLayer(new ActivationSigmoid(), true, 200));
+        network.addLayer(new BasicLayer(new ActivationSigmoid(), true, 200));
+        network.addLayer(new BasicLayer(new ActivationSigmoid(), false, 200));
+        network.getStructure().finalizeStructure();
+        network.reset();
+
+        EncogDirectoryPersistence.saveObject(EG_FILENAME, network);
+        BasicNetwork network2 = (BasicNetwork) EncogDirectoryPersistence
+                .loadObject(EG_FILENAME);
+
+        double d = EngineArray.euclideanDistance(network.getStructure()
+                .getFlat().getWeights(),
+                                                 network2.getStructure()
+                .getFlat().getWeights());
+
+        Assert.assertTrue(d < 0.01);
+    }
+
+    public void testPersistSerial() throws IOException, ClassNotFoundException {
+        BasicNetwork network = create();
+
+        SerializeObject.save(SERIAL_FILENAME, network);
+        BasicNetwork network2 = (BasicNetwork) SerializeObject.load(
+                SERIAL_FILENAME);
+
+        validate(network2);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        TEMP_DIR.dispose();
+    }
 }

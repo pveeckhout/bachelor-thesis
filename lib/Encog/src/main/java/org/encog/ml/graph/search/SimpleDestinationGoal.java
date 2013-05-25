@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -28,28 +28,25 @@ import org.encog.ml.graph.BasicPath;
 
 public class SimpleDestinationGoal implements SearchGoal {
 
-	private final BasicNode goalDestination;
-		
-	public SimpleDestinationGoal(BasicNode goalDestination) {
-		super();
-		this.goalDestination = goalDestination;
-	}
+    private final BasicNode goalDestination;
 
-	@Override
-	public boolean isGoalMet(BasicPath path) {
-		if( path.getDestinationNode() == goalDestination ) {
-			return true;
-		}
-		return false;
-	}
+    public SimpleDestinationGoal(BasicNode goalDestination) {
+        super();
+        this.goalDestination = goalDestination;
+    }
 
-	/**
-	 * @return the goalDestination
-	 */
-	public BasicNode getGoalDestination() {
-		return goalDestination;
-	}
+    @Override
+    public boolean isGoalMet(BasicPath path) {
+        if (path.getDestinationNode() == goalDestination) {
+            return true;
+        }
+        return false;
+    }
 
-	
-
+    /**
+     * @return the goalDestination
+     */
+    public BasicNode getGoalDestination() {
+        return goalDestination;
+    }
 }

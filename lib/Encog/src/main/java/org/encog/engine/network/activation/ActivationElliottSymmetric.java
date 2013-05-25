@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,22 +16,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
 package org.encog.engine.network.activation;
 
-
 /**
  * Computationally efficient alternative to ActivationTANH.
  * Its output is in the range [-1, 1], and it is derivable.
- * 
- * It will approach the -1 and 1 more slowly than Tanh so it 
+ * <p/>
+ * It will approach the -1 and 1 more slowly than Tanh so it
  * might be more suitable to classification tasks than predictions tasks.
- * 
- * Elliott, D.L. "A better activation function for artificial neural networks", 1993
+ * <p/>
+ * Elliott, D.L. "A better activation function for artificial neural networks",
+ * 1993
  * http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.46.7204&rep=rep1&type=pdf
  */
 public class ActivationElliottSymmetric implements ActivationFunction {
@@ -54,10 +54,10 @@ public class ActivationElliottSymmetric implements ActivationFunction {
      */
     @Override
     public final void activationFunction(final double[] x, final int start,
-            final int size) {
+                                         final int size) {
         for (int i = start; i < start + size; i++) {
-        	double s = params[0];
-        	x[i] = (x[i]*s) / (1 + Math.abs(x[i]*s));        		     			
+            double s = params[0];
+            x[i] = (x[i] * s) / (1 + Math.abs(x[i] * s));
         }
     }
 
@@ -74,9 +74,9 @@ public class ActivationElliottSymmetric implements ActivationFunction {
      */
     @Override
     public final double derivativeFunction(final double b, final double a) {
-    	double s = params[0];
-    	double d = (1.0+Math.abs(b*s));
-    	return  (s*1.0)/(d*d);
+        double s = params[0];
+        double d = (1.0 + Math.abs(b * s));
+        return (s * 1.0) / (d * d);
     }
 
     /**
@@ -84,7 +84,7 @@ public class ActivationElliottSymmetric implements ActivationFunction {
      */
     @Override
     public final String[] getParamNames() {
-        final String[] result = { "Slope" };
+        final String[] result = {"Slope"};
         return result;
     }
 
@@ -111,13 +111,12 @@ public class ActivationElliottSymmetric implements ActivationFunction {
     public final void setParam(final int index, final double value) {
         this.params[index] = value;
     }
-    
-    /**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getFactoryCode() {
-		return null;
-	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFactoryCode() {
+        return null;
+    }
 }

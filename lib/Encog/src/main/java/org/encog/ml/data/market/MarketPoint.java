@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -30,35 +30,34 @@ import org.encog.ml.data.temporal.TemporalPoint;
 /**
  * Hold one market datapoint. This class is based on the TemporalPoint, however
  * it is designed to take its sequence number from a date.
- * 
+ * <p/>
  * @author jheaton
- * 
+ * <p/>
  */
 public class MarketPoint extends TemporalPoint {
 
-	/**
-	 * When to hold the data from.
-	 */
-	private final Date when;
+    /**
+     * When to hold the data from.
+     */
+    private final Date when;
 
-	/**
-	 * Construct a MarketPoint with the specified date and size.
-	 * 
-	 * @param when
-	 *            When is this data from.
-	 * @param size
-	 *            What is the size of the data.
-	 */
-	public MarketPoint(final Date when, final int size) {
-		super(size);
-		this.when = when;
-	}
+    /**
+     * Construct a MarketPoint with the specified date and size.
+     * <p/>
+     * @param when
+     *             When is this data from.
+     * @param size
+     *             What is the size of the data.
+     */
+    public MarketPoint(final Date when, final int size) {
+        super(size);
+        this.when = when;
+    }
 
-	/**
-	 * @return the when
-	 */
-	public Date getWhen() {
-		return this.when;
-	}
-
+    /**
+     * @return the when
+     */
+    public Date getWhen() {
+        return this.when;
+    }
 }

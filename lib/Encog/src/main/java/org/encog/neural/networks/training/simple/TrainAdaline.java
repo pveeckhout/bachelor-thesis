@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -40,132 +40,129 @@ import org.encog.neural.networks.training.propagation.TrainingContinuation;
  */
 public class TrainAdaline extends BasicTraining implements LearningRate {
 
-	/**
-	 * The network to train.
-	 */
-	private final BasicNetwork network;
+    /**
+     * The network to train.
+     */
+    private final BasicNetwork network;
+    /**
+     * The training data to use.
+     */
+    private final MLDataSet training;
+    /**
+     * The learning rate.
+     */
+    private double learningRate;
 
-	/**
-	 * The training data to use.
-	 */
-	private final MLDataSet training;
+    /**
+     * Construct an ADALINE trainer.
+     * <p/>
+     * @param network
+     *                     The network to train.
+     * @param training
+     *                     The training data.
+     * @param learningRate
+     *                     The learning rate.
+     */
+    public TrainAdaline(final BasicNetwork network, final MLDataSet training,
+                        final double learningRate) {
+        super(TrainingImplementationType.Iterative);
+        if (network.getLayerCount() > 2) {
+            throw new NeuralNetworkError(
+                    "An ADALINE network only has two layers.");
+        }
+        this.network = network;
 
-	/**
-	 * The learning rate.
-	 */
-	private double learningRate;
+        this.training = training;
+        this.learningRate = learningRate;
+    }
 
-	/**
-	 * Construct an ADALINE trainer.
-	 * 
-	 * @param network
-	 *            The network to train.
-	 * @param training
-	 *            The training data.
-	 * @param learningRate
-	 *            The learning rate.
-	 */
-	public TrainAdaline(final BasicNetwork network, final MLDataSet training,
-			final double learningRate) {
-		super(TrainingImplementationType.Iterative);
-		if (network.getLayerCount() > 2) {
-			throw new NeuralNetworkError(
-					"An ADALINE network only has two layers.");
-		}
-		this.network = network;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canContinue() {
+        return false;
+    }
 
-		this.training = training;
-		this.learningRate = learningRate;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getLearningRate() {
+        return this.learningRate;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean canContinue() {
-		return false;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MLMethod getMethod() {
+        return this.network;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double getLearningRate() {
-		return this.learningRate;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void iteration() {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MLMethod getMethod() {
-		return this.network;
-	}
+        final ErrorCalculation errorCalculation = new ErrorCalculation();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void iteration() {
+        for (final MLDataPair pair : this.training) {
+            // calculate the error
+            final MLData output = this.network.compute(pair.getInput());
 
-		final ErrorCalculation errorCalculation = new ErrorCalculation();
+            for (int currentAdaline = 0; currentAdaline < output.size();
+                    currentAdaline++) {
+                final double diff = pair.getIdeal().getData(currentAdaline) -
+                        output.getData(currentAdaline);
 
-		for (final MLDataPair pair : this.training) {
-			// calculate the error
-			final MLData output = this.network.compute(pair.getInput());
+                // weights
+                for (int i = 0; i <= this.network.getInputCount(); i++) {
+                    final double input;
 
-			for (int currentAdaline = 0; currentAdaline < output.size(); currentAdaline++) {
-				final double diff = pair.getIdeal().getData(currentAdaline)
-						- output.getData(currentAdaline);
+                    if (i == this.network.getInputCount()) {
+                        input = 1.0;
+                    } else {
+                        input = pair.getInput().getData(i);
+                    }
 
-				// weights
-				for (int i = 0; i <= this.network.getInputCount(); i++) {
-					final double input;
+                    this.network.addWeight(0, i, currentAdaline,
+                                           this.learningRate * diff * input);
+                }
+            }
 
-					if (i == this.network.getInputCount()) {
-						input = 1.0;
-					} else {
-						input = pair.getInput().getData(i);
-					}
+            errorCalculation.updateError(output.getData(), pair.getIdeal()
+                    .getData(), pair.getSignificance());
+        }
 
-					this.network.addWeight(0, i, currentAdaline,
-							this.learningRate * diff * input);
-				}
-			}
+        // set the global error
+        setError(errorCalculation.calculate());
+    }
 
-			errorCalculation.updateError(output.getData(), pair.getIdeal()
-					.getData(),pair.getSignificance());
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TrainingContinuation pause() {
+        return null;
+    }
 
-		// set the global error
-		setError(errorCalculation.calculate());
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void resume(final TrainingContinuation state) {
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TrainingContinuation pause() {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void resume(final TrainingContinuation state) {
-
-	}
-
-	/**
-	 * Set the learning rate.
-	 * 
-	 * @param rate
-	 *            The new learning rate.
-	 */
-	@Override
-	public void setLearningRate(final double rate) {
-		this.learningRate = rate;
-	}
-
+    /**
+     * Set the learning rate.
+     * <p/>
+     * @param rate
+     *             The new learning rate.
+     */
+    @Override
+    public void setLearningRate(final double rate) {
+        this.learningRate = rate;
+    }
 }

@@ -2,7 +2,7 @@
  * Encog(tm) Core v3.2 - Java Version
  * http://www.heatonresearch.com/encog/
  * https://github.com/encog/encog-java-core
- 
+
  * Copyright 2008-2013 Heaton Research, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
+ *
+ * For more information on Heaton Research copyrights, licenses
  * and trademarks visit:
  * http://www.heatonresearch.com/copyright
  */
@@ -35,55 +35,54 @@ import org.encog.ml.data.MLDataSet;
  */
 public final class EncodeSVMProblem {
 
-	/**
-	 * Encode the Encog dataset.
-	 * 
-	 * @param training
-	 *            The training data.
-	 * @param outputIndex
-	 *            The ideal element to use, this is necessary because SVM's have
-	 *            only a single output. This value is typically zero.
-	 * @return The SVM problem.
-	 */
-	public static svm_problem encode(final MLDataSet training,
-			final int outputIndex) {
-		try {
-			final svm_problem result = new svm_problem();
+    /**
+     * Encode the Encog dataset.
+     * <p/>
+     * @param training
+     *                    The training data.
+     * @param outputIndex
+     *                    The ideal element to use, this is necessary because SVM's have
+     *                    only a single output. This value is typically zero.
+     * <p/>
+     * @return The SVM problem.
+     */
+    public static svm_problem encode(final MLDataSet training,
+                                     final int outputIndex) {
+        try {
+            final svm_problem result = new svm_problem();
 
-			result.l = (int) training.getRecordCount();
+            result.l = (int) training.getRecordCount();
 
-			result.y = new double[result.l];
-			result.x = new svm_node[result.l][training.getInputSize()];
+            result.y = new double[result.l];
+            result.x = new svm_node[result.l][training.getInputSize()];
 
-			int elementIndex = 0;
+            int elementIndex = 0;
 
-			for (final MLDataPair pair : training) {
-				final MLData input = pair.getInput();
-				final MLData output = pair.getIdeal();
-				result.x[elementIndex] = new svm_node[input.size()];
+            for (final MLDataPair pair : training) {
+                final MLData input = pair.getInput();
+                final MLData output = pair.getIdeal();
+                result.x[elementIndex] = new svm_node[input.size()];
 
-				for (int i = 0; i < input.size(); i++) {
-					result.x[elementIndex][i] = new svm_node();
-					result.x[elementIndex][i].index = i + 1;
-					result.x[elementIndex][i].value = input.getData(i);
-				}
+                for (int i = 0; i < input.size(); i++) {
+                    result.x[elementIndex][i] = new svm_node();
+                    result.x[elementIndex][i].index = i + 1;
+                    result.x[elementIndex][i].value = input.getData(i);
+                }
 
-				result.y[elementIndex] = output.getData(outputIndex);
+                result.y[elementIndex] = output.getData(outputIndex);
 
-				elementIndex++;
-			}
+                elementIndex++;
+            }
 
-			return result;
-		} catch (final OutOfMemoryError e) {
-			throw new EncogError("SVM Model - Out of Memory");
-		}
-	}
+            return result;
+        } catch (final OutOfMemoryError e) {
+            throw new EncogError("SVM Model - Out of Memory");
+        }
+    }
 
-	/**
-	 * Private constructor.
-	 */
-	private EncodeSVMProblem() {
-
-	}
-
+    /**
+     * Private constructor.
+     */
+    private EncodeSVMProblem() {
+    }
 }
