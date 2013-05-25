@@ -8,4 +8,4 @@
 !/dist/
 
 # also do not ignore the create jarfiles
-!/dist/*.pdf
+!/dist/*.jar
