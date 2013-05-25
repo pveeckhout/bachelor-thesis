@@ -1,0 +1,8 @@
+# ignore all files in build
+/build/*
+
+# but not the folder itself
+!/build/
+
+# also do not ignore the create jarfiles
+!/build/*.pdf
