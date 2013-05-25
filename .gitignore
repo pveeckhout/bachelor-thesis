@@ -2,6 +2,10 @@
 /build/
 /nbproject/
 
+# ignore files
+/lib/nblibraries.properties
+/nbbuild.xml
+
 # ignore all files inside dist folder
 /dist/*
 
