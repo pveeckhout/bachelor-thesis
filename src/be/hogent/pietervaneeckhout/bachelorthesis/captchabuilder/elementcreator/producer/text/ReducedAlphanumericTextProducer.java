@@ -21,27 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package be.hogent.pietervaneeckhout.bachelorthesisimpl;
+package be.hogent.pietervaneeckhout.bachelorthesis.captchabuilder.elementcreator.producer.text;
+
+import be.hogent.pietervaneeckhout.bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
 
 /**
- * BachelorThesisImpl.java (UTF-8)
+ * ReducedAlphanumericTextProducer.java (UTF-8)
  *
- * The default startup class for this application
+ * generates reduced alphanumerical text
  *
- * 2013/05/25
+ * 2013/04/14
  *
  * @author Pieter Van Eeckhout <vaneeckhout.pieter@gmail.com>
  * @author Pieter Van Eeckhout <pieter.vaneeckhout.q1295@student.hogent.be>
  * @author Hogent StudentID <2000901295>
- * @since 1.0.0
- * @version 1.0.1
+ * @since 1.0.2
+ * @version 1.0.7
  */
-public class BachelorThesisImpl {
-
+public class ReducedAlphanumericTextProducer extends AbstractTextProducer {
+        
     /**
-     * @param args the command line arguments
+     * constructor
+     * 
+     * @param minLenght the minimum text length
+     * @param maxLenght the maximum text length
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
-}
+    public ReducedAlphanumericTextProducer(int minLenght, int maxLenght) {
+        super(CaptchaConstants.REDUCEDALPHANUMERIC, minLenght, maxLenght);
+    }   
+ }
