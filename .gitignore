@@ -2,7 +2,7 @@
 /build/*
 
 # but not the folder itself
-!/build/
 
 # also do not ignore the create jarfiles
 !/build/*.pdf
+/dist/
