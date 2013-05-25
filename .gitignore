@@ -1,8 +1,11 @@
-# ignore all files in build
-/build/*
+# ignore folders
+/build/
 
-# but not the folder itself
+# ignore all files inside dist folder
+/dist/
+
+# do not ignore dist folder itself
+!/dist/
 
 # also do not ignore the create jarfiles
-!/build/*.pdf
-/dist/
+!/dist/*.pdf
