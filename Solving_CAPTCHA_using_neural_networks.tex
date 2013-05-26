@@ -15,7 +15,7 @@
 \usepackage{amsfonts}        % AMS math packages: extra wiskundige
 \usepackage{amsmath}         %   symbolen (o.a. getallen-
 \usepackage{amssymb}         %   verzamelingen N, R, Z, Q, etc.)
-\usepackage[UKenglish]{babel}    % Taalinstellingen: woordsplitsingen,
+\usepackage[UKenglish]{babel}% Taalinstellingen: woordsplitsingen,
                              %  commando's voor speciale karakters
                              %  ("dutch" voor NL)
 							 %  ("UKenglish" voor brits engels)
@@ -34,6 +34,9 @@
 
 % hoofdingen, enz.
 \pagestyle{fancy}
+
+%voorkom overlap van sectie titels en chapter titel
+\renewcommand{\sectionmark}[1]{} 
 
 % lijn, wordt gebruikt in titelpagina
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
