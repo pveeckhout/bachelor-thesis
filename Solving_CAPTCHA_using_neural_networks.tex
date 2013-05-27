@@ -211,14 +211,14 @@ Submitted on \datum
 
 \chapter*{Preamble}
 \label{ch:preamble}
-Firstly, dear reader, I would like to thank you for taking the time to read this thesis. Without an audience this entire endeavour would not mean as much as it does right now, while you are reading it's results. I personally believe this is because I would like my life not to go unnoticed. So if this thesis helps, or influences you in any way, then this work has gained more meaning.\\Secondly I would like to thank the following persons who have made it possible for me to arrive at this point. Special thanks and mentions go to:
+First, dear reader, I would like to thank you for taking the time to read this thesis. Without an audience this entire endeavour would not mean as much as it does right now, while you are reading its results. I personally believe this is because I would like my life not to go unnoticed. So if this thesis helps, or influences you in any way, then this work has gained more meaning.\\Second I would like to thank the following people who have made it possible for me to arrive at this point. Special thanks and mentions go to:
 \begin{itemize}
 \item my parents, for supporting me and giving me the opportunity and supplying the means for me to pursue my academic career.
-\item my girlfriend, because she has helped me countless times, she helped me through the rough spots. Because she never once complained about the time consuming job of writing this work.
-\item my good friends, willing proof readers and content critics Wouter Dekens, Patrick Van Brussel and Thijs van der Burgt.
+\item my girlfriend, Anne Charlotte. Because she has helped me countless times through the rough spots. Because not once did she complain about the time consuming job of writing this work.
+\item my good friends, willing proof readers and content critics: Wouter Dekens, Patrick Van Brussel and Thijs van der Burgt.
 \item Johan Van Schoor and Bert Van Vreckem for the support, organisation, guidance and feedback.
 \end{itemize}
-Bare in mind that this is not an exclusive list. So lastly I would like to thank all the other people who are not mentioned by name, like the teaching and support staff at University College Ghent.\\\\Ghent BELGIUM, June 2013
+Bare in mind that this is not an exclusive list. Finally I would like to thank all the other people who are not mentioned by name: such as the teaching and support staff at University College Ghent.\\\\Ghent BELGIUM, June 2013
 \begin{center}
 \includegraphics[width=5cm]{./img/signature.png}\\[.5cm]
 \studenta
@@ -228,17 +228,17 @@ Bare in mind that this is not an exclusive list. So lastly I would like to thank
 \paragraph{The target audience.}
 This thesis was written with an audience in mind that already has some technical understanding of computers and how they operate on hardware level (processor etc.). If you feel that your current knowledge is insufficient, or just want to read up some more, then I refer you to the ''How Computers Work - Processor and Main Memory'' \citep{Young2001} e-book.
 \paragraph{The history of SPAM.} 
-Ever since the internet found its way into our daily lives, there have been people out there who don't always have other people's best interests in mind. I am referring to spammer, people aiming to advertise their product, services, etc \ldots in an aggressive manner. The methods of advertising include but are not limited to: \begin{itemize}
+Ever since the internet found its way into our daily life, there have been people out there who don't always have other people's best interest in mind. I am referring to spammers, people aiming to advertise their product, services, etc \ldots in an aggressive manner. The methods of advertising include but are not limited to: \begin{itemize}
 \item Sending bulk emails without the recipients permission (SPAM). 
 \item Posting irrelevant links and information on fora and various social media.
 \item Flooding chat channels with their links and information. 
 \end{itemize}
 These emails, posts and messages inconvenience the end-users, requiring time to filter out the junk. The economic costs of SPAM has led to a decrease in the Japanese GDP by 500 billion Yen (3.78 billion Euro) in 2004 and were projected to reach a decrease of 1\% of the total GDP by 2010 unless adequate countermeasures were taken \citep{Ukai2007}. \citep{Khong2004} researched the economic arguments for regulating junk mails and the efficiency of these regulations.
 \paragraph{Birth of CAPTCHA.} 
-The two previously mentioned researches signify the importance and impact of SPAM on our daily lives. The users of the internet quickly tried to implement methods to prevent spammers from spreading their advertisements to the masses. Several prevention and detection methods and systems were developed successfully. These range from hidden text only visible to automated scripts, to invalid HTML tags. One of the methods developed for this purpose is a CAPTCHA test. CAPTCHA is an acronym based on the word ''capture'' and stands for 'Completely Automated Public Turing test to tell Computers and Humans Apart'. An attempt to trademark  the term was made by Carnegie Mellon University on 15 October 2004, but the application was eventually dropped on 12 April 2008
+The two previously mentioned researches signify the importance and impact of SPAM on our daily life. The users of the internet quickly tried to implement methods to prevent spammers from spreading their advertisements to the masses. Several prevention and detection methods and systems were developed successfully. These methods and mechanisms range from hidden text to invalid HTML tags, all used to confuse and interrupt automated programs. One of the methods developed to prevent SPAM is a CAPTCHA test. CAPTCHA is an acronym based on the word ''capture'' and stands for 'Completely Automated Public Turing test to tell Computers and Humans Apart'. An attempt to trademark  the term was made by Carnegie Mellon University on 15 October 2004, but the application was eventually dropped on 12 April 2008
 \paragraph{Spammers fight back.}
-All these prevention and detection methods did not stop the spammers from trying to reach an audience as large  as possible. The spammers rely on a large target audience because of the return rates being as low as 0.0023\% \citep{Cobb2003}. Trying to reach such a large audience the spammers start to device ways to circumvent or break the existing systems. One of these methods is solving CAPTCHA tests by making use of the adaptive learning and pattern recognizing capabilities of neural networks. These networks can be used to recognize letters from images with adversarial clutter.
-This is the area I will focus on in this thesis. This thesis will list some of the difficulties regarding the extraction of relevant data from a CAPTCHA, and how to possibly overcome these difficulties. However the main focus will be on searching for the types and configuration of neural networks best used for pattern recognition.
+All these prevention and detection methods did not stop the spammers from trying to reach an audience as large  as possible. The spammers rely on a large target audience because of the return rates being as low as 0.0023\% \citep{Cobb2003}. The spammers started to device ways to circumvent or break the existing systems in order to reach a large enough audience. One of these methods is solving CAPTCHA tests by making use of the adaptive learning and pattern recognizing capabilities of neural networks. These networks can be used to recognize letters from images with adversarial clutter.
+This is the area I will focus on in this thesis. This thesis will list some of the difficulties regarding the extraction of relevant data from a CAPTCHA and how to possibly overcome these difficulties. However the main focus will be on searching for the types and configuration of neural networks best used for pattern recognition.
 \chapter{Premise and research questions}
 \label{ch:Premise}
 \section{Premise}
@@ -247,7 +247,7 @@ The main objective of this thesis is to ascertain whether neural networks are ca
 \emph{''Are neural networks a viable tool for solving the current generation of CAPTCHA?''}
 \section{Research questions}
 \label{sec:researquestions}
-The research can be divided into two separate subjects. If one was to develop software for automatic CAPTCHA solving, following questions and problems would need to be addressed.
+The research can be divided into two separate subjects. If one was to develop software for automatic CAPTCHA solving, the following questions and problems would need to be addressed.
 \paragraph{\captcha :}
 \begin{itemize}
 \item What are the different types of CAPTCHA?
@@ -256,10 +256,10 @@ The research can be divided into two separate subjects. If one was to develop so
 \paragraph{Neural networks:}
 \begin{itemize}
 \item How do neural networks operate?
-\item Which types of neural networks are well suited pattern recognition?
+\item Which types of neural networks are well suited for pattern recognition?
 \item What network configuration would perform best?
 \end{itemize}
-\paragraph{general:}
+\paragraph{General:}
 \begin{itemize}
 \item How future proof would this solution be?
 \item Is there enough economic incentive to invest in development?
@@ -289,9 +289,9 @@ performance of a three year old child.'' Some of these tasks were:
 \item understanding facial expressions
 \item understanding handwriting
 \item filling in words
-\end{itemize}
-\citep{Naor1996}
-In 1997 Yahoo! was having a massive problem with spammers using bots to create free email addresses. Yahoo! contacted Carnegie Mellon University\footnote{\url{http://www.cylab.cmu.edu/research/projects/2008/captcha-project.html}} for help, by 2000 the first real CAPTCHA as we know them was invented\citep{Egen2009}.
+\end{itemize} \citep{Naor1996}
+In 1997 Yahoo! was having a massive problem with spammers using bots to create free email addresses. Yahoo! contacted Carnegie Mellon University\footnote{\url{http://www.cylab.cmu.edu/research/projects/2008/captcha-project.html}} for help, by 2000 the first real CAPTCHA as we know them was invented\citep{Egen2009}.\\
+As the Computing power increased, so did the amount of CAPTCHA tests being broken. By 2008 there was an 30\% to 60\% success rate on the most used forms of CAPTCHA.\citep{Yan2008}. As a  response to this Von Ahn and his team at Carnegie Mellon University released reCAPTCHA in September 2008, a system still currently in use.
 \subsection{Types of CAPTCHA.}
 %% TODO
 TODO
