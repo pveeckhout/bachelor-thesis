@@ -101,11 +101,12 @@ public class GetImageText {
     /**
      * Discard boxes that do not appear to contain text
      */
-    LinkedList discardNonText(LinkedList boxes, int[][] contrast) {
+    LinkedList<TextRegion> discardNonText(LinkedList<TextRegion> boxes,
+                                          int[][] contrast) {
         int i = 0;
         while (i < boxes.size()) {
             int numberOfStems = 0;
-            TextRegion thisBox = (TextRegion) boxes.get(i);
+            TextRegion thisBox = boxes.get(i);
             // Count the stems in this box
             if (thisBox.y1 != thisBox.y2) {
                 for (int a = thisBox.x1 + 1; a < thisBox.x2 - 1; a++) {
@@ -145,10 +146,10 @@ public class GetImageText {
     /**
      * Shrink each box as much as possible
      */
-    LinkedList shrink(LinkedList boxes, int[][] contrast) {
+    LinkedList<TextRegion> shrink(LinkedList<TextRegion> boxes, int[][] contrast) {
         int i = 0;
         while (i < boxes.size()) {
-            TextRegion thisBox = (TextRegion) boxes.get(i);
+            TextRegion thisBox = boxes.get(i);
             if (thisBox.x1 != thisBox.x2 &&
                     thisBox.y1 != thisBox.y2) {
                 int total = 0;
@@ -204,7 +205,7 @@ public class GetImageText {
             }
             i++;
         }
-        return (boxes);
+        return boxes;
     }
     public double merge_densityFactor;
     public int merge_mass;
@@ -212,7 +213,7 @@ public class GetImageText {
     public double merge_distfac;
     public int merge_dist2;
 
-    LinkedList merge(LinkedList boxes) {
+    LinkedList<TextRegion> merge(LinkedList<TextRegion> boxes) {
         boolean change = true;
         while (change == true) {
             change = false;
@@ -221,8 +222,8 @@ public class GetImageText {
                 int j = 0;
                 while (i < boxes.size() && j < boxes.size()) {
                     if (i != j) {
-                        TextRegion thisBox = (TextRegion) boxes.get(i);
-                        TextRegion thatBox = (TextRegion) boxes.get(j);
+                        TextRegion thisBox = boxes.get(i);
+                        TextRegion thatBox = boxes.get(j);
                         change = merge(thisBox, thatBox);
                         if (change) {
                             boxes.set(i, thisBox);
@@ -371,8 +372,8 @@ public class GetImageText {
      *
      * @return a LinkedList of boxes that are likely to contain text.
      */
-    public LinkedList getTextBoxes() {
-        LinkedList boxes = new LinkedList();
+    public LinkedList<TextRegion> getTextBoxes() {
+        LinkedList<TextRegion> boxes = new LinkedList<>();
 
         int[][] contrast = getContrast();
 
@@ -519,7 +520,7 @@ public class GetImageText {
      *
      * @return a <code>BufferedImage</code> value
      */
-    public BufferedImage isolateText(LinkedList boxes) {
+    public BufferedImage isolateText(LinkedList<TextRegion> boxes) {
         BufferedImage outputimage = new BufferedImage(image.getWidth(),
                                                       image.getHeight(),
                                                       BufferedImage.TYPE_INT_RGB);
