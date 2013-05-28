@@ -1,9 +1,0 @@
-# ignore all files in these directories
-source/
-
-# ignore all files in build folder
-build/*
-#but do NOT ignore the folder itself
-!build/
-# and do NOT ignore all .pdf files in build/
-!build/*.pdf

@@ -11,24 +11,27 @@
 
 %%---------- Extra functionaliteit ---------------------------------------
 
-\usepackage[utf8]{inputenc}  % Accenten gebruiken in tekst (vb. é ipv \'e)
-\usepackage{amsfonts}        % AMS math packages: extra wiskundige
-\usepackage{amsmath}         %   symbolen (o.a. getallen-
-\usepackage{amssymb}         %   verzamelingen N, R, Z, Q, etc.)
-\usepackage[UKenglish]{babel}% Taalinstellingen: woordsplitsingen,
-                             %  commando's voor speciale karakters
-                             %  ("dutch" voor NL)
-							 %  ("UKenglish" voor brits engels)
-\usepackage{eurosym}         % Euro-symbool €
-\usepackage{graphicx}        % Invoegen van tekeningen
-\usepackage[pdftex,bookmarks=true]{hyperref}
-                             % PDF krijgt klikbare links & verwijzingen,
-                             %  inhoudstafel
-\usepackage{listings}        % Broncode mooi opmaken
-\usepackage{multirow}        % Tekst over verschillende cellen in tabellen
-\usepackage{rotating}        % Tabellen en figuren roteren
-\usepackage{natbib}          % Betere bibliografiestijlen
-\usepackage{fancyhdr}        % Pagina-opmaak met hoofd- en voettekst
+\usepackage[utf8]{inputenc}						% Accenten gebruiken in tekst (vb. é ipv \'e)
+\usepackage{amsfonts}        					% AMS math packages: extra wiskundige
+\usepackage{amsmath}         					% symbolen (o.a. getallen-
+\usepackage{amssymb}         					% verzamelingen N, R, Z, Q, etc.)
+\usepackage[UKenglish]{babel}					% Taalinstellingen: woordsplitsingen,
+                             					% commando's voor speciale karakters
+                             					% ("dutch" voor NL)
+							 					% ("UKenglish" voor brits engels)
+\usepackage{eurosym}         					% Euro-symbool €
+\usepackage{graphicx}        					% Invoegen van tekeningen
+\usepackage[pdftex,bookmarks=true]{hyperref}	% PDF krijgt klikbare links & verwijzingen,
+                             					%  inhoudstafel
+\usepackage{listings}        					% Broncode mooi opmaken
+\usepackage{multirow}        					% Tekst over verschillende cellen in tabellen
+\usepackage{rotating}       	 				% Tabellen en figuren roteren
+\usepackage{natbib}          					% Betere bibliografiestijlen
+\usepackage{fancyhdr}        					% Pagina-opmaak met hoofd- en voettekst
+\usepackage{graphicx}		 					% Om figuren te kunnen verwerken
+\usepackage[small,bf,hang]{caption}				% Om de captions wat te verbeteren
+\usepackage{subcaption}		 					% subcaptions
+\usepackage[nottoc]{tocbibind}					% Bibliografie en inhoudsopgave in ToC; zie 													% tocbibind.dvi
 
 %%---------- Layout ------------------------------------------------------
 
@@ -69,6 +72,9 @@
 % CAPTCHA
 \newcommand{\captchasp}{CAPTCHA }
 \newcommand{\captcha}{CAPTCHA}
+
+% phonetic
+%\newcommand{\phonetic}[1]{ \usepackage[T3,OT2,T1]{fontenc}\usepackage[noenc]{tipa}#1}
 
 
 %%---------- Documenteigenschappen ---------------------------------------
@@ -207,6 +213,8 @@ Submitted on \datum
 % probleemstelling en de context, de onderzoeksvragen, de aanpak en de
 % resultaten. 
 
+%TODO
+TODO
 \end{abstract}
 
 \chapter*{Preamble}
@@ -214,7 +222,7 @@ Submitted on \datum
 First, dear reader, I would like to thank you for taking the time to read this thesis. Without an audience this entire endeavour would not mean as much as it does right now, while you are reading its results. I personally believe this is because I would like my life not to go unnoticed. So if this thesis helps, or influences you in any way, then this work has gained more meaning.\\Second I would like to thank the following people who have made it possible for me to arrive at this point. Special thanks and mentions go to:
 \begin{itemize}
 \item my parents, for supporting me and giving me the opportunity and supplying the means for me to pursue my academic career.
-\item my girlfriend, Anne Charlotte. Because she has helped me countless times through the rough spots. Because not once did she complain about the time consuming job of writing this work.
+\item my girlfriend, Anne Charlotte Magdaraog Mendoza. Because she has helped me countless times through the rough spots. Not once did she complain about the time consuming job of writing this work.
 \item my good friends, willing proof readers and content critics: Wouter Dekens, Patrick Van Brussel and Thijs van der Burgt.
 \item Johan Van Schoor and Bert Van Vreckem for the support, organisation, guidance and feedback.
 \end{itemize}
@@ -267,44 +275,52 @@ The research can be divided into two separate subjects. If one was to develop so
 \chapter{Methodology}
 \label{ch:methodology}
 \paragraph{Research philosophy.}
-%% TODO
+%TODO
 TODO
 \paragraph{Research approach.}
-%% TODO
+%TODO
 TODO
 \paragraph{Data Analysis.}
-%% TODO
+%TODO
 TODO
 \chapter{Corpus}
 \label{ch:corpus}
 \section{CAPTCHA}
 \label{sec:captcha}
-\subsection{What is CAPTCHA?}
+\subsection{CAPTCHA, an explanation.}
+A CAPTCHA (pronounced %TODO {\phonetic{/k\ae p.\textteshlig \textschwa / }}
+) is a type of challenge-response test that aims to make sure the response was made by a human. These tests are designed in such a manner that they should be easy to generate and grade by a computer, but also difficult for a computer to solve. Yet a human should be able to solve the test without much difficulty. If a test was solved successfully it can be assumed that the response was entered by a human.\\
+These test are mostly found on sites where on would like to prevent the access to unwanted bots. this is because having lots of spam on a site or in a service can have real detrimental consequences for that site or service. This is because most contemporary interactive sites store and serve their content from a database. When a database gets filled up the site can become slow and sluggish, reducing the customer's experience. This is only one of the many useful applications of CAPTCHAs. On the other hand, legitimate users also need to solve these tests, so it requires them to perform an extra task before they can post their content, create an email, view a certain page. While this 'simple' extra task does not seem like a large barrier, it does inconvenience some people enough to prevent them from posting valid content. This problem becomes even more apparent when dealing with non-native speakers\citep{Banday2011}. Protecting your site with a CAPTCHA can even have a detrimental effects on the conversion rates\footnote{\url{http://www.seomoz.org/blog/captchas-affect-on-conversion-rates}}.
 \subsection{The history of CAPTCHA.}
 The first one to think of the concept of CAPTCHA was Moni Naor in 1996. He proposed that reverse Turing testing, as CAPTCHAs are often called, should consist of ''those tasks 
 where humans excel in performing, but machines have a hard-time competing with the 
-performance of a three year old child.'' Some of these tasks were:
+performance of a three year old child.'' Some of these tasks were \citep{Naor1996}:
 \begin{itemize}
 \item gender recognition
 \item understanding facial expressions
 \item understanding handwriting
 \item filling in words
-\end{itemize} \citep{Naor1996}
-In 1997 Yahoo! was having a massive problem with spammers using bots to create free email addresses. Yahoo! contacted Carnegie Mellon University\footnote{\url{http://www.cylab.cmu.edu/research/projects/2008/captcha-project.html}} for help, by 2000 the first real CAPTCHA as we know them was invented\citep{Egen2009}.\\
-As the Computing power increased, so did the amount of CAPTCHA tests being broken. By 2008 there was an 30\% to 60\% success rate on the most used forms of CAPTCHA.\citep{Yan2008}. As a  response to this Von Ahn and his team at Carnegie Mellon University released reCAPTCHA in September 2008, a system still currently in use.
+\end{itemize}
+In 1997 Yahoo! was having a massive problem with spammers using bots to create free email addresses used to spread a huge amount of unwanted advertisement, giving Yahoo email adresses a bad reputation. Yahoo! contacted Carnegie Mellon University\footnote{\url{http://www.cylab.cmu.edu/research/projects/2008/captcha-project.html}} for help, by 2000 the first real CAPTCHA as we know them was invented\citep{Egen2009}. These were also the people who first used the term ''CAPTCHA'' and tried to trademark it.\\As the Computing power increased, so did the amount of CAPTCHA tests being broken. By 2008 there was an 30\% to 60\% success rate on the most used forms of CAPTCHA.\citep{Yan2008}. As a  response to this Von Ahn and his team at Carnegie Mellon University released reCAPTCHA in September 2008, a popular system still currently in use.\\CAPTCHAs have always undergone changes once it became clear a certain generation method didn't stop the spammers any more. The first CAPTCHAs generated by EZ-Gimpy for Yahoo! look completely different from the CAPTCHAs that are currently being generated. A good example of the adaptive nature of CAPTCHAs is reCAPTCHA, were you can see the changes depending on when a CAPTCHA was generated. (see Figure ~\ref{fig:captchaEvolution} on page ~\pageref{fig:captchaEvolution} for an example)
 \subsection{Types of CAPTCHA.}
-%% TODO
-TODO
+Following is a list and description of the different types of CAPTCHA, quoted directly from \citep{Sauer2008}.
+\begin{description}
+\item[Character based]This category means that a string of characters is presented to the user. This string can contain either words or random alphanumeric characters.
+\item[Image based]Images or pictures are presented to the user. This is normally in the form of an identifiable real-world object, but can also be presented in the form of shapes (BONGO). The task is to identify the object shown in the picture.
+\item[Anomaly based]Users are asked to determine which object, or character, or shape does not belong in a set of images displayed on the screen.
+\item[Recognition based]The user needs to determine what is being presented to them. In the case of a character based and recognition based CAPTCHA the user needs to identify and input the character string that is presented to them.
+\item[Sound based]The user is presented with an audio version of a CAPTCHA. The user listens to the audio file and inputs their answer. A sound based CAPTCHA can be presented in two formats, the first is the ''spoken words or numbers'' and the second would be sounds related to an image.
+\end{description}
 \subsection{Data extraction.}
-%% TODO
-TODO
+As previously stated, the data extraction part of solving CAPTCHAs is not the main focus of this thesis. Therefore I will not give in-depth explanations of the algorithms used and described here.\\\\CAPTCHAs are by design tough to solve for a computer. This is because most of the times a CAPTCHA gets cluttered with noise, or the letters get crowed together. This crowding or noise makes it so that the characters on the image are not separate entities.    This is to impede the segmentation of the CAPTCHA. Measures against segmentation are necessary to prevent an OCR\footnote{Optical Character Recognition} algorithm from simply reading and solving the test. This could be possible, as computers can (given the right algorithms) be very efficiently at pattern recognition. People trying to solve the CAPTCHA test automatically now first have to separate the individual characters before they can pass the characters to an OCR algorithm for classification.\\\citep{Yan2008} has described a working segmentation algorithm in 2008, but \citep{Huang2010} has significantly improved on the performance, so that now it should be able to segment the contemporary CAPTCHAs.\\In the unlikely case that the CAPTCHAs you are trying to solve don't have the segmentation issues, then you can first try to reduce the noise and then segment the characters by using the flood-fill method, as described by \citep{Cai2008}.
 \subsection{The future of CAPTCHA.}
-%% TODO
+\citep{Sauer2008} and colleges did a small research about how the current CAPTCHA (even the audio CAPTCHA) has serious shortcomings when trying to accommodate for blind or visually impaired users. This added downside to the current CAPTCHA system indicates that even tough it is an effective means
+%TODO
 TODO
 \section{Neural Networks}
 \label{sec:neuralnetworks}
 \subsection{How neural networks operate.}
-%% TODO
+%TODO
 TODO
 \subsection{Types of neural networks.}
 %% TODO
@@ -349,7 +365,33 @@ TODO
 %
 %%---------- Back matter -------------------------------------------------
 %
-%\listoffigures
+\listoffigures
+\begin{figure}
+\centering
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./img/reCAPTCHA2008.png}
+		\caption{Early 2008}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./img/reCAPTCHA2009.png}
+		\caption{December 16th 2009}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./img/reCAPTCHA2010.png}
+		\caption{January 24th 2010}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./img/reCAPTCHA2013.png}
+		\caption{May 28th 2013}
+	\end{subfigure}
+	\caption{Examples of CAPTCHAs directly Downloaded from reCAPTCHA}
+	\label{fig:captchaEvolution}
+	\citep{Motoyama2010}
+\end{figure}
 %\listoftables
 %
 % Lijst van broncode-listings. Kan je weglaten als je dit niet nodig hebt.
