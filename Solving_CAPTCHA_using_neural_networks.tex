@@ -246,7 +246,7 @@ These emails, posts and messages inconvenience the end-users, requiring time to 
 The two previously mentioned researches signify the importance and impact of SPAM on our daily life. The users of the internet quickly tried to implement methods to prevent spammers from spreading their advertisements to the masses. Several prevention and detection methods and systems were developed successfully. These methods and mechanisms range from hidden text to invalid HTML tags, all used to confuse and interrupt automated programs. One of the methods developed to prevent SPAM is a CAPTCHA test. CAPTCHA is an acronym based on the word ''capture'' and stands for 'Completely Automated Public Turing test to tell Computers and Humans Apart'. An attempt to trademark  the term was made by Carnegie Mellon University on 15 October 2004, but the application was eventually dropped on 12 April 2008
 \paragraph{Spammers fight back.}
 All these prevention and detection methods did not stop the spammers from trying to reach an audience as large  as possible. The spammers rely on a large target audience because of the return rates being as low as 0.0023\% \citep{Cobb2003}. The spammers started to device ways to circumvent or break the existing systems in order to reach a large enough audience. One of these methods is solving CAPTCHA tests by making use of the adaptive learning and pattern recognizing capabilities of neural networks. These networks can be used to recognize letters from images with adversarial clutter.
-This is the area I will focus on in this thesis. This thesis will list some of the difficulties regarding the extraction of relevant data from a CAPTCHA and how to possibly overcome these difficulties. However the main focus will be on searching for the types and configuration of neural networks best used for pattern recognition.
+This is the area I will focus on in this thesis. This thesis will list some of the difficulties regarding the extraction of relevant data from a CAPTCHA and how to possibly overcome these difficulties. However the main focus will be on understanding the inner workings of neural networks and on searching for the types and configuration of neural networks best used for pattern recognition.
 \chapter{Premise and research questions}
 \label{ch:Premise}
 \section{Premise}
@@ -287,11 +287,11 @@ TODO
 \label{ch:corpus}
 \section{CAPTCHA}
 \label{sec:captcha}
-\subsection{CAPTCHA, an explanation.}
+\subsection{CAPTCHA, an explanation}
 A CAPTCHA (pronounced %TODO {\phonetic{/k\ae p.\textteshlig \textschwa / }}
 ) is a type of challenge-response test that aims to make sure the response was made by a human. These tests are designed in such a manner that they should be easy to generate and grade by a computer, and at the same time be difficult for a computer to solve. Yet a human should be able to solve the test without much difficulty. If a test was solved successfully one can assume that the response was entered by a human.\\
 These test are mostly found on sites where one would like to prevent the access to unwanted bots. This is because having lots of spam on a site or in a service can have real detrimental consequences for that site or service. This is because most contemporary interactive sites store and serve their content from a database. When a database gets filled up the site can become slow and sluggish, reducing the customer's experience. This is only one of the many useful applications of CAPTCHAs. On the other hand, legitimate users also need to solve these tests, so it requires them to perform an extra task before they can post their content, create an email or view a certain page. While this 'simple' extra task does not seem like a large barrier, it does inconvenience some people enough to prevent them from posting valid content. This problem becomes even more apparent when dealing with non-native speakers\citep{Banday2011}. Protecting your site with a CAPTCHA can even have a detrimental effect on the conversion rates\footnote{\url{http://www.seomoz.org/blog/captchas-affect-on-conversion-rates}}.
-\subsection{The history of CAPTCHA.}
+\subsection{The history of CAPTCHA}
 Moni Naor was the first one to think of the concept of CAPTCHA in 1996. He proposed that reverse Turing testing, as CAPTCHAs are often called, should consist of ''tasks where humans excel in performing, but machines have a hard-time competing with the performance of a three year old child.'' Some of these tasks were \citep{Naor1996}:
 \begin{itemize}
 \item gender recognition
@@ -300,7 +300,7 @@ Moni Naor was the first one to think of the concept of CAPTCHA in 1996. He propo
 \item filling in words
 \end{itemize}
 In 1997 'Yahoo!' was having a gargantuan problem with spammers using bots to create free email addresses used to spread a huge amount of unwanted advertisement, giving Yahoo email adresses a bad reputation. 'Yahoo!' contacted Carnegie Mellon University\footnote{\url{http://www.cylab.cmu.edu/research/projects/2008/captcha-project.html}} for help, by 2000 the first real CAPTCHA as we know them was invented\citep{Egen2009}. These were also the people who first used the term ''CAPTCHA'' and tried to trademark it.\\As computing power increased, so did the amount of CAPTCHA tests being broken. By 2008 there was an 30\% to 60\% success rate on the most used CAPTCHA systems.\citep{Yan2008}. As a  response to this Von Ahn and his team at Carnegie Mellon University released reCAPTCHA (Figure ~\ref{fig:reCAPTCHA}, page ~\pageref{fig:reCAPTCHA}) in September 2008, a popular system which is still in use.\\CAPTCHAs have always undergone changes once it became clear a certain generation method didn't stop the spammers any more. The first CAPTCHAs generated by EZ-Gimpy for 'Yahoo!' looked completely different from the CAPTCHAs that are currently being generated. A good example of the adaptive nature of CAPTCHAs is reCAPTCHA, were you can see the changes depending on when a CAPTCHA was generated. (Figure ~\ref{fig:captchaEvolution}, page ~\pageref{fig:captchaEvolution})
-\subsection{Types of CAPTCHA.}
+\subsection{Types of CAPTCHA}
 Following is a list and description of the different types of CAPTCHA, courtesy of \citep{Sauer2008}.
 \begin{description}
 \item[Character based]In this category a string of characters is presented to the user. This string can contain either words or random alphanumeric characters. The task is to identify the string of characters.
@@ -309,9 +309,9 @@ Following is a list and description of the different types of CAPTCHA, courtesy 
 \item[Recognition based]In this category all previous categories can be used. The user is tasked to determine what is being presented to them and respond accordingly.
 \item[Sound based]In this category an audio version of a CAPTCHA is presented. The task is to identify the words and letters or image presented to the user.
 \end{description}
-\subsection{Data extraction.}
+\subsection{Data extraction}
 As previously stated, the data extraction part of solving CAPTCHAs is not the main focus of this thesis. Therefore I will not give in-depth explanations of the algorithms used and described here.\\\\CAPTCHAs are by design tough to solve for a computer. The majority of times a CAPTCHA gets cluttered with noise, or the letters get crowed together. This crowding or noise makes it so that the characters on the image are not separate entities. This is to impede the segmentation of the CAPTCHA. Measures against segmentation are necessary to prevent an OCR\footnote{Optical Character Recognition} algorithm from simply reading and solving the test. This could be possible, as computers can (given the right algorithms) be very efficient at pattern recognition. People trying to solve the CAPTCHA test automatically, have to separate the individual characters first before they can pass the characters to an OCR algorithm for classification.\\\citep{Yan2008} described a working segmentation algorithm in 2008, but \citep{Huang2010} has significantly improved on the performance,so it should be able to segment the contemporary CAPTCHAs.\\In the unlikely case that the CAPTCHAs you are trying to solve don't have the segmentation issues, then you can first try to reduce the noise and then segment the characters by using the flood-fill method, as described by \citep{Cai2008}.
-\subsection{The future of CAPTCHA.}
+\subsection{The future of CAPTCHA}
 \begin{figure}
 	\centering
 	\includegraphics[width=13.75cm]{./img/xkcd-captcha-evolution.png}
@@ -327,29 +327,112 @@ It would seem evident from years of use and research that CAPTCHAs are far from 
 \end{quote}\newpage
 \section{Neural Networks}
 \label{sec:neuralnetworks}
-\subsection{How neural networks operate.}
+\subsection{The concept of time}
+\subsection{The components of an artificial neural network}
+%TODO
+TODO: Neuron, Connection and weight
+\subsubsection{Connections}
 %TODO
 TODO
-\subsection{Types of neural networks.}
-%% TODO
+\subsubsection{Propagation function}
+%TODO
 TODO
-\subsection{Neural networks for pattern recognition}
-%% TODO
+\subsubsection{Neuron activation function.}
+%TODO
+TODO
+\subsubsection{Neuron activation order.}
+%TODO
+TODO
+\paragraph{Synchronous activation.}
+%TODO
+TODO
+\paragraph{Asynchronous activation.}
+%TODO
+TODO
+\paragraph{Random order activation.}
+%TODO
+TODO
+\paragraph{Random permutation activation.}
+%TODO
+TODO
+\paragraph{Topological order activation.}
+%TODO
+TODO
+\paragraph{Fixed order activation.}
+%TODO
+TODO
+\subsubsection{Neuron threshold value}
+%TODO
+TODO
+\subsubsection{Neural output function}
+%TODO
+TODO
+\subsection{Neural network topologies}
+%TODO
+TODO
+\subsubsection{Feedforward networks}
+%TODO
+TODO
+\subsubsection{Recurrent networks}
+%TODO
+TODO
+\subsubsection{Completely linked networks}
+%TODO
+TODO
+\subsection{Supervised learning}
+%TODO
+TODO
+\subsubsection{Preceptron networks}
+%TODO
+TODO
+\subsubsection{Radial Basis networks}
+%TODO
+TODO
+\subsubsection{Recurrent perceptron-like networks}
+%TODO
+TODO
+\subsubsection{Hopfield networks}
+%TODO
+TODO
+\subsubsection{Learning vector quantization}
+%TODO
+TODO
+\subsection{Unsupervised learning}
+%TODO
+TODO
+\subsubsection{Self-organizing maps}
+%TODO
+TODO
+\subsubsection{Adaptive resonance theory}
+%TODO
+TODO
+\section{Neural networks for pattern recognition}
+blaaaah blah blaah research shows blah blah blah blah\\\
+%TODO
+TODO
+\subsection{Optimal network topologies}
+%TODO
+TODO
+\subsubsection{Perceptron}
+%TODO
+TODO
+\subsubsection{Hopfield}
+%TODO
 TODO
 \subsection{Optimal network configuration}
-%% TODO
+%TODO
 TODO
 \section{Implementation}
 \label{sec:implementation}
 \subsection{Captcha builder}
-%% TODO
+%TODO
 TODO
 \subsection{Neural networks}
-%% TODO
+%TODO
 TODO
 \chapter{Conclusion}
 \label{ch:conclusie}
-%% TODO
+%TODO
 TODO
 %
 %%---------- Bijlagen ----------------------------------------------------
