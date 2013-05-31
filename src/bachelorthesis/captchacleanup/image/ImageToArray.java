@@ -114,7 +114,7 @@ public class ImageToArray {
                             startB <= B && B <= endB) {
                         array[x][y] = 1;
                     } else {
-                        array[x][y] = 0;
+                        array[x][y] = -1;
                     }
                 }
             }
