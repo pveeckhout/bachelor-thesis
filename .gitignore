@@ -10,7 +10,6 @@
 /dist/*
 
 # do not ignore dist folder itself
-!/dist/
 
 # also do not ignore the create jarfiles
 !/dist/*.jar
