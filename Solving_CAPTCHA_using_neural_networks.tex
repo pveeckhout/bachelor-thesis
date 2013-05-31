@@ -430,7 +430,7 @@ Until now, we have only looked at the different elements that make up a neuron. 
 \item the directional arrows cannot be added. So to express that connections start from the line neurons and end at the column neurons, the $\Rsh$ symbol has been introduced in the upper left corner.
 \end{itemize}
 \subsubsection{Feedforward networks}
-\paragraph{standard.\label{par:feedforward}} The first topology we will discuss is the one of the standard feedforward network. In a feedforward network the neurons are divided into layers. There layers can be grouped in three types of layers: one \emph{input layer}, $n$ \emph{hidden layers} and one \emph{output layer}. The hidden layers cannot be seen from the outside (hence the name hidden), and the neurons in those layers are referred to as hidden neurons. The hidden layers are also often referred to as the processing layers. In a feedforward network, a neuron has only connections towards the next layer. These connections all are directed towards the output layer. In many cases we will find that each neuron $i$ is connected to every neuron $j$ of the next layer. These networks are called completely linked networks. As a naming convention, the output neurons will often be referred to as $\Omega$. (Figure ~\ref{fig:feedforward})
+\paragraph{standard.\label{par:feedforward}} The first topology we will discuss is the one of the standard feedforward network. In a feedforward network the neurons are divided into layers. There layers can be grouped in three types of layers: one \emph{input layer}, $n$ \emph{hidden layers} and one \emph{output layer}. The hidden layers cannot be seen from the outside (hence the name hidden), and the neurons in those layers are referred to as hidden neurons. The hidden layers are also often referred to as the processing layers. In a feedforward network, a neuron has only connections towards the next layer. These connections all are directed towards the output layer. In many cases we will find that each neuron $i$ is connected to every neuron $j$ of the next layer. These networks are called completely linked feedforward networks. As a naming convention, the output neurons will often be referred to as $\Omega$. (Figure ~\ref{fig:feedforward})
 \begin{definition}
 (Feedforward network). 
 \end{definition} A feedforward network consists of three types of layers, one input layer, one output layer and optionally one or more processing layers. These layers are clearly separated. Connections only go from one neuron layer to the next, directed towards the output layer.
@@ -512,11 +512,11 @@ Indirect recurrence happens when in a network connections towards the input laye
 \label{fig:inderectrecurrence}
 \end{figure}
 \paragraph{Lateral recurrent.}
-Lateral recurrence happens when connections bewteen neurons of the same layer exist. These connections often make it so that each neuron inhibits the other neurons and strengthens itself. This often means that only the strongest neuron becomes active (\emph{winner-takes-all scheme}). (Figure ~\ref{fig:lateralrecurrence})
+Lateral recurrence happens when connections between neurons of the same layer exist. These connections often make it so that each neuron inhibits the other neurons and strengthens itself. This often means that only the strongest neuron becomes active (\emph{winner-takes-all scheme}). (Figure ~\ref{fig:lateralrecurrence})
 \begin{definition}
 (Lateral recurrence). A lateral recurrent network is a network where connections between the neurons of the same layer are allowed.
-\end{definition)
-\begin{figure}[h]
+\end{definition}
+\begin{figure}
 \centering
 	\begin{subfigure}[b]{0.3\textwidth}
 	\centering
@@ -532,7 +532,11 @@ Lateral recurrence happens when connections bewteen neurons of the same layer ex
 \label{fig:lateralrecurrence}
 \end{figure}
 \subsubsection{Completely linked networks}
-\begin{figure}[h]
+A completely linked network happens when all neuron connections are allowed, except for direct recurrent connections. All neuron connections must be symmetric, this means that $w_{i,j} = w_{j,i}$. As a direct result of the complete linking, input and output neurons can no longer be strictly defined and clearly defined layers do not longer exist. Another result is that the weight matrix $W$ can be different from zero everywhere, except along the diagonal. (Figure ~\ref{fig:completelylinked})
+\begin{definition}
+(Complete interconnection). A complete interconnected network is a network where each neuron is always connected to every other neuron. As a result ever neuron can become an input neuron.
+\end{definition}
+\begin{figure}
 \centering
 	\begin{subfigure}[b]{0.3\textwidth}
 	\centering
@@ -545,6 +549,7 @@ Lateral recurrence happens when connections bewteen neurons of the same layer ex
 	\caption{Completely linked Hinton diagram; Source:\citep{Kriesel2013}}
 	\end{subfigure}
 \caption{Completely linked network}
+\label{fig:completelylinked}
 \end{figure}
 \subsection{Supervised learning}
 %TODO
