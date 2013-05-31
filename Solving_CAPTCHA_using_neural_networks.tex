@@ -32,7 +32,6 @@
 \usepackage[small,bf,hang]{caption}				% Om de captions wat te verbeteren
 \usepackage{subcaption}		 					% subcaptions
 % \usepackage[nottoc]{tocbibind}					% Bibliografie en inhoudsopgave in ToC; zie tocbibind.dvi
-\usepackage{float}								% for figure placements rules
 %%---------- Layout ------------------------------------------------------
 
 % hoofdingen, enz.
@@ -395,6 +394,11 @@ The Fermi function can be expanded by adding a temperature parameter. The smalle
 \begin{equation}
 \displaystyle \frac{1}{1+e^{\frac{-x}{T}}}
 \end{equation}
+\subsubsection{The bias neuron}
+The bias neuron (also called the on neuron) is a technical trick. the purpose of a bias neuron is to represent a neurons threshold value as a connection weight. As said before the activation of a neuron depends on its threshold value, however theses threshold values are stored inside the neuron itself. This makes it complicated to access and use in the activation function, or to train the threshold value. This is where the bias neuron comes in.\\\\Threshold values $\Theta_{j_{i}}, \dotsc ,\Theta_{j_{n}}$ for neurons $j_1,j_2, \dotsc ,j_n$ can be expressed as a connection weight of a constantly firing neuron. This constantly firing neuron is the bias neuron. To implement this change, an additional neuron, whose output is always 1, will be added tot the network and connected to neurons $j_1,j_2, \dotsc ,j_n$. The newly made connections' weights will be set to the negative threshold values. $w_{BIAS,j_{n}} = - \Theta_{j_{n}}$\\\\Now that the threshold values are implemented as connection weight, the threshold value $\Theta_{j_{n}}$ of neurons $j_1,j_2, \dotsc ,j_n$ is then set to 0. This also means that the threshold value can be directly trained together with the connection weight. This makes the learning process considerably easier. Since the threshold value is no longer included in the activation function, its effect is now included in the propagation function.\\\\The advantages of the bias neuron are obvious when implementing and training a neural network. However they do have a disadvantage when you want to visually represent the neural network. these extra connection quickly clutter up the visual representation, and this becomes only worse when allot of neurons are being used. But since the implementation of a bias neuron is almost a certainty, allot of people omit the bias neuron from their illustrations for improved clarity. We know it exist and know that threshold values can simply be treated as weights because of it.
+\begin{definition}
+(Bias neuron). A bias neuron is a neuron whose output value is always 1 and is used to represent neuron biases as connection weights, which enables any weight training algorithm to train the biases at the same time.\\\\Let $j_1,j_2, \dotsc ,j_n$ be neurons with threshold values $\Theta_{j_{1}}, \dotsc ,\Theta_{j_{n}}$. By inserting a bias neuron whose output value is always 1, generating connections between the bias neuron and neurons $j_1,j_2, \dotsc ,j_n$ and weighting these connections $w_{BIAS,j_{1}},\dotsc,w_{BIAS,j_{n}}$ with $\Theta_{j_{1}}, \dotsc ,\Theta_{j_{n}}$, we can set $\Theta_{j_{1}}= \ldots = \Theta_{j_{n}} = 0$ and receive an equivalent neural network whose threshold values are realized by connection weights.
+\end{definition}
 \subsubsection{Neuron activation order.}
 The sequence in which the neurons of a neural network receive and process the input is critical for the result.
 \paragraph{Synchronous activation.}
@@ -588,7 +592,6 @@ TODO
 \subsection{Optimal network topologies}
 %TODO
 TODO
-%____________TOT HIER VANDAAG__________%
 \subsubsection{Perceptron}
 %TODO
 TODO
