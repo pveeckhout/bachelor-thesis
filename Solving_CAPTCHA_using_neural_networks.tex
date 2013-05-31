@@ -12,6 +12,7 @@
 %%---------- Extra functionaliteit ---------------------------------------
 
 \usepackage[utf8]{inputenc}						% Accenten gebruiken in tekst (vb. é ipv \'e)
+\usepackage{amsthm}								% Theorum package
 \usepackage{amsfonts}        					% AMS math packages: extra wiskundige
 \usepackage{amsmath}         					% symbolen (o.a. getallen-
 \usepackage{amssymb}         					% verzamelingen N, R, Z, Q, etc.)
@@ -21,8 +22,7 @@
 							 					% ("UKenglish" voor brits engels)
 \usepackage{eurosym}         					% Euro-symbool €
 \usepackage{graphicx}        					% Invoegen van tekeningen
-\usepackage[pdftex,bookmarks=true]{hyperref}	% PDF krijgt klikbare links & verwijzingen,
-                             					%  inhoudstafel
+\usepackage[pdftex,bookmarks=true]{hyperref}	% PDF krijgt klikbare links &  verwijzingen, inhoudstafel
 \usepackage{listings}        					% Broncode mooi opmaken
 \usepackage{multirow}        					% Tekst over verschillende cellen in tabellen
 \usepackage{rotating}       	 				% Tabellen en figuren roteren
@@ -31,7 +31,7 @@
 \usepackage{graphicx}		 					% Om figuren te kunnen verwerken
 \usepackage[small,bf,hang]{caption}				% Om de captions wat te verbeteren
 \usepackage{subcaption}		 					% subcaptions
-\usepackage[nottoc]{tocbibind}					% Bibliografie en inhoudsopgave in ToC; zie 													% tocbibind.dvi
+% \usepackage[nottoc]{tocbibind}					% Bibliografie en inhoudsopgave in ToC; zie tocbibind.dvi
 
 %%---------- Layout ------------------------------------------------------
 
@@ -67,6 +67,13 @@
   frame=single
 }
 \lstinputlisting{#1}}
+
+% Theorum definitions and style
+\theoremstyle{plain} \newtheorem{theorem}{Theorem} \newtheorem{proposition}{Proposition} \newtheorem{lemma}{Lemma} \newtheorem*{corollary}{Corollary}
+
+\theoremstyle{definition} \newtheorem{definition}{Definition} \newtheorem{conjecture}{Conjecture} \newtheorem*{example}{Example} \newtheorem{algorithm}{Algorithm}
+
+\theoremstyle{remark} \newtheorem*{remark}{Remark} \newtheorem*{note}{Note} \newtheorem{case}{Case}
 
 %%---------- Custom Commands ---------------------------------------
 % CAPTCHA
@@ -204,6 +211,7 @@ Submitted on \datum
 
 \tableofcontents
 
+
 %%---------- Kern --------------------------------------------------------
 
 \begin{abstract}
@@ -327,46 +335,93 @@ It would seem evident from years of use and research that CAPTCHAs are far from 
 \end{quote}\newpage
 \section{Neural Networks}
 \label{sec:neuralnetworks}
+The following section is a synthesis of 2 books describing neural networks, so similarities in structure and wording will be found. However, no harmful copyright infringement is intended. The two books are \citep{Kriesel2013} and \citep{Heaton2005}.
 \subsection{The concept of time}
+When we describe time in the context of neural networks, we denominate the number of cycles of the neural network. In this context time is split into discrete steps.
+\begin{definition}(The Concept of time). We reference the current time as $(t)$ the next step in time is refferd to as $(t+1)$ and the previous step as $(t-1)$. The other steps further ahead or behind are referenced analogously. \end{definition} When we refer to a certain point in time for mathematical variables (e.g. $net_j or o_i$) we will do this as following $net_j(t-1) or o_i(t+3)$.
 \subsection{The components of an artificial neural network}
-%TODO
-TODO: Neuron, Connection and weight
-\subsubsection{Connections}
-%TODO
-TODO
+An artificial neural network is made up by basic processing units, the \emph{neurons}, and directed weighted connections between these neurons. The strength of the connection is called the weight, this is expressed as $w_{i,j}$ for the connection between neuron $i$ and neuron $j$
+\begin{definition}
+(Neural network). A neural network is a sorted triple $(N, V, w)$ which contains two sets $N, V$ and a function $w$. $N$ is a set of neurons, $V$ is a set of connections where for each connections between neuron $i$ and $j$ applies $\{(i,j)|i,j \in  \mathbb{N}\}$, $w$ is a function ($w : V \to \mathbb{R}$) defining the weights. Where $w((i,j))$ defines the weight for the connection between neuron $i$ and neuron $j$, shortened to $w_{i,j}$.
+\end{definition} Depending on the implementation, a connection int the network does not exist or has no influence when the weight is undefined or equal to zero. The weight can be combined in a square \emph{weight matrix} $W$, or in a \emph{weight vector} $W$. The row number indicates where a connection begins and the column number where it ends. In this representation, a zero indicates a non-existing or inactive connection. This kind of representation is also called a \emph{Hinton Diagram} (Figure ~\ref{fig:HintonDiagram}, page ~\pageref{fig:HintonDiagram}).
+\subsubsection{Neuron Data Processing}
+Upon closer inspection, we can see that the neuron and its connections are made up out of several other distinguishable components and processes. which we will discuss more in-depth in the following sections.
+\begin{figure}
+\centering
+\includegraphics[width=7cm]{./img/Neuron_Dataprocessing.png}
+\caption{Neuron Data processing (Source: \citep{Kriesel2013} page 39, Figure 3.1)}
+\end{figure}
 \subsubsection{Propagation function}
-%TODO
-TODO
-\subsubsection{Neuron activation function.}
-%TODO
-TODO
-\subsubsection{Neuron activation order.}
-%TODO
-TODO
-\paragraph{Synchronous activation.}
-%TODO
-TODO
-\paragraph{Asynchronous activation.}
-%TODO
-TODO
-\paragraph{Random order activation.}
-%TODO
-TODO
-\paragraph{Random permutation activation.}
-%TODO
-TODO
-\paragraph{Topological order activation.}
-%TODO
-TODO
-\paragraph{Fixed order activation.}
-%TODO
-TODO
+In a network there will likely be more then one neuron linking to neuron $j$. Which means that each neuron one of these neurons will pass its output to neuron $j$. The propagation function receives all these outputs $o_{i_{1}},\dotsc,o_{i_{n}}$ of the neurons $i_1,i_2,\dotsc,i_n$ and combines those into a single value, the \emph{network input} $net_j$, based on the connection weights $w_{i,j}$.
+\begin{definition}
+(Propagation function and network input) The network input, or $net_j$, can be calculated with the propagation function $f _{prop}$ as follows:
+\begin{equation}
+net_j = f _{prop}(o_{i_{1}},\dotsc,o_{i_{n}},w_{i_{1},j},w_{i_{n},j})
+\end{equation}
+Where $I = \{i_1,i_2,\dotsc,i_n\}$ is the set of neurons so that $\forall z \in \{1,\dotsc,n\} : \exists w_{i_{z},j}$. The \emph{weighted sum} is a very popular, and the most used propagation function.
+\begin{equation}
+net_j = \sum_{i \in I}(o_i \cdot w_{i,j})
+\end{equation}
+\end{definition}
 \subsubsection{Neuron threshold value}
-%TODO
-TODO
+\begin{definition}
+(Threshold value in general). The threshold value $\Theta_j$ for neuron $j$ is uniquely assigned to $j$ and defines the position of the maximum gradient of its activation function.
+\end{definition}
+This means that the activation function of a neuron will react very sensitive to changes when $net_j$ is around the threshold value. 
+\subsubsection{Neuron activation function.}
+\paragraph{Activation status.}Neurons can change in activation status. A neuron's activations state depends on the $net_j$, the previous activation state and the activation function. A neurons activation state is important, because this will influence a neuron's reaction to the $net_j$.
+\paragraph{Activation function.}
+The activation, also called the transfer function, $a_j$ of neuron $j$ depends on on previous states, so this will change overtime. The activation function uses the network input $net_j$, the threshold value and the previous activation state $a_j(t-1)$ to create a new \emph{activation state}. The neuron activation function is also called the identity.
+\begin{definition}
+(activation and activation function). In neuron $j$ the activation function can be described as
+\begin{equation}
+a_j(t) = f _{act}(net_j(t),a_j(t-1),\Theta_j)
+\end{equation}
+\end{definition}
+\subparagraph{Binary threshold function.}
+the binary threshold function, also called the \emph{Heaviside function}, is the simplest activation function as can only take on two values. The activation will change, depending on whether the input value is above or below the threshold value. In either case the function changes from one value to another. This activation function doesn't have a variable, hence it's derivative is 0. This makes back-propagation learning impossible 
+\subparagraph{Fermi function.}
+The Fermi function, also called the logistic function, uses following equation. from the equation we can derive that the Fermi function maps a range of values between $(0,1)$. It's function is describe as following:
+\begin{equation}
+\displaystyle \frac{1}{1+e^{-x}}
+\end{equation}
+\subparagraph{hyperbolic tangent.}
+The hyperbolic tangent function maps to values within the range of $(-1,-)$. It's function is describe as following:
+\begin{equation}
+\tan(x)
+\end{equation}
+\subparagraph{Fermi function with temperature parameter.}
+The Fermi function can be expanded by adding a temperature parameter. The smaller this parameter becomes the colder the activation function becomes, the steeper the gradient of the activation function becomes. And visa versa. By making the temperature parameter very small, we can emulate the Heaviside activation function's behaviour. The extended Fermi activation is described as following:
+\begin{equation}
+\displaystyle \frac{1}{1+e^{\frac{-x}{T}}}
+\end{equation}
+\subsubsection{Neuron activation order.}
+The sequence in which the neurons of a neural network receive and process the input is critical for the result.
+\paragraph{Synchronous activation.}
+In this activation scheme all neurons update at the same time. They simultaneously calculate the input, activation and output. This type of activation scheme closest resembles biological neural networks. However implementing this is only possible on hardware capable of parallel processing. This is the most generic activation scheme and can be used for any network, independent of network topology. However feed-forward networks would not benefit from this scheme.
+\paragraph{Asynchronous activation.}
+the counterpart of synchronous activation. The neurons won't fire all at once in this scheme, but in different points in time. Several subcategories can be discerned. 
+\subparagraph{Random order activation.}
+In this activation scheme, a random neuron $i$ is chosen from all the neurons and for that neuron the input. For an $n$ neuron network, the activation cycle will end after having update $n$ neurons. During this random cycle some neurons can be update multiple times, while others don't get updated at all. It is for this reason that this order of activation is not always useful.
+\subparagraph{Random permutation activation.}
+In this scheme a list of each neuron in a randomized order is made. Therefore during one cycle, each neuron will be activated exactly once. But in a random order.\\
+This activation order doesn't get used much, just like random order activation. This is because of the huge overhead generated by having to build a random order list of each neuron for each activation cycle. While Hopfield network topology technically should be updated at random, in practice a fixed order activation is preferred.
+\subparagraph{Topological order activation.}
+In this scheme the neurons are update in a fixed order. The order is defined by the network topology. First the input neurons get activated then the layer after that, and so on until the output neurons are reached. Due to the definition, this activation order cannot be used for recurrent networks as they don't have a clearly defined start or end. This is the most efficient activation schema when comes to feed-forward networks.
+\subparagraph{Fixed order activation.}
+In this scheme the order of activation gets set during implementation. This can be useful in some cases (again feed-forward networks come to mind), but in case a network can change topology during runtime, then this activation order will have detrimental effects, because it cannot and will not change based on the new topology.
 \subsubsection{Neural output function}
-%TODO
-TODO
+The output function calculates what value neuron $i$ will pass to its connected neurons $j$. The output value $o_j$  of neuron $j$ is calculated from its activation state $a_j$.
+\begin{definition}
+(Output function). For neuron $j$ the output function is formally described as
+\begin{equation}
+f _{out}(a_j) = o_j
+\end{equation}
+Generally though the output functions is often the same as the activation $a_j$, which is directly output.
+\begin{equation}
+f _{out}(a_j) = a_j,SO o_j = a_j
+\end{equation}
+\end{definition}
 \subsection{Neural network topologies}
 %TODO
 TODO
@@ -406,8 +461,11 @@ TODO
 \subsubsection{Adaptive resonance theory}
 %TODO
 TODO
+\subsubsection{Input and output of data}
+%TODO
+TODO
 \section{Neural networks for pattern recognition}
-blaaaah blah blaah research shows blah blah blah blah\\\
+sources and zever
 %TODO
 TODO
 \subsection{Optimal network topologies}
@@ -419,6 +477,7 @@ TODO
 \subsubsection{Hopfield}
 %TODO
 TODO
+\subsubsection{Kohonen self organizing maps}
 \subsection{Optimal network configuration}
 %TODO
 TODO
@@ -518,6 +577,12 @@ TODO
 	\includegraphics[width=\textwidth]{./img/CRAPCHA.png}
 	\caption{Test generated by the CAPTCHA system (Source: \citep{Lsquid2013})}
 	\label{fig:CRAPCHA}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{./img/Hinton_Diagram.png}
+	\caption{An example Hinton diagram (Source: \url{http://www.nd.com/products/nsv30/hinton.htm})}
+	\label{fig:HintonDiagram}
 \end{figure}
 %\listoftables
 %
