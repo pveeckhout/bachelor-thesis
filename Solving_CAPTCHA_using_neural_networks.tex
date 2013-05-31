@@ -450,7 +450,7 @@ Until now, we have only looked at the different elements that make up a neuron. 
 \label{fig:feedforward}
 \end{figure}
 \paragraph{Shortcut connections.}
-This is essentially a standard feedforward network (see ~\ref{par:feedforward}) where connections exist that skip one or more levels. these so-called shortcut connections may only be directed towards the output layer. (Figure ~\ref{fig:shortcutfeedforward}
+This is essentially a standard feedforward network (see ~\ref{par:feedforward}) where connections exist that skip one or more levels. these so-called shortcut connections may only be directed towards the output layer. (Figure ~\ref{fig:shortcutfeedforward})
 \begin{definition}
 (Shortcut feedforward). A shortcut feedforward network consists of three types of layers, one input layer, one output layer and optionally one or more processing layers. These layers are clearly separated. Connections only exist directed towards the output layer, the connections however may span over one or more layers.
 \end{definition}
@@ -470,10 +470,13 @@ This is essentially a standard feedforward network (see ~\ref{par:feedforward}) 
 \label{fig:shortcutfeedforward}
 \end{figure}
 \subsubsection{Recurrent networks}
-%TODO
-TODO
+Recurrence is the event where a neuron influences itself. This can be done through any means or by any connection. It is because of this that recurrent networks often don't have explicitly defined input and output neurons.
 \paragraph{Direct recurrent.}
-\begin{figure}[h]
+Direct recurrence happens in a network when neurons feed their output back to themselves as input. This is also often called self-recurrence. The neurons inhibit themselves, and as a result of this strengthen themselves in order to reach their activation limits. (Figure ~\ref{fig:directrecurrent})
+\begin{definition}
+(Direct recurrence). A direct recurrence network is a network where a neuron $j$ is connected to itself. the connection weight is then defined as $w_{j,j}$. The diagonal of weight matrix $W$ will no longer be zero as a direct result from this.
+\end{definition}
+\begin{figure}
 \centering
 	\begin{subfigure}[b]{0.3\textwidth}
 	\centering
@@ -486,9 +489,14 @@ TODO
 	\caption{Direct recurrent Hinton diagram; Source:\citep{Kriesel2013}}
 	\end{subfigure}
 \caption{Direct recurrent network}
+\label{fig:directrecurrent}
 \end{figure}
 \paragraph{Indirect recurrent.}
-\begin{figure}[h]
+Indirect recurrence happens when in a network connections towards the input layer are allowed. A neuron can influence itself by passing its output to one of the previous or one of the next layers. (Figure ~\ref{fig:inderectrecurrence})
+\begin{definition}
+(Indirect recurrence). An indirect recurrent network is a network where connections forward and backward in the network may exist. The neurons influence themselves by influencing the preceding layers.
+\end{definition}
+\begin{figure}
 \centering
 	\begin{subfigure}[b]{0.3\textwidth}
 	\centering
@@ -501,8 +509,13 @@ TODO
 	\caption{Indirect recurrent Hinton diagram; Source:\citep{Kriesel2013}}
 	\end{subfigure}
 \caption{Indirect recurrent network}
+\label{fig:inderectrecurrence}
 \end{figure}
 \paragraph{Lateral recurrent.}
+Lateral recurrence happens when connections bewteen neurons of the same layer exist. These connections often make it so that each neuron inhibits the other neurons and strengthens itself. This often means that only the strongest neuron becomes active (\emph{winner-takes-all scheme}). (Figure ~\ref{fig:lateralrecurrence})
+\begin{definition}
+(Lateral recurrence). A lateral recurrent network is a network where connections between the neurons of the same layer are allowed.
+\end{definition)
 \begin{figure}[h]
 \centering
 	\begin{subfigure}[b]{0.3\textwidth}
@@ -516,6 +529,7 @@ TODO
 	\caption{Lateral recurrent Hinton diagram; Source:\citep{Kriesel2013}}
 	\end{subfigure}
 \caption{Lateral recurrent network}
+\label{fig:lateralrecurrence}
 \end{figure}
 \subsubsection{Completely linked networks}
 \begin{figure}[h]
