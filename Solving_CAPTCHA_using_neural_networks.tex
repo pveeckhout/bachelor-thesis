@@ -10,7 +10,7 @@
 \documentclass[pdftex,a4paper,12pt,twoside]{report}
 
 %%---------- Extra functionaliteit ---------------------------------------
-
+\usepackage{tipa}								% phonetics
 \usepackage[utf8]{inputenc}						% Accenten gebruiken in tekst (vb. é ipv \'e)
 \usepackage{amsthm}								% Theorum package
 \usepackage{amsfonts}        					% AMS math packages: extra wiskundige
@@ -78,10 +78,6 @@
 % CAPTCHA
 \newcommand{\captchasp}{CAPTCHA }
 \newcommand{\captcha}{CAPTCHA}
-
-% phonetic
-%\newcommand{\phonetic}[1]{ \usepackage[T3,OT2,T1]{fontenc}\usepackage[noenc]{tipa}#1}
-
 
 %%---------- Documenteigenschappen ---------------------------------------
 %% Vul dit aan met je eigen info:
@@ -295,9 +291,7 @@ TODO
 \section{CAPTCHA}
 \label{sec:captcha}
 \subsection{CAPTCHA, an explanation}
-A CAPTCHA (pronounced %TODO {\phonetic{/k\ae p.\textteshlig \textschwa / }}
-) is a type of challenge-response test that aims to make sure the response was made by a human. These tests are designed in such a manner that they should be easy to generate and grade by a computer, and at the same time be difficult for a computer to solve. Yet a human should be able to solve the test without much difficulty. If a test was solved successfully one can assume that the response was entered by a human.\\
-These test are mostly found on sites where one would like to prevent the access to unwanted bots. This is because having lots of spam on a site or in a service can have real detrimental consequences for that site or service. This is because most contemporary interactive sites store and serve their content from a database. When a database gets filled up the site can become slow and sluggish, reducing the customer's experience. This is only one of the many useful applications of CAPTCHAs. On the other hand, legitimate users also need to solve these tests, so it requires them to perform an extra task before they can post their content, create an email or view a certain page. While this 'simple' extra task does not seem like a large barrier, it does inconvenience some people enough to prevent them from posting valid content. This problem becomes even more apparent when dealing with non-native speakers\citep{Banday2011}. Protecting your site with a CAPTCHA can even have a detrimental effect on the conversion rates\footnote{\url{http://www.seomoz.org/blog/captchas-affect-on-conversion-rates}}.
+A CAPTCHA (pronounced \textipa{/'\phonetic{k\ae p.\textteshlig \textschwa /}}) is a type of challenge-response test that aims to make sure the response was made by a human. These tests are designed in such a manner that they should be easy to generate and grade by a computer, and at the same time be difficult for a computer to solve. Yet a human should be able to solve the test without much difficulty. If a test was solved successfully one can assume that the response was entered by a human.\\These test are mostly found on sites where one would like to prevent the access to unwanted bots. This is because having lots of spam on a site or in a service can have real detrimental consequences for that site or service. This is because most contemporary interactive sites store and serve their content from a database. When a database gets filled up the site can become slow and sluggish, reducing the customer's experience. This is only one of the many useful applications of CAPTCHAs. On the other hand, legitimate users also need to solve these tests, so it requires them to perform an extra task before they can post their content, create an email or view a certain page. While this 'simple' extra task does not seem like a large barrier, it does inconvenience some people enough to prevent them from posting valid content. This problem becomes even more apparent when dealing with non-native speakers\citep{Banday2011}. Protecting your site with a CAPTCHA can even have a detrimental effect on the conversion rates\footnote{\url{http://www.seomoz.org/blog/captchas-affect-on-conversion-rates}}.
 \subsection{The history of CAPTCHA}
 Moni Naor was the first one to think of the concept of CAPTCHA in 1996. He proposed that reverse Turing testing, as CAPTCHAs are often called, should consist of ''tasks where humans excel in performing, but machines have a hard-time competing with the performance of a three year old child.'' Some of these tasks were \citep{Naor1996}:
 \begin{itemize}
