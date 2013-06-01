@@ -588,9 +588,34 @@ $E_p = 	\begin{pmatrix}
 \end{center}
 \end{definition}
 \subparagraph{Unsupervised learning.}
-\subparagraph{Reinforced learning.}
+Unsupervised learning is the the type of learning closest related to how biological neural networks operate, yet this type of learning is not suitable for all problems. In this learning type only the training patterns are given, the network itself is taxed with trying to identify and classify similar patterns.
+\begin{definition}(Unsupervised learning). The training set only consists of input
+patterns, the network tries by itself to detect similarities and to generate pattern
+classes.
+\end{definition}
+\subparagraph{Reinforcement learning.}
+Reinforcement learning uses only the training patterns, but after each cycle a logical or real value is returned to it. This value indicates whether the output was correct or not.
+\begin{definition}
+(Reinforcement learning). The training set consists of input patterns,
+after completion of a sequence a value is returned to the network indicating whether
+the result was right or wrong and, possibly, how right or wrong it was.
+\end{definition}
 \subparagraph{Supervised learning.}
-\subparagraph{Offline learning.}
+Supervised learning uses a training set $P$ consisting of both the trainings pattern $(p)$ and teaching input $(t)$ in form of the precise activation of all output neurons $\Omega$. The network is fed with the trainings patterns, and the connection weights then are adjusted based on the error vector obtained from subtracting the actual output with the teaching input. The goals is to change the weights in such a matter that the network cannot only associate input and output patterns independently after the training, but that is can also provide plausible results to unknown, similar input patterns. after training the network should be able to generalise.
+\begin{definition}
+(Supervised learning). The training set consists of training patterns and teaching inputs so that the network can calculate a precise error vector to adjust the network with.
+\end{definition}
+\subparagraph{Offline learning or online learning.}
+Offline learning is a method that stands in stark contrast with online learning.\\In offline learning you present all training patterns at once and the total error is calculated with an error function, or simply accumulated. Only after all patterns have been presented will the weights be changed. Offline training procedures are also called batch training procedures, since a batch of results is corrected in one go. on such iteration of a batch training process is called  epoch.\\In online learning the weights are changed after every pattern presented.\\\\Each method method has advantages and disadvantages, and it isn't always clear what type is best to be used. 
+\begin{definition}
+(Offline learning). Several training patterns are entered into the
+network at once, the errors are accumulated and it learns for all patterns at the same
+time.
+\end{definition}
+\begin{definition}
+(Online learning). The network learns directly from the errors of each
+training sample.
+\end{definition}
 \paragraph{Training samples}
 \paragraph{Learning curve and error measurement}
 \paragraph{Hebbian rule}
