@@ -617,8 +617,13 @@ time.
 training sample.
 \end{definition}
 \paragraph{Training samples}
+We should take a look at selecting the training data and the learning curve now that we know how to train a network. We should be particularly interested in whether our network has merely memorized the our training data (can it produce the right output for our trained inputs but to provide wrong answers for all other problems of the same class), or whether it can generalize the problem.\\\\It can be that the network has sufficient storage capacity to store the training data, but only only recognizes the input data. This implies that the network is oversized and has to much free storage capacity. On the other it can be that the network has insufficient storage capacity, this in turn leads to bad generalization. It is important to find a balance.\\\\For this purpose that the training set is often divided into a set used for training the network, and a set used for verification. Provided of course that there are enough training samples not to affect the initial quality of training. Th usual used ration is 70\% for training data and 30\% for verification. These sets should be randomly chosen. We can conclude the training of the network when both the results of the training data and the verification data are good. The verification data is included in the training, eventhough it is not directly used in training the network. What this means is that you do not modify the network to accommodate for the poor results of the verification data. If you do this, you run the risk of tailoring the network to the verification data. A  possible solution is a third set of validation data used only for validation after a supposable successful training. The downside to keep in mind is that by raining less patterns, we obviously withhold information from the network and risk to worsen the learning performance.
 \paragraph{Learning curve and error measurement}
+%TODO
+TODO
 \paragraph{Hebbian rule}
+%TODO
+TODO
 \subsection{Supervised learning}
 %TODO
 TODO
