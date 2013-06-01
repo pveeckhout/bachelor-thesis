@@ -31,7 +31,7 @@
 \usepackage{graphicx}		 					% Om figuren te kunnen verwerken
 \usepackage[small,bf,hang]{caption}				% Om de captions wat te verbeteren
 \usepackage{subcaption}		 					% subcaptions
-% \usepackage[nottoc]{tocbibind}					% Bibliografie en inhoudsopgave in ToC; zie tocbibind.dvi
+%\usepackage[nottoc]{tocbibind}					% Bibliografie en inhoudsopgave in ToC; zie tocbibind.dvi
 %%---------- Layout ------------------------------------------------------
 
 % hoofdingen, enz.
@@ -291,7 +291,7 @@ TODO
 \section{CAPTCHA}
 \label{sec:captcha}
 \subsection{CAPTCHA, an explanation}
-A CAPTCHA (pronounced \textipa{/'\phonetic{k\ae p.\textteshlig \textschwa /}}) is a type of challenge-response test that aims to make sure the response was made by a human. These tests are designed in such a manner that they should be easy to generate and grade by a computer, and at the same time be difficult for a computer to solve. Yet a human should be able to solve the test without much difficulty. If a test was solved successfully one can assume that the response was entered by a human.\\These test are mostly found on sites where one would like to prevent the access to unwanted bots. This is because having lots of spam on a site or in a service can have real detrimental consequences for that site or service. This is because most contemporary interactive sites store and serve their content from a database. When a database gets filled up the site can become slow and sluggish, reducing the customer's experience. This is only one of the many useful applications of CAPTCHAs. On the other hand, legitimate users also need to solve these tests, so it requires them to perform an extra task before they can post their content, create an email or view a certain page. While this 'simple' extra task does not seem like a large barrier, it does inconvenience some people enough to prevent them from posting valid content. This problem becomes even more apparent when dealing with non-native speakers \citep{Banday2011}. Protecting your site with a CAPTCHA can even have a detrimental effect on the conversion rates\footnote{\url{http://www.seomoz.org/blog/captchas-affect-on-conversion-rates}}.
+A CAPTCHA (pronounced \textipa{/'k\ae p.\textteshlig \textschwa /}) is a type of challenge-response test that aims to make sure the response was made by a human. These tests are designed in such a manner that they should be easy to generate and grade by a computer, and at the same time be difficult for a computer to solve. Yet a human should be able to solve the test without much difficulty. If a test was solved successfully one can assume that the response was entered by a human.\\These test are mostly found on sites where one would like to prevent the access to unwanted bots. This is because having lots of spam on a site or in a service can have real detrimental consequences for that site or service. This is because most contemporary interactive sites store and serve their content from a database. When a database gets filled up the site can become slow and sluggish, reducing the customer's experience. This is only one of the many useful applications of CAPTCHAs. On the other hand, legitimate users also need to solve these tests, so it requires them to perform an extra task before they can post their content, create an email or view a certain page. While this 'simple' extra task does not seem like a large barrier, it does inconvenience some people enough to prevent them from posting valid content. This problem becomes even more apparent when dealing with non-native speakers \citep{Banday2011}. Protecting your site with a CAPTCHA can even have a detrimental effect on the conversion rates\footnote{\url{http://www.seomoz.org/blog/captchas-affect-on-conversion-rates}}.
 \subsection{The history of CAPTCHA}
 Moni Naor was the first one to think of the concept of CAPTCHA in 1996. He proposed that reverse Turing testing, as CAPTCHAs are often called, should consist of ''tasks where humans excel in performing, but machines have a hard-time competing with the performance of a three year old child.'' Some of these tasks were \citep{Naor1996}:
 \begin{itemize}
@@ -313,13 +313,7 @@ Following is a list and description of the different types of CAPTCHA, courtesy 
 \subsection{Data extraction}
 As previously stated, the data extraction part of solving CAPTCHAs is not the main focus of this thesis. Therefore I will not give in-depth explanations of the algorithms used and described here.\\\\CAPTCHAs are by design tough to solve for a computer. The majority of times a CAPTCHA gets cluttered with noise, or the letters get crowed together. This crowding or noise makes it so that the characters on the image are not separate entities. This is to impede the segmentation of the CAPTCHA. Measures against segmentation are necessary to prevent an OCR\footnote{Optical Character Recognition} algorithm from simply reading and solving the test. This could be possible, as computers can (given the right algorithms) be very efficient at pattern recognition. People trying to solve the CAPTCHA test automatically, have to separate the individual characters first before they can pass the characters to an OCR algorithm for classification.\\\citep{Yan2008} described a working segmentation algorithm in 2008, but \citep{Huang2010} has significantly improved on the performance, so it should be able to segment the contemporary CAPTCHAs.\\In the unlikely case that the CAPTCHAs you are trying to solve don't have the segmentation issues, then you can first try to reduce the noise and then segment the characters by using the flood-fill method, as described by \citep{Cai2008}.
 \subsection{The future of CAPTCHA}
-\begin{figure}
-	\centering
-	\includegraphics[width=13.75cm]{./img/xkcd-captcha-evolution.png}
-	\caption{xkcd on the future of CAPTCHA (Source: \url{http://www.xkcd.com/810/}, accessed on 2013/05/28)}
-	\label{fig:xkcdCAPTCHA}
-\end{figure}
-The arms race between the makers of CAPTCHA systems and people trying to break them favoured the defender. This is different from other computer security arms races, where the odds are in favour of the adversary. This is because CAPTCHA has broken the traditional pattern where the attacker's role is to generate new instances while the defender must recognize them, recognizing a problem is almost always harder than generating them. Websites and services using CAPTCHA can easily change the CAPTCHA generation algorithm, creating new unsolvable CAPTCHAs, while the attackers now have the challenging recognition problem. This battle has brought advances to the field of Automated Pattern Recognition and Artificial Intelligence. Some people even believe that eventually the solving algorithms will become so sophisticated they could be classified as a sentient AI\footnote{\url{http://thenextweb.com/2009/10/15/inevitable-future-captcha/}} (Figure~\ref{fig:xkcdCAPTCHA}).\\
+The arms race between the makers of CAPTCHA systems and people trying to break them favoured the defender. This is different from other computer security arms races, where the odds are in favour of the adversary. This is because CAPTCHA has broken the traditional pattern where the attacker's role is to generate new instances while the defender must recognize them, recognizing a problem is almost always harder than generating them. Websites and services using CAPTCHA can easily change the CAPTCHA generation algorithm, creating new unsolvable CAPTCHAs, while the attackers now have the challenging recognition problem. This battle has brought advances to the field of Automated Pattern Recognition and Artificial Intelligence. Some people even believe that eventually the solving algorithms will become so sophisticated they could be classified as a sentient AI\footnote{\url{http://thenextweb.com/2009/10/15/inevitable-future-captcha/}} (Figure~\ref{fig:xkcdCAPTCHA}, page ~\pageref{fig:xkcdCAPTCHA}).\\
 All the positive aspects and technological innovations aside, CAPTCHAs are inherently flawed. As the solving agents got better, the CAPTCHAs became harder. We have reached the point where the average user is having difficulties solving the standard CAPTCHAs\footnote{\url{http://www.internetevolution.com/author.asp?section_id=587&doc_id=259406}}. \\\\
 CAPTCHA of the future will need to explore completely new test systems. As an example of this, \citep{Sauer2008} and colleges did a small research about how the current CAPTCHA (even the audio CAPTCHA) has serious shortcomings when trying to accommodate for blind or visually impaired users. They suggest a new system were the sound and image part of the test are integrated, opposed to the current system where the audio part and the visual part are on independent development and maintenance paths. With their suggested test all visually impaired and hearing impaired users should be able to solve the test.\\\\
 But even the newly developed systems will eventually succumb to the ever increasing computing power. The question is whether CAPTCHAs are the right way to prevent spammers, because how many ''unsolvable CAPTCHA'' (Figure ~\ref{fig:ImpossibleCaptcha}, page ~\pageref{fig:ImpossibleCaptcha}) is a user going to tolerate before giving up? The malcontent of some has even led to the creation of intentionally unsolvable CAPTCHAs (Figure ~\ref{fig:CRAPCHA}, page ~\pageref{fig:CRAPCHA}) through a service called ''CRAPCHA''\footnote{\url{http://crapcha.com/}}, aimed at ridiculing the real CAPTCHA services.
@@ -364,6 +358,7 @@ This means that the activation function of a neuron will react very sensitive to
 \subsubsection{Neuron activation function.}
 \paragraph{Activation status.}Neurons can change in activation status. A neuron's activations state depends on the $net_j$, the previous activation state and the activation function. A neurons activation state is important, because this will influence a neuron's reaction to the $net_j$.
 \paragraph{Activation function.}
+\label{p:activationfunction}
 The activation, also called the transfer function, $a_j$ of neuron $j$ depends on on previous states, so this will change overtime. The activation function uses the network input $net_j$, the threshold value and the previous activation state $a_j(t-1)$ to create a new \emph{activation state}. The neuron activation function is also called the identity.
 \begin{definition}
 (activation and activation function). In neuron $j$ the activation function can be described as
@@ -420,6 +415,14 @@ Generally though the output functions is often the same as the activation $a_j$,
 \begin{equation}
 f _{out}(a_j) = a_j,SO o_j = a_j
 \end{equation}
+\end{definition}
+\subsubsection{Input and output of data}
+The purpose of a neural network is to receive, process and return data. The input components for a network with $n$ input neurons can be scribed by vector $x = (x_1,x_2, \dotsc ,x_n)$ and the output components for a network with $m$ output neurons can be scribed by vector $y = (y_1,y_2, \dotsc ,y_m)$. this leads us to following definitions:
+\begin{definition}
+(Input vector). A network with $n$ input neurons needs $n$ input values $x_1,x_2, \dotsc ,x_n$ they can be combined in an input vector $x = (x_1,x_2, \dotsc ,x_n)$.
+\end{definition}
+\begin{definition}
+(Output vector).  A network with $m$ output neurons has $m$ output values $y_1,y_2, \dotsc ,y_m$ they can be combined in an input vector $y = (y_1,y_2, \dotsc ,y_m)$.
 \end{definition}
 \subsection{Neural network topologies}
 Until now, we have only looked at the different elements that make up a neuron. But we can only do so much with only one neuron. It is time to zoom out and start looking at how several neurons can be organized together to effectively make a neural network. The following is a list of the usual network designs. Every topology described will be accompanied by a visual representation a Hinton diagram, courtesy of \citep{Kriesel2013}. The Hinton diagram is supplied so that the characteristics of the network can immediately be seen.\\\\For the transformation from the visual representation tot the Hinton diagram, following legend will be used:
@@ -619,9 +622,67 @@ training sample.
 \paragraph{Training samples}
 We should take a look at selecting the training data and the learning curve now that we know how to train a network. We should be particularly interested in whether our network has merely memorized the our training data (can it produce the right output for our trained inputs but to provide wrong answers for all other problems of the same class), or whether it can generalize the problem.\\\\It can be that the network has sufficient storage capacity to store the training data, but only only recognizes the input data. This implies that the network is oversized and has to much free storage capacity. On the other it can be that the network has insufficient storage capacity, this in turn leads to bad generalization. It is important to find a balance.\\\\For this purpose that the training set is often divided into a set used for training the network, and a set used for verification. Provided of course that there are enough training samples not to affect the initial quality of training. Th usual used ration is 70\% for training data and 30\% for verification. These sets should be randomly chosen. We can conclude the training of the network when both the results of the training data and the verification data are good. The verification data is included in the training, eventhough it is not directly used in training the network. What this means is that you do not modify the network to accommodate for the poor results of the verification data. If you do this, you run the risk of tailoring the network to the verification data. A  possible solution is a third set of validation data used only for validation after a supposable successful training. The downside to keep in mind is that by raining less patterns, we obviously withhold information from the network and risk to worsen the learning performance.
 \paragraph{Learning curve and error measurement}
-%TODO
-TODO
+A learning curve indicates the variations in the error. The motivation for creating a learning curve is to see whether the network is progressing or not. The error must first be normalized before we can use it to plot out the learning curve. Normalizing the error is to represent the distance between the correct and current output of the network. There are four ways of calculating the normalized error. In the following sections $\Omega$ will be the output neurons and $O$ the set of output neurons.
+\subparagraph{Specific error.}
+The specific error $Err_p$ is based on single training sample $p$. This means it is generated during online learning.
+\begin{equation}
+Err_p = \frac{1}{2} \sum_{\Omega \in O}(t_\Omega - y_\Omega)^2
+\end{equation}
+\subparagraph{Root mean square.}
+The root mean square (also referred to as RMS) of two vectors $t$ and $y$ is a error normalization method that can be used both for online and offline.\\\\
+The online formula:
+\begin{equation}
+Err_p =  \sqrt{\frac{\sum_{\Omega \in O}(t_\Omega - y_\Omega)^2}{|O|}}
+\end{equation}
+The offline formula:
+\begin{equation}
+Err = \sum_{_{p} \in P}\sqrt{\frac{\sum_{\Omega \in O}(t_\Omega - y_\Omega)^2}{|O|}}
+\end{equation}
+\subparagraph{Euclidean distance.}
+Just like the root mean square the Euclidean distance calculates the error based on the two vectors $t$ and $y$, and can be used both online and offline.\\\\
+The online formula:
+\begin{equation}
+Err_p =  \sqrt{{\sum_{\Omega \in O}(t_\Omega - y_\Omega)^2}}
+\end{equation}
+The offline formula:
+\begin{equation}
+Err = \sum_{_{p} \in P}\sqrt{{\sum_{\Omega \in O}(t_\Omega - y_\Omega)^2}}
+\end{equation}
+This is just a small grasp of he most used error measuring methods, many more can be used. I you are interested in finding out more about error measurement please read the technical report of Prechelt \citep{foobar}\\\\Depending on the the method used our learning curve will look different. Normally a perfect learning curve will look like a negative exponential function. Since a learning curve will be proportional to $e^{-t}$ can best be illustrated by using a logarithmic scale. In this scale a descending line indicates an exponential decrease of the error.
+\subparagraph{When to stop learning?}
+Generally learning is stopped when the user ''thinks'' the error became small enough. There is no clear-cut answer for this question, but the analysis and comparison of learning curves can bring more clarity. You can also assume greater confidence, when a network reaches nearly the same final error-rate for different random initializations.\\\\A learning curve descending fast can be overtaken by another curve. This can indicate that either the learning rate of the worse curve was too high or the worse curve itself simply got stuck in a local minimum, but was the first to find it. It is also important to plot the verification data on a second learning curve. This will often provide worse result, but with good generalization this curve can decrease too.\\\\Preventing memorization of the sample data can be achieved by early stopping. An indication that early stopping might be beneficial is when the learning curve of the verification samples suddenly rises rapidly while the learning curve of the verification data is continuously falling
 \paragraph{Hebbian rule}
+The Hebhian learning rule acts as basis for most other complex learning rules. It was first described by Donnald O. Hebb and current exists in 2 forms, the original rule and the generalized form.
+\subparagraph{The original rule.}
+\begin{definition}
+(Hebbian rule). If neuron $j$ receives an input from neuron $i$ and if both neurons are strongly active at the same time, then increase the weight $w_{i,j}$, strengthening the connection.
+\begin{equation}
+\Delta w_{i,j} \sim \eta o_ia_j
+\end{equation}
+\end{definition}
+With $\Delta w_{i,j}$ being the change in weight from $i$ to $j$. This change in weight is simply added to the weight $w_{i,j}$. $\Delta w_{i,j}$ is dependent on following factors.
+\begin{itemize}
+\item the output $o_i$ of predecessor neuron $i$
+\item the activation function of successor neuron $j$
+\item the constant $\eta$, the learning rate
+\end{itemize}
+Notice that the definitions speaks about the activation twice, while in the formula the activation is only used once. instead of the activation $a_i$ of neuron $i$ and the activation$a_j$ of neuron $j$ the formula uses the activation $a_j$ of neuron $j$ and the output $o_j$ of neuron $i$. This is possible because the identity or activation of a neuron is often used as the output (~\ref{p:activationfunction}). Therefore $a_i$ and $o_i$ can be considerate as being the same value.
+\subparagraph{Generalized form.}
+\begin{definition}
+(Hebbian rule,generalized). The generalized form of the Hebbian Rule only specifies the proportion of change in the weight based on the product of two undefined functions, but with defined input values.
+\begin{equation}
+\Delta w_{i,j} = \eta \cdot (h(o_i,w_{i,j}) \cdot g(a_j,t_j))
+\end{equation}
+\end{definition}
+With $\Delta w_{i,j}$ being the change in weight from $i$ to $j$. This change in weight is simply added to the weight $w_{i,j}$. $\Delta w_{i,j}$ is dependent on following factors.
+\begin{itemize}
+\item $g(a_j,t_j)$: this function uses the actual activation $a_j$ and the expected activation found in the teaching input $t_j$
+\item $h(o_i,w_{i,j})$: this function uses the output of the predecessor neuron $o_i$ and the connection weight between the two neurons $w_{i,j}$
+\item the constant $\eta$, the learning rate
+\end{itemize}
+Since this is a generalized form, the functions $g$ and $h$ are not specified.
+\section{Neural networks for pattern recognition}
+sources and zever
 %TODO
 TODO
 \subsection{Supervised learning}
@@ -630,18 +691,11 @@ TODO
 \subsubsection{Preceptron networks}
 %TODO
 TODO
-\subsubsection{Radial Basis networks}
-%TODO
-TODO
-\subsubsection{Recurrent perceptron-like networks}
-%TODO
-TODO
 \subsubsection{Hopfield networks}
 %TODO
 TODO
 \subsubsection{Learning vector quantization}
-%TODO
-TODO
+Can be used, wont further investigate
 \subsection{Unsupervised learning}
 %TODO
 TODO
@@ -649,28 +703,7 @@ TODO
 %TODO
 TODO
 \subsubsection{Adaptive resonance theory}
-%TODO
-TODO
-\subsubsection{Input and output of data}
-%TODO
-TODO
-\section{Neural networks for pattern recognition}
-sources and zever
-%TODO
-TODO
-\subsection{Optimal network topologies}
-%TODO
-TODO
-\subsubsection{Perceptron}
-%TODO
-TODO
-\subsubsection{Hopfield}
-%TODO
-TODO
-\subsubsection{Kohonen self organizing maps}
-\subsection{Optimal network configuration}
-%TODO
-TODO
+Can be used, wont further investigate
 \section{Implementation}
 \label{sec:implementation}
 \subsection{Captcha builder}
@@ -706,6 +739,12 @@ TODO
 %%---------- Back matter -------------------------------------------------
 %
 \listoffigures
+\begin{figure}
+	\centering
+	\includegraphics[width=13.75cm]{./img/xkcd-captcha-evolution.png}
+	\caption{xkcd on the future of CAPTCHA (Source: \url{http://www.xkcd.com/810/}, accessed on 2013/05/28)}
+	\label{fig:xkcdCAPTCHA}
+\end{figure}
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{./img/reCAPTCHA.png}
