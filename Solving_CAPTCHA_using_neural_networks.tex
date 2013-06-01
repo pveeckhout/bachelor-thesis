@@ -395,6 +395,7 @@ The Fermi function can be expanded by adding a temperature parameter. The smalle
 \displaystyle \frac{1}{1+e^{\frac{-x}{T}}}
 \end{equation}
 \subsubsection{The bias neuron}
+\label{subsubsec:biasneuron}
 The bias neuron (also called the on neuron) is a technical trick. the purpose of a bias neuron is to represent a neurons threshold value as a connection weight. As said before the activation of a neuron depends on its threshold value, however theses threshold values are stored inside the neuron itself. This makes it complicated to access and use in the activation function, or to train the threshold value. This is where the bias neuron comes in.\\\\Threshold values $\Theta_{j_{i}}, \dotsc ,\Theta_{j_{n}}$ for neurons $j_1,j_2, \dotsc ,j_n$ can be expressed as a connection weight of a constantly firing neuron. This constantly firing neuron is the bias neuron. To implement this change, an additional neuron, whose output is always 1, will be added tot the network and connected to neurons $j_1,j_2, \dotsc ,j_n$. The newly made connections' weights will be set to the negative threshold values. $w_{BIAS,j_{n}} = - \Theta_{j_{n}}$\\\\Now that the threshold values are implemented as connection weight, the threshold value $\Theta_{j_{n}}$ of neurons $j_1,j_2, \dotsc ,j_n$ is then set to 0. This also means that the threshold value can be directly trained together with the connection weight. This makes the learning process considerably easier. Since the threshold value is no longer included in the activation function, its effect is now included in the propagation function.\\\\The advantages of the bias neuron are obvious when implementing and training a neural network. However they do have a disadvantage when you want to visually represent the neural network. these extra connection quickly clutter up the visual representation, and this becomes only worse when allot of neurons are being used. But since the implementation of a bias neuron is almost a certainty, allot of people omit the bias neuron from their illustrations for improved clarity. We know it exist and know that threshold values can simply be treated as weights because of it.
 \begin{definition}
 (Bias neuron). A bias neuron is a neuron whose output value is always 1 and is used to represent neuron biases as connection weights, which enables any weight training algorithm to train the biases at the same time.\\\\Let $j_1,j_2, \dotsc ,j_n$ be neurons with threshold values $\Theta_{j_{1}}, \dotsc ,\Theta_{j_{n}}$. By inserting a bias neuron whose output value is always 1, generating connections between the bias neuron and neurons $j_1,j_2, \dotsc ,j_n$ and weighting these connections $w_{BIAS,j_{1}},\dotsc,w_{BIAS,j_{n}}$ with $\Theta_{j_{1}}, \dotsc ,\Theta_{j_{n}}$, we can set $\Theta_{j_{1}}= \ldots = \Theta_{j_{n}} = 0$ and receive an equivalent neural network whose threshold values are realized by connection weights.
@@ -556,8 +557,49 @@ A completely linked network happens when all neuron connections are allowed, exc
 \label{fig:completelylinked}
 \end{figure}
 \subsection{Neural network learning}
-%TODO
-TODO
+One of the most interesting features of a neural network is the ability to familiarize themselves with a problem by means of training. This means that after sufficient training, the network will be able to solve unknown problems of the same type. This is called generalization. Training a  network involves some form of leaning procedure. A learning procedure is a rather complex thing, so a brief explanation will be giving first.
+\paragraph{Learning paradigms.}
+We must be careful with the term ''learning'' as it is a very comprehensive term. A system learns when it changes itself in order to adapt to changes in the systems environment. A neural network as a learning systems changes, learns, whenever its components change. So any change in the components previously  mentioned due to environmental changes will result in a changing network. this process is classified as neural network learning. Looking ad the previous components capable of changing we can form a list of all theoretically possible means of neural network learning.
+\begin{enumerate}
+\item developing new connections
+\item deleting existing connections
+\item changing connecting weights
+\item changing the threshold values of neurons
+\item varying one or more of the three neuron functions (activation function, propagation function and output function)
+\item developing new neurons
+\item deleting existing neurons (and so its existing connections)
+\end{enumerate}
+We can safely assume that changing the connection weights will be the most commonly used method of training. Especially because of the simple fact that deleting a connection (no longer training a connection with weight) and creating new connections (changing the connection weight from 0) in the connection matrix can be done by connection weight adjustment training. With the introduction of the bias neuron (~\ref{subsubsec:biasneuron}) the threshold values can also be changed by using connection weight training.  We can perform any of the first four of the learning paradigms by just training synaptic weights.\\\\Changin neuron functions is difficult to implement and not very intuitive. Because of this, those paradigms aren't really popular and will not be discussed any further. The option of generating new, or removing old neurons have a few advantages. This method not only provides a way to keep the connection weights well adjusted during the training of a neural network, it also optimizes the neural network topology. For this reason this type of training is gathering a growing amount of interest. A method of achieving this functionality would be evolutionary algorithms. However we will not elaborate any further on this since this is outside the scope of this thesis, and since we already covered that the majority of learning methods can be achieved by weight training.\\\\To summarize, neural network learn by modifying the connecting weights according to rules formulated as algorithms. Therefore a learning procedure is always an algorithm that can easily be implemented by means of a programming language.
+\paragraph{Training patterns, teaching input, desired output and error vector}
+\begin{definition}
+(Desired output). The expected result of the output layer when presented with a training pattern.
+\end{definition}
+\begin{definition}
+(Teaching input). For an output neuron $j$ the teaching input $t_j$ is desired and correct value $j$ should have after the input of a training pattern. The teaching inputs $t_1,t_2, \dotsc ,t_n$ van be combined into a vector $t$. $t$ always refers to a specific training pattern $p$. this correlation is contained in the training set.
+\end{definition}
+\begin{definition}
+(Training pattern). A training pattern is an input vector $p$ with the components $p_1,p_2, \dotsc , p_n$ whose desired output is known. By entering the training pattern into the network we receive an output that can be compared with the desired output. 
+\end{definition}
+\begin{definition}
+(Training set). A training set (named $P$) is a finite set of pairs of training patterns ($p$) and teaching inputs ($t$). The finite ordered pairs $(p,t)$ of training patterns and teaching inputs are used to train our neural network.
+\end{definition}
+\begin{definition}
+(Error vector).The error vector (also called the difference vector) for output neurons $\Omega_1,\Omega_2, \dotsc ,\Omega_n$ is the difference between the actual output vector and the teaching input for a training input $p$. Depending on whether you are learning offline or online, the difference vector refers to a specific training pattern, or to the error of a set of training patterns which is normalized in a certain way.\begin{center}
+$E_p = 	\begin{pmatrix}
+			t_1-y_1\\
+			t_2-y_2\\
+			\vdots\\
+			t_n-y_n
+		\end{pmatrix}$
+\end{center}
+\end{definition}
+\subparagraph{Unsupervised learning.}
+\subparagraph{Reinforced learning.}
+\subparagraph{Supervised learning.}
+\subparagraph{Offline learning.}
+\paragraph{Training samples}
+\paragraph{Learning curve and error measurement}
+\paragraph{Hebbian rule}
 \subsection{Supervised learning}
 %TODO
 TODO
