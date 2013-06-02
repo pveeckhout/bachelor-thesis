@@ -314,8 +314,7 @@ Following is a list and description of the different types of CAPTCHA, courtesy 
 As previously stated, the data extraction part of solving CAPTCHAs is not the main focus of this thesis. Therefore I will not give in-depth explanations of the algorithms used and described here.\\\\CAPTCHAs are by design tough to solve for a computer. The majority of times a CAPTCHA gets cluttered with noise, or the letters get crowed together. This crowding or noise makes it so that the characters on the image are not separate entities. This is to impede the segmentation of the CAPTCHA. Measures against segmentation are necessary to prevent an OCR\footnote{Optical Character Recognition} algorithm from simply reading and solving the test. This could be possible, as computers can (given the right algorithms) be very efficient at pattern recognition. People trying to solve the CAPTCHA test automatically, have to separate the individual characters first before they can pass the characters to an OCR algorithm for classification.\\\citep{Yan2008} described a working segmentation algorithm in 2008, but \citep{Huang2010} has significantly improved on the performance, so it should be able to segment the contemporary CAPTCHAs.\\In the unlikely case that the CAPTCHAs you are trying to solve don't have the segmentation issues, then you can first try to reduce the noise and then segment the characters by using the flood-fill method, as described by \citep{Cai2008}.
 \subsection{The future of CAPTCHA}
 The arms race between the makers of CAPTCHA systems and people trying to break them favoured the defender. This is different from other computer security arms races, where the odds are in favour of the adversary. This is because CAPTCHA has broken the traditional pattern where the attacker's role is to generate new instances while the defender must recognize them, recognizing a problem is almost always harder than generating them. Websites and services using CAPTCHA can easily change the CAPTCHA generation algorithm, creating new unsolvable CAPTCHAs, while the attackers now have the challenging recognition problem. This battle has brought advances to the field of Automated Pattern Recognition and Artificial Intelligence. Some people even believe that eventually the solving algorithms will become so sophisticated they could be classified as a sentient AI\footnote{\url{http://thenextweb.com/2009/10/15/inevitable-future-captcha/}} (Figure~\ref{fig:xkcdCAPTCHA}, page ~\pageref{fig:xkcdCAPTCHA}).\\
-All the positive aspects and technological innovations aside, CAPTCHAs are inherently flawed. As the solving agents got better, the CAPTCHAs became harder. We have reached the point where the average user is having difficulties solving the standard CAPTCHAs\footnote{\url{http://www.internetevolution.com/author.asp?section_id=587&doc_id=259406}}. \\\\
-CAPTCHA of the future will need to explore completely new test systems. As an example of this, \citep{Sauer2008} and colleges did a small research about how the current CAPTCHA (even the audio CAPTCHA) has serious shortcomings when trying to accommodate for blind or visually impaired users. They suggest a new system were the sound and image part of the test are integrated, opposed to the current system where the audio part and the visual part are on independent development and maintenance paths. With their suggested test all visually impaired and hearing impaired users should be able to solve the test.\\\\
+All the positive aspects and technological innovations aside, CAPTCHAs are inherently flawed. As the solving agents got better, the CAPTCHAs became harder. We have reached the point where the average user is having difficulties solving the standard CAPTCHAs\footnote{\url{http://www.internetevolution.com/author.asp?section_id=587&doc_id=259406}}. \\\\CAPTCHA of the future will need to explore completely new test systems. As an example of this, \citep{Sauer2008} and colleges did a small research about how the current CAPTCHA (even the audio CAPTCHA) has serious shortcomings when trying to accommodate for blind or visually impaired users. They suggest a new system were the sound and image part of the test are integrated, opposed to the current system where the audio part and the visual part are on independent development and maintenance paths. With their suggested test all visually impaired and hearing impaired users should be able to solve the test.\\\\
 But even the newly developed systems will eventually succumb to the ever increasing computing power. The question is whether CAPTCHAs are the right way to prevent spammers, because how many ''unsolvable CAPTCHA'' (Figure ~\ref{fig:ImpossibleCaptcha}, page ~\pageref{fig:ImpossibleCaptcha}) is a user going to tolerate before giving up? The malcontent of some has even led to the creation of intentionally unsolvable CAPTCHAs (Figure ~\ref{fig:CRAPCHA}, page ~\pageref{fig:CRAPCHA}) through a service called ''CRAPCHA''\footnote{\url{http://crapcha.com/}}, aimed at ridiculing the real CAPTCHA services.
 \begin{quote}
 It would seem evident from years of use and research that CAPTCHAs are far from perfect as a solution. Remove spammers from the equation and we remove the need for CAPTCHAs entirely; this is the mentality we should be aiming for. The perfect CAPTCHA is no CAPTCHA at all. \citep{Bushell2011}
@@ -438,12 +437,12 @@ Until now, we have only looked at the different elements that make up a neuron. 
 \end{definition} A feedforward network consists of three types of layers, one input layer, one output layer and optionally one or more processing layers. These layers are clearly separated. Connections only go from one neuron layer to the next, directed towards the output layer.
 \begin{figure}
 \centering
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/Feedforward-normal-Topology.png}
 	\caption{Standard feedforward topology}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/Feedforward-normal-Hinton.png}
 	\caption{Standard feedforward Hinton diagram}
@@ -458,12 +457,12 @@ This is essentially a standard feedforward network (see ~\ref{par:feedforward}) 
 \end{definition}
 \begin{figure}
 \centering
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/Feedforward-shortcut-Topology.png}
 	\caption{Shortcut feedforward topology}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/Feedforward-shortcut-Hinton.png}
 	\caption{Shortcut feedforward Hinton diagram}
@@ -480,12 +479,12 @@ Direct recurrence happens in a network when neurons feed their output back to th
 \end{definition}
 \begin{figure}
 \centering
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/recurrent-direct-Topology.png}
 	\caption{Direct recurrent topology}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/recurrent-direct-Hinton.png}
 	\caption{Direct recurrent Hinton diagram; Source:\citep{Kriesel2013}}
@@ -500,12 +499,12 @@ Indirect recurrence happens when in a network connections towards the input laye
 \end{definition}
 \begin{figure}
 \centering
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/recurrent-indirect-Topology.png}
 	\caption{Indirect recurrent topology}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/recurrent-indirect-Hinton.png}
 	\caption{Indirect recurrent Hinton diagram; Source:\citep{Kriesel2013}}
@@ -520,12 +519,12 @@ Lateral recurrence happens when connections between neurons of the same layer ex
 \end{definition}
 \begin{figure}
 \centering
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/recurrent-lateral-Topology.png}
 	\caption{Lateral recurrent topology}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/recurrent-lateral-Hinton.png}
 	\caption{Lateral recurrent Hinton diagram; Source:\citep{Kriesel2013}}
@@ -540,12 +539,12 @@ A completely linked network happens when all neuron connections are allowed, exc
 \end{definition}
 \begin{figure}
 \centering
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/Completelylinked-Topology.png}
 	\caption{Completely linked topology}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.3\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{./img/Completelylinked-Hinton.png}
 	\caption{Completely linked Hinton diagram; Source:\citep{Kriesel2013}}
@@ -652,7 +651,7 @@ This is just a small grasp of he most used error measuring methods, many more ca
 \subparagraph{When to stop learning?}
 Generally learning is stopped when the user ''thinks'' the error became small enough. There is no clear-cut answer for this question, but the analysis and comparison of learning curves can bring more clarity. You can also assume greater confidence, when a network reaches nearly the same final error-rate for different random initializations.\\\\A learning curve descending fast can be overtaken by another curve. This can indicate that either the learning rate of the worse curve was too high or the worse curve itself simply got stuck in a local minimum, but was the first to find it. It is also important to plot the verification data on a second learning curve. This will often provide worse result, but with good generalization this curve can decrease too.\\\\Preventing memorization of the sample data can be achieved by early stopping. An indication that early stopping might be beneficial is when the learning curve of the verification samples suddenly rises rapidly while the learning curve of the verification data is continuously falling
 \paragraph{Hebbian rule}
-The Hebhian learning rule acts as basis for most other complex learning rules. It was first described by Donnald O. Hebb and current exists in 2 forms, the original rule and the generalized form.
+The Hebbian learning rule acts as basis for most other complex learning rules. It was first described by \emph{Donnald O. Hebb} and currently exists in 2 forms, the original rule and the generalized form.
 \subparagraph{The original rule.}
 \begin{definition}
 (Hebbian rule). If neuron $j$ receives an input from neuron $i$ and if both neurons are strongly active at the same time, then increase the weight $w_{i,j}$, strengthening the connection.
@@ -753,22 +752,22 @@ TODO
 \end{figure}
 \begin{figure}
 \centering
-	\begin{subfigure}[b]{0.5\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{./img/reCAPTCHA2008.png}
 		\caption{Early 2008}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.5\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{./img/reCAPTCHA2009.png}
 		\caption{December 16th 2009}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.5\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{./img/reCAPTCHA2010.png}
 		\caption{January 24th 2010}
 	\end{subfigure}
-	\begin{subfigure}[b]{0.5\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{./img/reCAPTCHA2013.png}
 		\caption{May 28th 2013}
