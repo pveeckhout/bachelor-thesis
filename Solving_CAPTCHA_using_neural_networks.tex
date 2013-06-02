@@ -79,6 +79,7 @@
 \newcommand{\captchasp}{CAPTCHA }
 \newcommand{\captcha}{CAPTCHA}
 
+
 %%---------- Documenteigenschappen ---------------------------------------
 %% Vul dit aan met je eigen info:
 
@@ -384,7 +385,7 @@ The Fermi function can be expanded by adding a temperature parameter. The smalle
 \end{equation}
 \subsubsection{The bias neuron}
 \label{subsubsec:biasneuron}
-The bias neuron (also called the on neuron) is a technical trick. the purpose of a bias neuron is to represent a neurons threshold value as a connection weight. As said before the activation of a neuron depends on its threshold value, however theses threshold values are stored inside the neuron itself. This makes it complicated to access and use in the activation function, or to train the threshold value. This is where the bias neuron comes in.\\\\Threshold values $\Theta_{j_{i}}, \dotsc ,\Theta_{j_{n}}$ for neurons $j_1,j_2, \dotsc ,j_n$ can be expressed as a connection weight of a constantly firing neuron. This constantly firing neuron is the bias neuron. To implement this change, an additional neuron, whose output is always 1, will be added tot the network and connected to neurons $j_1,j_2, \dotsc ,j_n$. The newly made connections' weights will be set to the negative threshold values. $w_{BIAS,j_{n}} = - \Theta_{j_{n}}$\\\\Now that the threshold values are implemented as connection weight, the threshold value $\Theta_{j_{n}}$ of neurons $j_1,j_2, \dotsc ,j_n$ is then set to 0. This also means that the threshold value can be directly trained together with the connection weight. This makes the learning process considerably easier. Since the threshold value is no longer included in the activation function, its effect is now included in the propagation function.\\\\The advantages of the bias neuron are obvious when implementing and training a neural network. However they do have a disadvantage when you want to visually represent the neural network. these extra connection quickly clutter up the visual representation, and this becomes only worse when allot of neurons are being used. But since the implementation of a bias neuron is almost a certainty, allot of people omit the bias neuron from their illustrations for improved clarity. We know it exist and know that threshold values can simply be treated as weights because of it.
+The bias neuron (also called the on neuron) is a technical trick. the purpose of a bias neuron is to represent a neurons threshold value as a connection weight. As said before the activation of a neuron depends on its threshold value, however theses threshold values are stored inside the neuron itself. This makes it complicated to access and use in the activation function, or to train the threshold value. This is where the bias neuron comes in.\\\\Threshold values $\Theta_{j_{i}}, \dotsc ,\Theta_{j_{n}}$ for neurons $j_1,j_2, \dotsc ,j_n$ can be expressed as a connection weight of a constantly firing neuron. This constantly firing neuron is the bias neuron. To implement this change, an additional neuron, whose output is always 1, will be added tot the network and connected to neurons $j_1,j_2, \dotsc ,j_n$. The newly made connections' weights will be set to the negative threshold values. $w_{BIAS,j_{n}} = - \Theta_{j_{n}}$\\\\Now that the threshold values are implemented as connection weight, the threshold value $\Theta_{j_{n}}$ of neurons $j_1,j_2, \dotsc ,j_n$ is then set to 0. This also means that the threshold value can be directly trained together with the connection weight. This makes the learning process considerably easier. Since the threshold value is no longer included in the activation function, its effect is now included in the propagation function.\\\\The advantages of the bias neuron are obvious when implementing and training a neural network. However they do have a disadvantage when you want to visually represent the neural network. these extra connection quickly clutter up the visual representation, and this becomes only worse when a lot of neurons are being used. But since the implementation of a bias neuron is almost a certainty, a lot of people omit the bias neuron from their illustrations for improved clarity. We know it exist and know that threshold values can simply be treated as weights because of it.
 \begin{definition}
 (Bias neuron). A bias neuron is a neuron whose output value is always 1 and is used to represent neuron biases as connection weights, which enables any weight training algorithm to train the biases at the same time.\\\\Let $j_1,j_2, \dotsc ,j_n$ be neurons with threshold values $\Theta_{j_{1}}, \dotsc ,\Theta_{j_{n}}$. By inserting a bias neuron whose output value is always 1, generating connections between the bias neuron and neurons $j_1,j_2, \dotsc ,j_n$ and weighting these connections $w_{BIAS,j_{1}},\dotsc,w_{BIAS,j_{n}}$ with $\Theta_{j_{1}}, \dotsc ,\Theta_{j_{n}}$, we can set $\Theta_{j_{1}}= \ldots = \Theta_{j_{n}} = 0$ and receive an equivalent neural network whose threshold values are realized by connection weights.
 \end{definition}
@@ -647,11 +648,11 @@ The offline formula:
 \begin{equation}
 Err = \sum_{_{p} \in P}\sqrt{{\sum_{\Omega \in O}(t_\Omega - y_\Omega)^2}}
 \end{equation}
-This is just a small grasp of he most used error measuring methods, many more can be used. I you are interested in finding out more about error measurement please read the technical report of Prechelt \citep{foobar}\\\\Depending on the the method used our learning curve will look different. Normally a perfect learning curve will look like a negative exponential function. Since a learning curve will be proportional to $e^{-t}$ can best be illustrated by using a logarithmic scale. In this scale a descending line indicates an exponential decrease of the error.
+This is just a small grasp of he most used error measuring methods, many more can be used. I you are interested in finding out more about error measurement please read the technical report of Prechelt \citep{Prechelt1994}\\\\Depending on the the method used our learning curve will look different. Normally a perfect learning curve will look like a negative exponential function. Since a learning curve will be proportional to $e^{-t}$ can best be illustrated by using a logarithmic scale. In this scale a descending line indicates an exponential decrease of the error.
 \subparagraph{When to stop learning?}
 Generally learning is stopped when the user ''thinks'' the error became small enough. There is no clear-cut answer for this question, but the analysis and comparison of learning curves can bring more clarity. You can also assume greater confidence, when a network reaches nearly the same final error-rate for different random initializations.\\\\A learning curve descending fast can be overtaken by another curve. This can indicate that either the learning rate of the worse curve was too high or the worse curve itself simply got stuck in a local minimum, but was the first to find it. It is also important to plot the verification data on a second learning curve. This will often provide worse result, but with good generalization this curve can decrease too.\\\\Preventing memorization of the sample data can be achieved by early stopping. An indication that early stopping might be beneficial is when the learning curve of the verification samples suddenly rises rapidly while the learning curve of the verification data is continuously falling
 \paragraph{Hebbian rule}
-The Hebbian learning rule acts as basis for most other complex learning rules. It was first described by \emph{Donnald O. Hebb} and currently exists in 2 forms, the original rule and the generalized form.
+The Hebbian learning rule acts as basis for most other complex learning rules. It was first described by \emph{Donnald O. Hebb} \citep{Hebb1949} and currently exists in 2 forms, the original rule and the generalized form.
 \subparagraph{The original rule.}
 \begin{definition}
 (Hebbian rule). If neuron $j$ receives an input from neuron $i$ and if both neurons are strongly active at the same time, then increase the weight $w_{i,j}$, strengthening the connection.
@@ -681,7 +682,7 @@ With $\Delta w_{i,j}$ being the change in weight from $i$ to $j$. This change in
 \item the constant $\eta$, the learning rate
 \end{itemize}
 Since this is a generalized form, the functions $g$ and $h$ are not specified.
-\paragraph{The learning rule.}
+\paragraph{The learning rate.}
 The speed and accuracy of a learning procedure are be controlled by and are always proportional to a learning rate $(\eta)$. If this value is chosen too big, it is possible to miss possibly favourable narrow local minima in the error. However, setting it very small is not a good solution either as this would dramatically increase the time and computing cost of training a network. Experience has shown that learning rates between 0.01 and 0.9 are mostly optimal. A popular method for finding an optimal $\eta$ is starting out high ans lowly decreasing it.
 \begin{definition}
 (Learning rate). The learning rate $(\eta)$ dictates the speed and accuracy of a learning procedure.
@@ -689,7 +690,7 @@ The speed and accuracy of a learning procedure are be controlled by and are alwa
 \section{Neural networks for pattern recognition}
 Now that we have a clear understanding of how neural networks work and can be trained, can we take a look at several neural network implementations. This thesis will focus on the network implementations most frequently found in the literature to be used for pattern recognition.
 \subsection{Perceptron networks}
-This is the classic example of neural network, often when the term ''neural network'' is used a perceptron network (or variation thereof) is meant. Perceptron networks were first described by Frank Rosenblatt in 1958 \citep{Ros58}. \\\\There is no set definition of a perceptron network, but it is often described as being a feedforward network with shortcut connections. The input layer of the the perceptron network is called the retina, and is only used for data input, no processing happens in the input layer as the weights for the input layer are static. 
+This is the classic example of neural network, often when the term ''neural network'' is used a perceptron network (or variation thereof) is meant. Perceptron networks were first described by Frank Rosenblatt in 1958 \citep{Rosenblat1958}. \\\\There is no set definition of a perceptron network, but it is often described as being a feedforward network with shortcut connections. The input layer of the the perceptron network is called the retina, and is only used for data input, no processing happens in the input layer as the weights for the input layer are static. 
 \subsubsection{Single layer perceptron network}
 A single layer perceptron (or SLP for short) is a perceptron network that has only one layer (except the input neurons). This means that the trainable connection weights going from the input layer go straight towards one or more output neurons $\Omega$. A single layer perceptrons with multiple outputs can simply be considered as several separate single layer perceptrons with the same input. The single layer perceptrons is because of the limitation to a single layer only able to represent linear data.
 \paragraph{Single layer perceptrons and the delta rule.}
@@ -735,8 +736,29 @@ Because of the previous two backpropagtion-specific learning rate properties can
 \item Many dynamically adjusted learning rates instead of one static learning rate.
 \end{itemize}
 \subsection{Hopfield networks}
-%TODO
-TODO
+A Hopfield network is a completely linked network developed by John Hopfield \citep{Hopfield1982}. He was inspired by how the magnetic particles organize themselves into a state of least energy. You can compare the magnetic exerted by the particles with the connection weights between neurons and position or rotation of the particles with the activation of a neuron. To simulate this, all neurons must affect each other, but not itself, hence the choice for a completely linked network. A standard Hopfield network uses a binary activation method so the neuron has only 2 possible states.\\\\
+A hopfield network is made up out of a set of $H$ completely linked neurons. each of these neurons can only have two possible states, namely $\{-1,1\}$. The state of the network of $|H|$ neurons can then be expressed as a string value $x \in \{\-1,1\}^{|H|}$. As said in previously in this thesis, is virtually impossible to determine a set of input and output neurons for a completely linked network.
+\paragraph{Training a Hopfield network.}
+Again, we will use a set $P$ of  training patterns $p \in \{\-1,1\}^{|H|}$ each pattern representing a minimum for out network. In contrast to other networks, we already know the minima for the error function, so we don't need to look for them any more. Instead we can just define them, so that the network will converge to the closest minimum when input is presented.\\\\Hopfield network training happens offline and is a done in a single iteration. this means that all neurons will be trained at once.
+\begin{equation}
+w_{i,j} = \sum_{p \in P} p_i \cdot p_j
+\end{equation}
+After the pattern has been trained the weights $w_{i,j}$ are processed. for each weight we check if the neurons are in the same state or not. If they are in the same state, add 1 to the weight. Are they in a different state, subtract 1 from the weight (or add -1). This algorithm the is repeated for each training pattern $p \in P$. The more neurons $i$ and $j$ are in the same state the higher the total connection weight $w_{i,j}$ will be and the more the neurons will be forced to attain the same state. The same is true for the opposite.
+\subparagraph{Maximum trainable patterns.}
+Thanks to this training we can store a number of patterns $p$, however this amount is limited. The maximum number of treconstructible patterns p is limited to $|P|_{MAX} \approx  0.139 \cdot |H|$ . This was shown by mathematical analysis.
+\paragraph{The influence of connection weights.}
+A neuron can change their state in function of the current state the other neurons and connection weights. This means that the connection weights are able to influence the change of the whole network. There are three possibilities for the connection weights
+\begin{itemize}
+\item[$w_{i,j} > 0 $] This will force the two connected neurons to become equal in state. The bigger this value is, the harder the two neurons will try to get in the same state.
+\item[$w_{i,j} < 0 $] This will force the two connected neurons to become opposite in state. The bigger this value is, the harder the two neurons will try to get in the opposite state.
+\item[$w_{i,j} = 0 $] This means that the two neurons do not influence each other.
+\end{itemize}
+\paragraph{Converging a Hopfield network.}
+The network will start to change once it has been trained and has received an input pattern. The changein the individual neurons $k$ can be expressed as
+\begin{equation}
+x_h(t) = f_{act} (\sum_{j \in H} w_{j,h} \cdot x_j(t-1))
+\end{equation} Where $f_{act}$ generally is the the binary activation function with threshold value 0.\\This means that neuron $h$ adds the weights from the previous step of all neurons connected to it. As said before, the sign of this value will determin in which direction the neuron will change, and the size how strongly it is forced to change. 
+\paragraph{input and output of a Hopfield network.} A Hopfield network automatically looks for a minimum for the state it is in. We will use this, and define an input pattern as being exactly that, a state of a Hopfield network. f we use the binary string representation again, then a Hopfield input pattern can be described as string $x \in \{\-1,1\}^{|H|}$.\\\\The network will converge to a minimum state after the network has been initialized with the input pattern. But how an we now that such a minimum has been reached? Simple, the network stops. It can be mathematically proven that a regular completely linked (hence only zeros on the diagonal) Hopfield network will always converge to a minimum. We can then build another binary string from the reached equilibrium, $y \in \{\-1,1\}^{|H|}$ is then the Hopfield network output.
 \subsection{Self-organizing maps}
 %TODO
 TODO
@@ -747,7 +769,7 @@ TODO
 TODO
 \subsection{Neural networks}
 %TODO
-TODO
+TO USE: \citep{Browning2007}; \citep{Chellapilla2005}; \citep{Fletcher2009}; \citep{Gang}; \citep{Jiang2003}; \citep{SathasivamSaratha2011}; \citep{Torma1995}s
 \chapter{Conclusion}
 \label{ch:conclusie}
 %TODO
@@ -774,6 +796,7 @@ TODO
 %
 %%---------- Back matter -------------------------------------------------
 %
+
 \listoffigures
 \begin{figure}
 	\centering
@@ -840,7 +863,7 @@ TODO
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{./img/CRAPCHA.png}
-	\caption{Test generated by the CAPTCHA system (Source: \citep{Lsquid2013})}
+	\caption{Test generated by the CRAPCHA system (Source: \citep{Lsquid2013})}
 	\label{fig:CRAPCHA}
 \end{figure}
 \begin{figure}
