@@ -357,7 +357,7 @@ This means that the activation function of a neuron will react very sensitive to
 \subsubsection{Neuron activation function.}
 \paragraph{Activation status.}Neurons can change in activation status. A neuron's activations state depends on the $net_j$, the previous activation state and the activation function. A neurons activation state is important, because this will influence a neuron's reaction to the $net_j$.
 \paragraph{Activation function.}
-\label{p:activationfunction}
+\label{par:activationfunction}
 The activation, also called the transfer function, $a_j$ of neuron $j$ depends on on previous states, so this will change overtime. The activation function uses the network input $net_j$, the threshold value and the previous activation state $a_j(t-1)$ to create a new \emph{activation state}. The neuron activation function is also called the identity.
 \begin{definition}
 (activation and activation function). In neuron $j$ the activation function can be described as
@@ -665,7 +665,7 @@ With $\Delta w_{i,j}$ being the change in weight from $i$ to $j$. This change in
 \item the activation function of successor neuron $j$
 \item the constant $\eta$, the learning rate
 \end{itemize}
-Notice that the definitions speaks about the activation twice, while in the formula the activation is only used once. instead of the activation $a_i$ of neuron $i$ and the activation$a_j$ of neuron $j$ the formula uses the activation $a_j$ of neuron $j$ and the output $o_j$ of neuron $i$. This is possible because the identity or activation of a neuron is often used as the output (~\ref{p:activationfunction}). Therefore $a_i$ and $o_i$ can be considerate as being the same value.
+Notice that the definitions speaks about the activation twice, while in the formula the activation is only used once. instead of the activation $a_i$ of neuron $i$ and the activation$a_j$ of neuron $j$ the formula uses the activation $a_j$ of neuron $j$ and the output $o_j$ of neuron $i$. This is possible because the identity or activation of a neuron is often used as the output (~\ref{par:activationfunction}). Therefore $a_i$ and $o_i$ can be considerate as being the same value.
 \subparagraph{Generalized form.}
 \begin{definition}
 (Hebbian rule,generalized). The generalized form of the Hebbian Rule only specifies the proportion of change in the weight based on the product of two undefined functions, but with defined input values.
@@ -673,6 +673,7 @@ Notice that the definitions speaks about the activation twice, while in the form
 \Delta w_{i,j} = \eta \cdot (h(o_i,w_{i,j}) \cdot g(a_j,t_j))
 \end{equation}
 \end{definition}
+\label{equa:generalizedHebbian}
 With $\Delta w_{i,j}$ being the change in weight from $i$ to $j$. This change in weight is simply added to the weight $w_{i,j}$. $\Delta w_{i,j}$ is dependent on following factors.
 \begin{itemize}
 \item $g(a_j,t_j)$: this function uses the actual activation $a_j$ and the expected activation found in the teaching input $t_j$
@@ -680,29 +681,65 @@ With $\Delta w_{i,j}$ being the change in weight from $i$ to $j$. This change in
 \item the constant $\eta$, the learning rate
 \end{itemize}
 Since this is a generalized form, the functions $g$ and $h$ are not specified.
+\paragraph{The learning rule.}
+The speed and accuracy of a learning procedure are be controlled by and are always proportional to a learning rate $(\eta)$. If this value is chosen too big, it is possible to miss possibly favourable narrow local minima in the error. However, setting it very small is not a good solution either as this would dramatically increase the time and computing cost of training a network. Experience has shown that learning rates between 0.01 and 0.9 are mostly optimal. A popular method for finding an optimal $\eta$ is starting out high ans lowly decreasing it.
+\begin{definition}
+(Learning rate). The learning rate $(\eta)$ dictates the speed and accuracy of a learning procedure.
+\end{definition}
 \section{Neural networks for pattern recognition}
-sources and zever
+Now that we have a clear understanding of how neural networks work and can be trained, can we take a look at several neural network implementations. This thesis will focus on the network implementations most frequently found in the literature to be used for pattern recognition.
+\subsection{Perceptron networks}
+This is the classic example of neural network, often when the term ''neural network'' is used a perceptron network (or variation thereof) is meant. Perceptron networks were first described by Frank Rosenblatt in 1958 \citep{Ros58}. \\\\There is no set definition of a perceptron network, but it is often described as being a feedforward network with shortcut connections. The input layer of the the perceptron network is called the retina, and is only used for data input, no processing happens in the input layer as the weights for the input layer are static. 
+\subsubsection{Single layer perceptron network}
+A single layer perceptron (or SLP for short) is a perceptron network that has only one layer (except the input neurons). This means that the trainable connection weights going from the input layer go straight towards one or more output neurons $\Omega$. A single layer perceptrons with multiple outputs can simply be considered as several separate single layer perceptrons with the same input. The single layer perceptrons is because of the limitation to a single layer only able to represent linear data.
+\paragraph{Single layer perceptrons and the delta rule.}
+The delta rule is an extension on the Hebbian rule. It has the advantage that it can be used networks without binary activation functions, and that the network will automatically learn faster as it is farther away from the target. I refer you to \citep{Kriesel2013} page 90-95 in case you want to read the whole mathematical and logical construction of the delta rule.
+\begin{definition}
+(Delta rule). The delta rule (also called the Widrow-Hoff rule) is based on the generalized Hebbian rule (~\ref{equa:generalizedHebbian}), where the function $h$ only uses the output $o_i$ of the predecessor neuron $i$, and where the function $g$ is the difference between the desired activation $t_\Omega$ and the actual activation $a_\Omega$ of the output neuron $\Omega$. If we substitute this into the Hebbian rule we get he following:
+\begin{equation}
+\Delta w_{i,\Omega} = \eta \cdot o_i \cdot (t_\Omega - a_\Omega) = \eta o_i \delta_\Omega
+\end{equation}
+\label{equa:deltaSLP}
+If we were to use the desired output instead of the desired activation the formula would look like this:
+\begin{equation}
+\Delta w_{i,\Omega} = \eta \cdot o_i \cdot (t_\Omega - o_\Omega) = \eta o_i \delta_\Omega
+\end{equation}
+\end{definition}
+These formulas can be used for online learning, in the case of batch processing you simply let the error accumulate
+\begin{equation}
+\Delta w_{i,\Omega} = \eta \cdot \sum_{_{p} \ in P} o_{p,i} \cdot (t_{p,\Omega} - o_{p,\Omega}) = \eta \cdot \sum_{_{p} \ in P} o_{p,i} \cdot \delta_{p,\Omega}
+\end{equation}
+\subsubsection{Multilayer perceptron network}
+Contrary to single layer perceptron can the multilayer perceptron (MLP for short). This achieved by taking a single layered perceptron with multiple output neurons and attaching other single layer perceptrons to this, to further process the already linear processed output from the output neurons of the base single layer perceptron. Each added layer supposedly adds the capability to process an extra dimension.\\\\It has been mathematically proven that even a multilayer perceptron with only one layer of hidden neurons can approximate a functions with finitely many discontinuities as well as their first derivatives to an arbitrary precision. This proof can unfortunately not be used in the reverse way, so it still is up to us to find the correct amount of neurons to use in each situation.\\\\When describing a multilayer perceptron comprising 7 input neurons, a hidden layer of 10 neurons, another hidden layer of 5 neurons and an output layer of 6 neurons the following abbreviation is often used: 7-10-5-6.\\The numbers indicate the amount of neurons for that layer. The first layer is the input layer (retina) and the last is the output layer. The layers in between are the hidden layers, these are always order going from closest to the input layer (and farthest from the output) to farthest from the input layer (and closest to the output).\\\\Word of warning for reading through the literature. Not all sources use the same way of counting the network layers, some include the retina, some count the trainable weight layers and others exclude the output neuron layer.
+\paragraph{Multilayer perceptrons backpropagation.}
+The backpropagation of error learning rule is used to train multi-staged neural perceptrons. Backpropagation is a gradient descent procedure with error function $Err(W)$ receiving all the connection weights as arguments and links them to the output error. This system is an extension of the delta rule. The output function is kept the same for each neuron, but the variable $\delta_i$ for each neuron $i$ needs to be generalized from one trainable weight to several ones. Again, if you want to read the whole mathematical and logical construction, please read \citep{Kriesel2013} pages 104-108.
+\begin{definition}
+(Backpropagation). Backpropagation is based on the generalized Hebbian rule (~\ref{equa:generalizedHebbian}), where the function $h$ only uses the output $o_i$ of the predecessor neuron $i$, and where the function $g$ is the difference between the desired activation $t_\Omega$ and the actual activation $a_\Omega$ of the output neuron $\Omega$. If we substitute this into the Hebbian rule we get he following:
+\begin{equation}
+\begin{array}{l l}
+\Delta w_{i,j} : \eta \cdot o_i \cdot \delta_j \text{with}\\
+\delta_j = \left\{
+	\begin{array}{l l}
+    f'_{act}(net_j) \cdot (t_j - y_j) & \quad \text{(when $j$ is an output neuron)}\\
+    f'_{act}(net_j) \cdot \sum_{l \in L}(\delta_lw_{h,l})) & \quad \text{(when $j$ is a hidden neuron)}
+  \end{array} \right.
+\end{array}
+\end{equation}
+\end{definition}
+\subparagraph{Backpropagation and the learning rate.}
+It might be opportune to be able t change the learning rate over time during the training of a network. A larger learning rate might fork fine at the start, but nearing the end of the training procedure, we would to be able to increase the learning accuracy by decreasing the size of the learning rate. It is a bad idea to reduce the learning rate continuously, as the algorithm will get stuck when the learning rate is reduced faster than the error is reduced. The solution is to reduce the error gradually.\\\\It might also be beneficial for different layers to have different learning rates, as the layers farthest away from the output will be least affected by the backpropagtion. It is for this reason wise to assign greater learning tot the layers closest to the input layer.
+\subparagraph{eliminating the learning rate.}
+Because of the previous two backpropagtion-specific learning rate properties can a chosen learning rate be detrimental for the network learning. To overcome this, resilient backporpagation is often used. Hovere, resilient backpropagtion is not necesary better. We will not go deeper into comparing normal backpropagtion with resilient backpropagtion. Just keep in mind that resilient backpropagtion is based on these two principles:
+\begin{itemize}
+\item Weight changes are not proportional to the gradient thereof.
+\item Many dynamically adjusted learning rates instead of one static learning rate.
+\end{itemize}
+\subsection{Hopfield networks}
 %TODO
 TODO
-\subsection{Supervised learning}
+\subsection{Self-organizing maps}
 %TODO
 TODO
-\subsubsection{Preceptron networks}
-%TODO
-TODO
-\subsubsection{Hopfield networks}
-%TODO
-TODO
-\subsubsection{Learning vector quantization}
-Can be used, wont further investigate
-\subsection{Unsupervised learning}
-%TODO
-TODO
-\subsubsection{Self-organizing maps}
-%TODO
-TODO
-\subsubsection{Adaptive resonance theory}
-Can be used, wont further investigate
 \section{Implementation}
 \label{sec:implementation}
 \subsection{Captcha builder}
