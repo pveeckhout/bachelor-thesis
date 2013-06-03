@@ -760,10 +760,26 @@ x_h(t) = f_{act} \bigg(\sum_{j \in H} w_{j,h} \cdot x_j(t-1)\bigg)
 \end{equation} Where $f_{act}$ generally is the the binary activation function with threshold value 0.\\This means that neuron $h$ adds the weights from the previous step of all neurons connected to it. As said before, the sign of this value will determin in which direction the neuron will change, and the size how strongly it is forced to change. 
 \paragraph{input and output of a Hopfield network.} A Hopfield network automatically looks for a minimum for the state it is in. We will use this, and define an input pattern as being exactly that, a state of a Hopfield network. f we use the binary string representation again, then a Hopfield input pattern can be described as string $x \in \{\-1,1\}^{|H|}$.\\\\The network will converge to a minimum state after the network has been initialized with the input pattern. But how an we now that such a minimum has been reached? Simple, the network stops. It can be mathematically proven that a regular completely linked (hence only zeros on the diagonal) Hopfield network will always converge to a minimum. We can then build another binary string from the reached equilibrium, $y \in \{\-1,1\}^{|H|}$ is then the Hopfield network output.
 \subsection{Self-organizing maps}
+Self Orga nizing maps (also called Kohonen networks, or shorted to SOMs) were developed by Tuevo Kohonen in the Eighties  \citep{kohonen1982}. Just like Hopfield networks, the state of the network will be the the output, but Kohonen networks learn completely unsupervised. It also is not needed to know what the neurons calculate, we only need to know which neuron was active at a certain time. In short, Kohonen networks are trained without supervision, and we not interested in the exact output but rather in which neuron provides the output.
+\begin{definition}
+(Self-organizing map). A self-organizing map (or Kohonen network) is a set $K$ of self organizing map neurons. When an input is presented exactly neuron $k \in K$ that is closest to the input pattern will be activated.
+\end{definition}
+\paragraph{Structure of a self organizing map.}
+Kohonen networks are used to map a high-dimensional input onto a low-dimensional grid of neurons, so a map of the high-dimensional space can be drawn. For this purpose the network obtains many points of the high-dimensional input space where every point in that space will be assigned to a neuron. There essentially are two spaces the kohonen networks are working in, namely the high-dimensional input space and the low-dimensional grid of neurons. Even when the the dimensions of the two spaces would be the same, the spaces would not be equal. It would only mean that in this case they only have the same dimension.\\\\
+In a one-dimensional grid, the neurons can have a maximum of 2 connections. So it could be organized as a string of pearls where every neuron has exactly 2 neighbours (except the start and end neurons of course). In a two-dimensional each connection can have a maximum of 4 connections. This means they could be organized as a square array or in a of honey-comb structure. Higher-dimension grids can be used, however the ammount of maximum connections increases exponentially, and these high-complexity networks often lack a visual representation. Therefore they are not used very often. Irregular topologies are possible too, but theses are also not used very often.
+\paragraph{Training a self organized map.}
+%TODO
+TODO
+\subparagraph{Learning rule}
+%TODO
+TODO
+\paragraph{Using self organized maps.}
 %TODO
 TODO
 \section{Implementation}
 \label{sec:implementation}
+%TODO
+TODO
 \subsection{Captcha builder}
 %TODO
 TODO
