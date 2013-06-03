@@ -278,15 +278,11 @@ The research can be divided into two separate subjects. If one was to develop so
 \end{itemize}
 \chapter{Methodology}
 \label{ch:methodology}
-\paragraph{Research philosophy.}
-%TODO
-TODO
-\paragraph{Research approach.}
-%TODO
-TODO
-\paragraph{Data Analysis.}
-%TODO
-TODO
+This thesis is made up out of several parts, the first part will be a literature study researching CAPTCHA. The second part will be another literature study about how neural network work. In the third part i will try to apply the gathered information an experimental phase.
+\subsection{Research philosophy}
+The research philosophy used in this thesis is post-positivism. It will used quantitative, qualitative and other methods (such as interpreting and combining severel sources). The premise in this philosophy is that the world can be objectified, but the objectification is always coloured based on the subjective knowledge, experiences and believes of each individual.
+\subsection{Approach}
+The information in this thesis was gathered primarily by performing literature studies on the subjects that presented problems, and then trying to verify the conclusions made from the literature study by testing them in an experimental setting.
 \chapter{Corpus}
 \label{ch:corpus}
 \section{CAPTCHA}
@@ -749,9 +745,9 @@ Thanks to this training we can store a number of patterns $p$, however this amou
 \paragraph{The influence of connection weights.}
 A neuron can change their state in function of the current state the other neurons and connection weights. This means that the connection weights are able to influence the change of the whole network. There are three possibilities for the connection weights
 \begin{itemize}
-\item[$w_{i,j} > 0 $] This will force the two connected neurons to become equal in state. The bigger this value is, the harder the two neurons will try to get in the same state.
-\item[$w_{i,j} < 0 $] This will force the two connected neurons to become opposite in state. The bigger this value is, the harder the two neurons will try to get in the opposite state.
-\item[$w_{i,j} = 0 $] This means that the two neurons do not influence each other.
+\item$w_{i,j} > 0 $: This will force the two connected neurons to become equal in state. The bigger this value is, the harder the two neurons will try to get in the same state.
+\item$w_{i,j} < 0 $: This will force the two connected neurons to become opposite in state. The bigger this value is, the harder the two neurons will try to get in the opposite state.
+\item$w_{i,j} = 0 $: This means that the two neurons do not influence each other.
 \end{itemize}
 \paragraph{Converging a Hopfield network.}
 The network will start to change once it has been trained and has received an input pattern. The changein the individual neurons $k$ can be expressed as
@@ -768,21 +764,85 @@ Self Orga nizing maps (also called Kohonen networks, or shorted to SOMs) were de
 Kohonen networks are used to map a high-dimensional input onto a low-dimensional grid of neurons, so a map of the high-dimensional space can be drawn. For this purpose the network obtains many points of the high-dimensional input space where every point in that space will be assigned to a neuron. There essentially are two spaces the kohonen networks are working in, namely the high-dimensional input space and the low-dimensional grid of neurons. Even when the the dimensions of the two spaces would be the same, the spaces would not be equal. It would only mean that in this case they only have the same dimension.\\\\
 In a one-dimensional grid, the neurons can have a maximum of 2 connections. So it could be organized as a string of pearls where every neuron has exactly 2 neighbours (except the start and end neurons of course). In a two-dimensional each connection can have a maximum of 4 connections. This means they could be organized as a square array or in a of honey-comb structure. Higher-dimension grids can be used, however the ammount of maximum connections increases exponentially, and these high-complexity networks often lack a visual representation. Therefore they are not used very often. Irregular topologies are possible too, but theses are also not used very often.
 \paragraph{Training a self organized map.}
-%TODO
-TODO
+Training a Kohonen network makes it cover the input space. this is actually rather straightforward and can be described in five steps.
+\begin{enumerate}
+\item Initialization. The network starts with random neuron centers $c_k \in \mathbb{R}^N$ of the neuron space.
+\item create an input pattern. A point $p$ is selected from the input space $\mathbb{R}^N$. this is the stimulus that will be entered into the network.
+\item Measure distance. The distance $||p-c_j||$ is then calculated for every neuron $j$.
+\item Winner takes it all. The neuron which has the smallest distance to $p$ wins. this means that a neuron will be randomly selected from all the neurons fulfilling this condition:
+\begin{center}
+$||p-c_i|| \leq ||p-c_j|| \forall k \neq i$
+\end{center}
+\item Adapt the centers. Move the neuron centers within the input space based on this rule:
+\begin{center}
+$\Delta c_j = \eta (t) \cdot h(i,j,t) \cdot (p-c_j)$
+\end{center}
+The value of $\Delta c_k$ is added to the existing neuron centers. This formula shows that the change of position is dependent on the distance to the input pattern. The topology influences the change based on the function $h(i,j,t)$.
+\end{enumerate}
 \subparagraph{Learning rule}
-%TODO
-TODO
-\paragraph{Using self organized maps.}
-%TODO
-TODO
+The learning rule is the following:
+\begin{equation}
+\begin{array}{l l}
+\Delta c_j = \eta (t) \cdot h(i,j,t) \cdot (p-c_j) \\
+c_j(t+1) = c_j(t) + Delta c_j
+\end{array}
+\end{equation}
+\subparagraph{The topology function $h$.}
+The topology function $h(i,j,t)$ is defined in the grid and represents the relationship between neighbouring neurons. This means that this function will determine the topology of the trained network. It often is time dependent, but it is not necessary so. This function will take a large value if $j$ is the the neighbour of, or even the winning neuron itself.  Otherwise it will a small value. The topology function $h(i,j,t)$ has only one maximum. This maximum is found next to winner neuron $i$, where the distance is 0.
+\subparagraph{Introducing the distance.}
+For the topology function to be able to return large values next to the winner neuron and small values for non neighbouring neurons, it needs to know these distances. It needs to know how far $i$ and $j$ are away from each other. In a one-dimensional network the amount of connections between $i$ and $j$ can be used, in a two-dimensional the euclidean distance can be used.
+\subparagraph{Common distance and topology functions.}
+One of common distance functions is the Gaussian bell function. The width of the bell function can be changed by applying the parameter $\sigma$. This parameter can be used to monotonically reduce the size of the neighbourhoods over time.
+\begin{equation}
+h(i,j,t) = e^{ \big( - \frac{||g_i-c_j||^2}{e \cdot \sigma (t)^2} \big) }
+\end{equation}
+$g_i$ and $g_j$ represent the positions of the neurons on the grid. There are several other functions that can be used, but we will not elaborate much further on this.
+\subparagraph{Learning rate.}
+The reducing the learning rate $\eta$ in time in conjunction with the neighbourhood size $\sigma$ is used to prevent the later training phases from pulling the entire map towards a new pattern. A $\eta$ between 0.01 and 0.6 typically works well, but this is very dependant on the network topology and the neighbourhood size.\\\\The advantage of a large learning rate and neighbourhood size at the start is that the network can unflod fast when starting out from the randomly initialized network. In the end when the network becomes more rigid, it will be able to fine-tune itself because of the smaller learning rate and neighbourhoods. However, $h \cdot \eta$ should always be bigger than 1, otherwise the neurons will start missing the training sample.
 \section{Implementation}
 \label{sec:implementation}
-%TODO
-TODO
+After all this theoretical research, I was eager to try and implement what i had learned. I set out on a mission to try and solve a CAPTCHA by using neural networks for pattern recognition. For this I knew i had to have ready access to hundres if not thousands of CAPTCHA images, and know the correct answer for each one of those CAPTCHAs. for that reason I decided to build my own CAPTCHA generating framework.
 \subsection{Captcha builder}
-%TODO
-TODO
+The main objective in creating this was to be able to precisely influence the type of CAPTCHA image was generated, and that a lot of images (with respective answres) could be generated quickly. For this task I first set out the find a suitable framework, but as I found I started programming my own. The builder is capable of
+\begin{itemize}
+\item rendering backgrounds range from transparent to two-coloured gradients.
+\item rendering text in
+	\begin{itemize}
+	\item Character sets ranging from a reduced alphanumeric set to a set comprising all letters, numbers and punctuation.
+	\item Arabic font
+	\item Chinese characters
+	\end{itemize}
+\item rendering several styles of fonts, letter colouring or letter outlining
+\item rendering line noise onto the image
+\item generating distortions
+	\begin{itemize}
+	\item fish-eye
+	\item shear
+	\item ripple
+	\item stretch
+	\item \ldots
+	\end{itemize}
+\item rendering a border around the image.
+\end{itemize}
+This all is done via an elaborate sequence of parsers and builders\footnote{As of writing, I noticed that some of the parts of the builder pattern should be implemented more efficiently with extensibility in mind.}. The whole process of creating defining what type of CAPTCHA image to build is directed by what I call a ''buildString''. The buildString is a line of text passed to the builder, the builder then parses the text and sets up the different element builders, ready to create a CAPTCHA test. A few examples of buildstrings: 
+\begin{verbatim}
+Background:
+:BACKGROUND!TWOCOLORGRADIENT#COLORS1@RANGE*FF0000*000000
+#COLORS2@LIST*00FF00*0000FFF:
+
+Border:
+:BORDER!SOLID#COLORS@RANGE*000000*ffffff#THICKNESS@4:
+
+Noise:
+:NOISE!CURVEDLINE#COLORS@RANGE*000000*ffffff#THICKNESS@2.3:
+
+Gimp:
+ :GIMP!FISHEYE#DOUBLE1@3.7#DOUBLE2@7.6#
+ COLORS1@RANGE*000000*ffffff#COLORS2@LIST*a5f9b3*1586df*de48af
+\end{verbatim}
+The parsing of the buildstring happens in two stages, the long parse is when the whole string is analysed to build the ElementCreatorBuilders (again made based on the builder design pattern). These element creators builders are stored in an ArrayDeque in the CaptchaBuilder. After the long parse (named like this because it can take some time to parse a long buildString), the CaptchaBuilder is ready to generate actual captcha tests. When the method buildCaptcha() is called the Builder will perform what is called the short parsing of the buildString, where it checks whether the order of the element creators builders inside the ArrayDeque is correct or not. When all checks succeed, each of the element creators builders will produce a fresh element creator that is used to add elements to the CAPTCHA or distort it. This whole process of shortparsing is essential for maintaining randomness. If you want to delve through the code, or use it yourself, feel free as the CaptchaBuilder framework is licensed as MIT. A small piece of code I am perticulary proud of, is the ColorRangeContainer class. The CaptchaBuilder used to get real slow when using a lot of, or big color ranges as the option for one or more of the elements. I used to store the differnt colors that could be used as an ArrayList of integers. Obviously all these integers needed to be generated, which I did by looping through all the possibilities and storing them. Needles to say this took up a huge amount of time and memory, so I devised a better way. (Code ~\ref{source:ColorRangeContainer.java}, page ~\pageref{source:ColorRangeContainer.java}
+Whenever a class stores a color, be it a single colour, multiple colours or a whole range of colours, it will do this with this utility class. It has a lot of different constructors, this is to account for the different options of representing colours in a programming environment. Once the class has been instantiated, it can return a random colour from all the stored possibilities, be that 1 to 4228250625\footnote{The maximum amount of colours representable in the RGBa format}, simply by calling getRandomColorInRange(), again there are several other methods available with the same functionality, that return a colour in most of the ways a colour can be represented grammatically.\\\\
+The framework does it's job, it generates all different kinds of CAPTCHA images. The tests generated, the Captcha class, are implemented as an immutable data object, where all the variables cannot be changed once the class has been instantiated. (Code ~\ref{source:Captcha.java}, page ~\pageref{source:Captcha.java}
 \subsection{Neural networks}
 %TODO
 TO USE: \citep{Browning2007}; \citep{Chellapilla2005}; \citep{Fletcher2009}; \citep{Gang}; \citep{Jiang2003}; \citep{SathasivamSaratha2011}; \citep{Torma1995}s
@@ -794,8 +854,14 @@ TODO
 %%---------- Bijlagen ----------------------------------------------------
 %
 \appendix
-%\chapter{Sourcecode}
-%\label{ch:Sourcecode}
+\chapter*{Code}
+\label{ch:Sourcecode}
+
+\codefragment{source/ColorRangeContainer.java}{The ColorRangeContainerClass, used for storing the colors used in the elements and randomly getting one of the available colors.}
+\label{source:ColorRangeContainer.java}
+
+\codefragment{source/Captcha.java}{The Captcha test.}
+\label{source:Captcha.java}
 %
 % Automatisch invoegen van al je Java broncode:
 % 1/ maak een link naar je broncodedirectory naar subdirectory source
@@ -807,13 +873,9 @@ TODO
 % 3/ Haal volgende regel uit commentaar
 %\input{source.tex}
 %
-\bibliographystyle{plainnat}
-\bibliography{Solving_CAPTCHA_using_neural_networks}
-%
-%%---------- Back matter -------------------------------------------------
-%
 
-\listoffigures
+\chapter*{Images}
+\label{images}
 \begin{figure}
 	\centering
 	\includegraphics[width=13.75cm]{./img/xkcd-captcha-evolution.png}
@@ -888,9 +950,17 @@ TODO
 	\caption{An example Hinton diagram (Source: \url{http://www.nd.com/products/nsv30/hinton.htm})}
 	\label{fig:HintonDiagram}
 \end{figure}
+
+\bibliographystyle{plainnat}
+\bibliography{Solving_CAPTCHA_using_neural_networks}
+%
+%%---------- Back matter -------------------------------------------------
+%
+
+\listoffigures
 %\listoftables
 %
 % Lijst van broncode-listings. Kan je weglaten als je dit niet nodig hebt.
-%\lstlistoflistings
+\lstlistoflistings
 %
 \end{document}
