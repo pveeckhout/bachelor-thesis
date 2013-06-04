@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.neuralnetworks.network.encog;
+package bachelorthesis.neuralnetworks.network.encog.hopfield;
 
 import bachelorthesis.neuralnetworks.network.NeuralNetwork;
 import org.encog.ml.data.specific.BiPolarNeuralData;

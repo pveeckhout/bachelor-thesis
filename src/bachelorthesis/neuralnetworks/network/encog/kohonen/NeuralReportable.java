@@ -21,14 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.neuralnetworks.network.encog;
+package bachelorthesis.neuralnetworks.network.encog.kohonen;
 
 /**
- * EncogBasicNetworkBuilder.java (UTF-8)
+ * NeuralReportable.java (UTF-8)
  *
- * Provides a builder for a configurable Encog HopfieldNetwork
+ * Utility class used to be able to inform an implementing class of the training
+ * progress
  *
- * 2013/05/19
+ * 2013/06/04
  *
  * @author Pieter Van Eeckhout <vaneeckhout.pieter@gmail.com>
  * @author Pieter Van Eeckhout <pieter.vaneeckhout.q1295@student.hogent.be>
@@ -36,34 +37,14 @@ package bachelorthesis.neuralnetworks.network.encog;
  * @since 1.0.0
  * @version 1.0.0
  */
-public class EncogHopfieldNetworkBuilder {
-
-    private double[][] trainingInput;
-    private int id;
-    private int hSize;
-    private int vSize;
+public interface NeuralReportable {
 
     /**
-     * builder constructor
+     * Informs about the progress of the network training
      * <p/>
-     * @param trainingInput the input data for training
-     * @param hSize         the width of the network
-     * @param vSize         the height of the network
+     * @param cycles     how many training cycles have passed
+     * @param totalError the total error for that epoch
+     * @param bestError  the best total error occurred so far
      */
-    public EncogHopfieldNetworkBuilder(double[][] trainingInput, int hSize,
-                                       int vSize) {
-        this.trainingInput = trainingInput;
-        this.hSize = hSize;
-        this.vSize = vSize;
-        this.id = -1;
-    }
-
-    public EncogHopfieldNetworkBuilder setId(int id) {
-        this.id = id;
-        return this;
-    }
-
-    public EncogHopfieldNetwork createEncogHopfieldNetwork() {
-        return new EncogHopfieldNetwork(trainingInput, id, hSize, vSize);
-    }
+    public void update(int cycles, double totalError, double bestError);
 }
