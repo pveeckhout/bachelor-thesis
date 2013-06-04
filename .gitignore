@@ -1,5 +1,4 @@
 # ignore all files in these directories
-/source/
 
 # ignore all files in build folder
 build/*
