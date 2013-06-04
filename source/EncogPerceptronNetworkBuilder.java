@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.neuralnetworks.network.encog;
+package bachelorthesis.neuralnetworks.network.encog.perceptron;
 
 import bachelorthesis.neuralnetworks.network.encog.util.PropagationType;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.List;
 import org.encog.ml.train.strategy.Strategy;
 
 /**
- * EncogBasicNetworkBuilder.java (UTF-8)
+ * EncogPerceptronNetworkBuilder.java (UTF-8)
  *
  * Provides a builder for a configurable Encog BasicNetwork
  *
@@ -41,7 +41,7 @@ import org.encog.ml.train.strategy.Strategy;
  * @since 1.0.0
  * @version 1.1.0
  */
-public class EncogBasicNetworkBuilder {
+public class EncogPerceptronNetworkBuilder {
 
     private int id;
     private double[][] trainingInput;
@@ -60,7 +60,7 @@ public class EncogBasicNetworkBuilder {
      * @param trainingInput The inputs for the training
      * @param trainingIdeal the expected results for the training
      */
-    public EncogBasicNetworkBuilder(double[][] trainingInput,
+    public EncogPerceptronNetworkBuilder(double[][] trainingInput,
                                     double[][] trainingIdeal) {
         this.id = -1;
         this.accuracy = 0.00000000001;
@@ -73,50 +73,50 @@ public class EncogBasicNetworkBuilder {
         this.vSize = 50;
     }
 
-    public EncogBasicNetworkBuilder setId(int id) {
+    public EncogPerceptronNetworkBuilder setId(int id) {
         this.id = id;
         return this;
     }
 
-    public EncogBasicNetworkBuilder setHsize(int hSize) {
+    public EncogPerceptronNetworkBuilder setHsize(int hSize) {
         this.hSize = hSize;
         return this;
     }
 
-    public EncogBasicNetworkBuilder setVsize(int vSize) {
+    public EncogPerceptronNetworkBuilder setVsize(int vSize) {
         this.vSize = vSize;
         return this;
     }
 
-    public EncogBasicNetworkBuilder setHiddenLayers(int[] hiddenLayers) {
+    public EncogPerceptronNetworkBuilder setHiddenLayers(int[] hiddenLayers) {
         this.hiddenLayers = hiddenLayers;
         return this;
     }
 
-    public EncogBasicNetworkBuilder setAccuracy(double accuracy) {
+    public EncogPerceptronNetworkBuilder setAccuracy(double accuracy) {
         this.accuracy = accuracy;
         return this;
     }
 
-    public EncogBasicNetworkBuilder setLearningRate(double learningRate) {
+    public EncogPerceptronNetworkBuilder setLearningRate(double learningRate) {
         this.learningRate = learningRate;
         return this;
     }
 
-    public EncogBasicNetworkBuilder setTrainingStrategies(
+    public EncogPerceptronNetworkBuilder setTrainingStrategies(
             List<Strategy> trainingStrategies) {
         this.trainingStrategies = trainingStrategies;
         return this;
     }
 
-    public EncogBasicNetworkBuilder setPropagationType(
+    public EncogPerceptronNetworkBuilder setPropagationType(
             PropagationType propagationType) {
         this.propagationType = propagationType;
         return this;
     }
 
-    public EncogBasicNetwork createEncogBasicLetterRecognitionNetwork() {
-        return new EncogBasicNetwork(id, hSize, vSize, trainingInput,
+    public EncogPerceptronNetwork createEncogBasicLetterRecognitionNetwork() {
+        return new EncogPerceptronNetwork(id, hSize, vSize, trainingInput,
                                      trainingIdeal, hiddenLayers, accuracy,
                                      learningRate, trainingStrategies,
                                      propagationType);

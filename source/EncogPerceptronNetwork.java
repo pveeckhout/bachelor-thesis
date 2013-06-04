@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.neuralnetworks.network.encog;
+package bachelorthesis.neuralnetworks.network.encog.perceptron;
 
 import bachelorthesis.neuralnetworks.network.encog.util.PropagationType;
 import bachelorthesis.neuralnetworks.network.NeuralNetwork;
@@ -41,7 +41,7 @@ import org.encog.neural.networks.training.propagation.scg.ScaledConjugateGradien
 import org.encog.util.simple.EncogUtility;
 
 /**
- * EncogBasicNetwork.java (UTF-8)
+ * EncogPerceptronNetwork.java (UTF-8)
  *
  * Provides a configurable Encog BasicNetwork
  *
@@ -53,7 +53,7 @@ import org.encog.util.simple.EncogUtility;
  * @since 1.0.0
  * @version 1.1.0
  */
-public class EncogBasicNetwork extends NeuralNetwork {
+public class EncogPerceptronNetwork extends NeuralNetwork {
 
     private double trainingInput[][];
     private double trainingIdeal[][];
@@ -77,7 +77,7 @@ public class EncogBasicNetwork extends NeuralNetwork {
      *                           ManhattanPropagation)
      * @param trainingStrategies the training strategies to be used
      */
-    protected EncogBasicNetwork(int id, int hSize, int vSize,
+    protected EncogPerceptronNetwork(int id, int hSize, int vSize,
                                 double[][] trainingInput,
                                 double[][] trainingIdeal, int[] hiddenLayers,
                                 double accuracy, double learningRate,

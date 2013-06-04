@@ -287,9 +287,9 @@ The research can be divided into two separate subjects. If one was to develop so
 \end{itemize}
 \chapter{Methodology}
 \label{ch:methodology}
-This thesis is made up out of several parts, the first part will be a literature study researching CAPTCHA. The second part will be another literature study about how neural network work. In the third part i will try to apply the gathered information an experimental phase.
+This thesis is made up out of several parts, the first parts are a study on CAPTCHA and neural networks. The last part is a description of applying the the gathered information.
 \subsection{Research philosophy}
-The research philosophy used in this thesis is post-positivism. It will used quantitative, qualitative and other methods (such as interpreting and combining severel sources). The premise in this philosophy is that the world can be objectified, but the objectification is always coloured based on the subjective knowledge, experiences and believes of each individual.
+The research philosophy used in this thesis is post-positivism. It will used quantitative, qualitative and other methods (such as interpreting and combining several sources). The premise in this philosophy is that the world can be objectified, but the objectification is always coloured based on the subjective knowledge, experiences and believes of each individual.
 \subsection{Approach}
 The information in this thesis was gathered primarily by performing literature studies on the subjects that presented problems, and then trying to verify the conclusions made from the literature study by testing them in an experimental setting.
 \chapter{Corpus}
@@ -750,7 +750,7 @@ w_{i,j} = \sum_{p \in P} p_i \cdot p_j
 \end{equation}
 After the pattern has been trained the weights $w_{i,j}$ are processed. For each weight we check if the neurons are in the same state or not. If they are in the same state, add 1 to the weight. Are they in a different state, subtract 1 from the weight (or add -1). This algorithm then is repeated for each training pattern $p \in P$. The more neurons $i$ and $j$ are in the same state the higher the total connection weight $w_{i,j}$ will be and the more the neurons will be forced to attain the same state. The same is true for the opposite.
 \subparagraph{Maximum trainable patterns.}
-Thanks to this training we can store a number of patterns $p$, however this amount is limited. The maximum number of reconstructible patterns p is limited to $|P|_{MAX} \approx  0.139 \cdot |H|$ . This was shown by mathematical analysis.
+Thanks to this training we can store a number of patterns $p$, however this amount is limited. The maximum number of reconstructible patterns p is limited to $|P|_{MAX} \approx  0.139 \cdot |H|$. This was shown by mathematical analysis.
 \paragraph{The influence of connection weights.}
 A neuron can change their state in function of the current state the other neurons and connection weights. This means that the connection weights are able to influence the change of the whole network. There are three possibilities for the connection weights
 \begin{itemize}
@@ -763,22 +763,22 @@ The network will start to change once it has been trained and has received an in
 \begin{equation}
 x_h(t) = f_{act} \bigg(\sum_{j \in H} w_{j,h} \cdot x_j(t-1)\bigg)
 \end{equation} Where $f_{act}$ generally is the binary activation function with threshold value 0.\\This means that neuron $h$ adds the weights from the previous step of all neurons connected to it. As said before, the sign of this value will determine in which direction the neuron will change, and the size how strongly it is forced to change. 
-\paragraph{input and output of a Hopfield network.} A Hopfield network automatically looks for a minimum for the state it is in. We will use this, and define an input pattern as being exactly that, a state of a Hopfield network. When we use the binary string representation again, then a Hopfield input pattern can be described as string $x \in \{\-1,1\}^{|H|}$.\\\\The network will converge to a minimum state after the network has been initialized with the input pattern. But how can we now that such a minimum has been reached? Simple, the network stops. It can be mathematically proven that a regular completely linked (hence only zeros on the diagonal) Hopfield network will always converge to a minimum. We can then build another binary string from the reached equilibrium, $y \in \{\-1,1\}^{|H|}$ is then the Hopfield network output.
+\paragraph{Input and output of a Hopfield network.} A Hopfield network automatically looks for a minimum for the state it is in. We will use this characteristic, and define an input pattern as being a state of a Hopfield network. When we use the binary string representation again, then a Hopfield input pattern can be described as string $x \in \{\-1,1\}^{|H|}$.\\\\The network will converge to a minimum state after the network has been initialized with the input pattern. But how can we now that such a minimum has been reached? Simple, the network stops. It can be mathematically proven that a regular completely linked (hence only zeros on the diagonal) Hopfield network will always converge to a minimum. We can then build another binary string from the reached equilibrium, $y \in \{\-1,1\}^{|H|}$ is then the Hopfield network output.
 \subsection{Self-organizing maps}
-Self Orga nizing maps (also called Kohonen networks, or shorted to SOMs) were developed by Tuevo Kohonen in the Eighties  \citep{kohonen1982}. Just like Hopfield networks, the state of the network will be the the output, but Kohonen networks learn completely unsupervised. It also is not needed to know what the neurons calculate, we only need to know which neuron was active at a certain time. In short, Kohonen networks are trained without supervision, and we not interested in the exact output but rather in which neuron provides the output.
+Self Organizing maps (also called Kohonen networks, or shorted to SOMs) were developed by Tuevo Kohonen in the Eighties  \citep{kohonen1982}. Just like Hopfield networks, the state of the network will be the output, but Kohonen networks learn completely unsupervised. It also is not needed to know what the neurons calculate, we only need to know which neuron was active at a certain time. In short, Kohonen networks are trained without supervision, we not interested in the exact output but rather in which neuron provides the output.
 \begin{definition}
 (Self-organizing map). A self-organizing map (or Kohonen network) is a set $K$ of self organizing map neurons. When an input is presented exactly neuron $k \in K$ that is closest to the input pattern will be activated.
 \end{definition}
 \paragraph{Structure of a self organizing map.}
-Kohonen networks are used to map a high-dimensional input onto a low-dimensional grid of neurons, so a map of the high-dimensional space can be drawn. For this purpose the network obtains many points of the high-dimensional input space where every point in that space will be assigned to a neuron. There essentially are two spaces the kohonen networks are working in, namely the high-dimensional input space and the low-dimensional grid of neurons. Even when the the dimensions of the two spaces would be the same, the spaces would not be equal. It would only mean that in this case they only have the same dimension.\\\\
-In a one-dimensional grid, the neurons can have a maximum of 2 connections. So it could be organized as a string of pearls where every neuron has exactly 2 neighbours (except the start and end neurons of course). In a two-dimensional each connection can have a maximum of 4 connections. This means they could be organized as a square array or in a of honey-comb structure. Higher-dimension grids can be used, however the ammount of maximum connections increases exponentially, and these high-complexity networks often lack a visual representation. Therefore they are not used very often. Irregular topologies are possible too, but theses are also not used very often.
+Kohonen networks are used to map a high-dimensional input onto a low-dimensional grid of neurons, so a map of the high-dimensional space can be drawn. For this purpose the network obtains many points of the high-dimensional input space where every point in that space will be assigned to a neuron. There essentially are two spaces the Kohonen networks are working in, namely the high-dimensional input space and the low-dimensional grid of neurons. Even when the the dimensions of the two spaces would be the same, the spaces would not be equal. It would only mean that in this case they only have the same dimension.\\\\
+In a one-dimensional grid, the neurons can have a maximum of 2 connections. So it could be organized as a string of pearls where every neuron has exactly 2 neighbours (except the start and end neurons of course). In a two-dimensional each connection can have a maximum of 4 connections. This means they could be organized as a square array or in a of honey-comb structure. Higher-dimension grids can be used, however the amount of maximum connections increases exponentially, and these high-complexity networks often lack a visual representation. Therefore they are not used very often. Irregular topologies are possible too, but theses are also not used very often.
 \paragraph{Training a self organized map.}
-Training a Kohonen network makes it cover the input space. this is actually rather straightforward and can be described in five steps.
+Training a Kohonen network makes it cover the input space. This is actually rather straightforward and can be described in five steps.
 \begin{enumerate}
 \item Initialization. The network starts with random neuron centers $c_k \in \mathbb{R}^N$ of the neuron space.
-\item create an input pattern. A point $p$ is selected from the input space $\mathbb{R}^N$. this is the stimulus that will be entered into the network.
+\item Create an input pattern. A point $p$ is selected from the input space $\mathbb{R}^N$. This is the stimulus that will be entered into the network.
 \item Measure distance. The distance $||p-c_j||$ is then calculated for every neuron $j$.
-\item Winner takes it all. The neuron which has the smallest distance to $p$ wins. this means that a neuron will be randomly selected from all the neurons fulfilling this condition:
+\item Winner takes it all. The neuron which has the smallest distance to $p$ wins. This means that a neuron will be randomly selected from all the neurons fulfilling this condition:
 \begin{center}
 $||p-c_i|| \leq ||p-c_j|| \forall k \neq i$
 \end{center}
@@ -807,12 +807,12 @@ h(i,j,t) = e^{ \big( - \frac{||g_i-c_j||^2}{e \cdot \sigma (t)^2} \big) }
 \end{equation}
 $g_i$ and $g_j$ represent the positions of the neurons on the grid. There are several other functions that can be used, but we will not elaborate much further on this.
 \subparagraph{Learning rate.}
-The reducing the learning rate $\eta$ in time in conjunction with the neighbourhood size $\sigma$ is used to prevent the later training phases from pulling the entire map towards a new pattern. A $\eta$ between 0.01 and 0.6 typically works well, but this is very dependant on the network topology and the neighbourhood size.\\\\The advantage of a large learning rate and neighbourhood size at the start is that the network can unflod fast when starting out from the randomly initialized network. In the end when the network becomes more rigid, it will be able to fine-tune itself because of the smaller learning rate and neighbourhoods. However, $h \cdot \eta$ should always be bigger than 1, otherwise the neurons will start missing the training sample.
+Reducing the learning rate $\eta$ in time in conjunction with the neighbourhood size $\sigma$ is used to prevent the later training phases from pulling the entire map towards a new pattern. A $\eta$ between 0.01 and 0.6 typically works well, but this is very dependant on the network topology and the neighbourhood size.\\\\The advantage of a large learning rate and neighbourhood size at the start is that the network can unfold fast when starting out from the randomly initialized network. In the end when the network becomes more rigid, it will be able to fine-tune itself because of the smaller learning rate and neighbourhoods. However, $h \cdot \eta$ should always be bigger than $1$, otherwise the neurons will start missing the training sample.
 \section{Implementation}
 \label{sec:implementation}
-After all this theoretical research, I was eager to try and implement what i had learned. I set out on a mission to try and solve a CAPTCHA by using neural networks for pattern recognition. For this I knew i had to have ready access to hundres if not thousands of CAPTCHA images, and know the correct answer for each one of those CAPTCHAs. for that reason I decided to build my own CAPTCHA generating framework.
+After all this theoretical research, an atempt was made to implement what had been learned. The goal was to try and solve a CAPTCHA by using neural networks for pattern recognition. Access to hundreds if not thousands of CAPTCHA images was needed. On top of that was it necessary to know the correct answer for each one of those CAPTCHAs. That is was it was decided to build a custom CAPTCHA generating framework.
 \subsection{Captcha builder}
-The main objective in creating this was to be able to precisely influence the type of CAPTCHA image was generated, and that a lot of images (with respective answres) could be generated quickly. For this task I first set out the find a suitable framework, but as I found I started programming my own. The builder is capable of
+The main objective in creating this was to be able to precisely control the type of CAPTCHA image generated, and that a lot of images (with the respective answers) could be generated quickly. An attempt was made to find a suitable framework, but none were up to the task. As a result the development of a custom build framework was started. The resulting CAPTCHA builder is capable of
 \begin{itemize}
 \item rendering backgrounds range from transparent to two-coloured gradients.
 \item rendering text in
@@ -833,7 +833,7 @@ The main objective in creating this was to be able to precisely influence the ty
 	\end{itemize}
 \item rendering a border around the image.
 \end{itemize}
-This all is done via an elaborate sequence of parsers and builders\footnote{As of writing, I noticed that some of the parts of the builder pattern should be implemented more efficiently with extensibility in mind.}. The whole process of creating defining what type of CAPTCHA image to build is directed by what I call a ''buildString''. The buildString is a line of text passed to the builder, the builder then parses the text and sets up the different element builders, ready to create a CAPTCHA test. A few examples of buildstrings: 
+This all is done via an elaborate sequence of parsers and builder patterns\footnote{As of writing, it can be noted that some of the parts of the builder patterns should be implemented more efficiently with extensibility in mind.}. The element defining what type of CAPTCHA image is createdrocess is the ''buildString''. The buildString is a line of text passed to the CaptchaBuilder, the builder then parses the text and sets up the different element builders, ready to create a CAPTCHA test. A few examples of buildStrings: 
 \begin{verbatim}
 Background:
 :BACKGROUND!TWOCOLORGRADIENT#COLORS1@RANGE*FF0000*000000
@@ -849,31 +849,43 @@ Gimp:
  :GIMP!FISHEYE#DOUBLE1@3.7#DOUBLE2@7.6#
  COLORS1@RANGE*000000*ffffff#COLORS2@LIST*a5f9b3*1586df*de48af
 \end{verbatim}
-The parsing of the buildstring happens in two stages, the long parse is when the whole string is analysed to build the ElementCreatorBuilders (again made based on the builder design pattern). These element creators builders are stored in an ArrayDeque in the CaptchaBuilder. After the long parse (named like this because it can take some time to parse a long buildString), the CaptchaBuilder is ready to generate actual captcha tests. When the method buildCaptcha() is called the Builder will perform what is called the short parsing of the buildString, where it checks whether the order of the element creators builders inside the ArrayDeque is correct or not. When all checks succeed, each of the element creators builders will produce a fresh element creator that is used to add elements to the CAPTCHA or distort it. This whole process of shortparsing is essential for maintaining randomness. If you want to delve through the code, or use it yourself, feel free as the CaptchaBuilder framework is licensed as MIT. A small piece of code I am perticulary proud of, is the ColorRangeContainer class. The CaptchaBuilder used to get real slow when using a lot of, or big color ranges as the option for one or more of the elements. I used to store the differnt colors that could be used as an ArrayList of integers. Obviously all these integers needed to be generated, which I did by looping through all the possibilities and storing them. Needles to say this took up a huge amount of time and memory, so I devised a better way. (Code ~\ref{source:ColorRangeContainer.java}, page ~\pageref{source:ColorRangeContainer.java})
-Whenever a class stores a color, be it a single colour, multiple colours or a whole range of colours, it will do this with this utility class. It has a lot of different constructors, this is to account for the different options of representing colours in a programming environment. Once the class has been instantiated, it can return a random colour from all the stored possibilities, be that 1 to 4228250625\footnote{The maximum amount of colours representable in the RGBa format}, simply by calling getRandomColorInRange(), again there are several other methods available with the same functionality, that return a colour in most of the ways a colour can be represented grammatically.\\\\
-The framework does it's job rather well. It can generate all different kinds of CAPTCHA images quickly and a CAPTCHA images will always have the same characteristics when the builder uses the same buildString. The CAPTCHA tests generated, the Captcha class, are implemented as an immutable data object, where all the variables cannot be changed once the class has been instantiated. (Code ~\ref{source:Captcha.java}, page ~\pageref{source:Captcha.java})
+The parsing of the buildString happens in two stages, the long parse is when the whole string is analysed to build the ElementCreatorBuilders (again made based on the builder design pattern). These element creators builders are stored in an ArrayDeque in the CaptchaBuilder. After the long parse (named like this because it can take some time to parse a long buildString), the CaptchaBuilder is ready to generate actual CAPTCHA tests. When the method buildCaptcha() is called the Builder will perform the short parsing of the buildString, where it checks whether the order of the element creators builders inside the ArrayDeque is correct or not. When everything checks out, each of the element creators builders is called upon to make a fresh element creator that is used to add elements to the CAPTCHA or distort it. This whole process of short-parsing is essential for maintaining randomness. If you want to delve through the code, or use it yourself, feel free as the CaptchaBuilder framework is licensed under the MIT license. A small piece of code worth looking at, is the ColorRangeContainer class. The CaptchaBuilder used to become real slow when using a lot of, or big color ranges as the option for one or more of the elements. Colours be used to be stored as an ArrayList of integers and obviously all these integers needed to be generated. This accomplished by looping through all the possibilities and storing them. Needles to say this took up a huge amount of time and memory, so a better way of storing these colour ranges was thought of. (Code ~\ref{source:ColorRangeContainer.java}, page ~\pageref{source:ColorRangeContainer.java})
+Whenever a class stores a color, be it a single colour, multiple colours or a whole range of colours, it will do this with this utility class. It has a lot of different constructors, this is to account for the different options of representing colours in a programming environment. Once an object of the class has been instantiated, it can return a random colour from all the stored possibilities, it doesn't matter whether the possible colours is only 1 or all 4228250625 colours\footnote{The maximum amount of colours representable in the RGBa format}. It returns this colour when its function getRandomColorInRange() is called. Here again there are several other methods available with the same functionality, that return a colour in most of the ways a colour can be represented grammatically.\\\\
+As a finale point of interest, the code for the CAPTCHA tests generated. These are objects instantiations of the Captcha class. This class is implemented as an immutable data object, where all the variables cannot be changed once the class has been instantiated. The Captcha objects themselves are safe to pass to other applications as their implementation resists change and manipulation, making them secure for use in the ''outside world''\footnote{The Framework could be adapted to work inside a website for example.}.(Code ~\ref{source:Captcha.java}, page ~\pageref{source:Captcha.java}). It can concluded that, all thing are considered, the framework does it's job rather well. It can generate all different kinds of CAPTCHA images quickly and every CAPTCHA image will always have the same characteristics when same buildString is used.
 \subsection{Neural networks}
-When trying to implement the neural networks I was faced with the problem of how to start this. Should I try to write the neural networks from scratch, or would it be more opportune to use on of the many neural network frameworks out there. I had first set out to create my own neural network framework. I quickly found out this was a task of gargantuan proportions, and I would not be able to finish it in time. Instead I focussed on finding a neural network framework that was able to accommodate the needs of this thesis, yet was still easy enough to quickly implement the different types of neural networks. I found en tested three neural network frameworks: Neuroph\footnote{\url{http://neuroph.sourceforge.net}}, Encog\footnote{\url{http://www.heatonresearch.com/encog}} and Snipe\footnote{\url{http://www.dkriesel.com/en/tech/snipe}}.
+When trying to implement the neural networks one of the questions was how to start building the networks. Would it be opportune to write the neural networks from scratch, or would it be better to use on of the many neural network frameworks out there? Th first idea was to create a custom neural network framework (much like the CaptchaBuilder framework). This option was quickly dropped, as it s was a task of gargantuan proportions, and the framework would not be finished in time. Instead the focussed was placed on finding a neural network framework that was able to accommodate the needs of this thesis, yet was still easy enough to quickly implement the different types of neural networks. Three candidate neural network frameworks were found: Neuroph\footnote{\url{http://neuroph.sourceforge.net}}, Encog\footnote{\url{http://www.heatonresearch.com/encog}} and Snipe\footnote{\url{http://www.dkriesel.com/en/tech/snipe}}.
 \begin{itemize}
-\item Neuroph: Neuroph has a useful graphical interface that is easy to use. however it has the downside of quickly becoming slow. When I was testing Hopfield networks, Neuroph started slowing down quickly as the dimensions increased.
+\item Neuroph: Neuroph has a useful graphical interface that is easy to use. however it has the downside of quickly becoming slow. When testing Hopfield networks, Neuroph started slowing down quickly as the dimensions increased.
 \item Encog: Encog is a well documented framework with lots of examples available, it was able to maintain its speed much throughout the initial testing of Hopfield and multilayered perceptron networks.
-\item Snipe: Snipe is like the Swiss army knife of the neural network frameworks, it can do anything. It is adaptable and customizable to your needs. The downside it has, is that due to all this potential the framework is very complex to understand and use.
+\item Snipe: Snipe is like the Swiss army knife of the neural network frameworks, it can do anything. Snipe is adaptable and customizable to your needs, the trade off is that due to all this potential the framework is very complex to hard understand and use.
 \end{itemize}
-I chose for Encog as the framework to use, as it came out of the test as having good performance under stress and easy to program for.
+Encog was chosen as the framework to use, as it came out of the test as having good performance under stress and easy to program for.
+\subsubsection{Implementing the networks}
+The hardest thing to implement was the conversion from an image with a letter to an input set the network could use. For this a class was made that iterates over the image pixels and converts the image from an array of pixels to an array of double values. When a pixel has a colour value that falls between the range specified, the corresponding double will be set to $+1$. If the color is not in the specified range, the double value will become $-1$. This could be changed to increase when needed, but so far I have not seen any beneficial effects of increasing the gap between those two values. (Code ~\ref{source:ImageToArray.java}, page ~\pageref{source:ImageToArray.java})
 \paragraph{Creating the Hopfield network.}
+The first network I tried out was the Hopfield network (Code ~\ref{source:EncogHopfieldNetwork.java}, page ~\pageref{source:EncogHopfieldNetwork.java}). This was straightforward to implement thanks to the fact that the Encog framework has default implementation of a Hopfield network. The functions needed (build, train and evaluate) haven been implemented so that all the needed steps are executed in one method call. A state pattern might prove a useful extra extension to prevent the execution of one function when it cannot be executed yet (e.g. training the network when it hasn't been build yet).
+\subparagraph{Testing out the network}
+Images of letters weren't immediately use  when first testing out this network, instead generic 10X10 patterns were used to see whether the network was capable of recognizing patterns. The first results were promising so the implementation was adjusted to accommodate for using the input from the letters. The network was expanded to receive input for each pixel of the image containing one character (40X50), resulting in a massive network of 2000 neurons. The training of the network was very easy, again thanks to the Encog framework. However, when evaluating the network it quickly became apparent that the implementation of the Hopfield network was flawed. The patterns trained were all combined into a single pattern. As stated before, a Hopfield network is only capable of storing a maximum of $\approx  0.139 \cdot |H|$ patterns, with $H$ being the total amount of neurons. This was a problem that was not identified quickly, seeing that the network should be able to theoretically store a maximum of 278 reconstructible patterns, being far more than the 45 patterns being trained. A more detailed study has shown that the theoretical maximum amount of reconstructible patterns overshoots the real value by a magnitude 10. The storage capacity of a Hopfield network decreases significantly if the patterns are highly correlated (which is the case when training the network for character recognition). A more realistic storage capacity for Hopfield networks training character patterns using the Hebbian rule is $\approx 0.012$ \citep{Gang}. Gang Wei and Zheyuan Yu also propose a better learning rule, namely the Pseudo-inverse Rule. The pseudo-inverse rule has a technical maximum capacity of $p = 2|H|$ \citep{Gardner}, but again, realistically the pseudo-inverse rule has a storage capacity of $\approx 0.064$ when training for character recognition. Using the pseudo-inverse rule the network would need to consist out of at least 704 neurons to store 45 character patterns. The network implemented should be able to store and recognize the patterns correctly once the pseudo-inverse learning rule is implemented. Unfortunately Encog did not allow to quickly change the learning rule, as only the Hebbian rule is default implemented and the API for writing a custom learning rule did not bring much clarity.
+\paragraph{Creating the multi layered perceptron.}
 %TODO
 TODO
-\paragraph{Creating the multi layered perceptron.}
+Feed forward\citep{Jiang2003} and \citep{Browning2007}
+\subparagraph{Testing out the network}
 %TODO
 TODO
 \paragraph{Creating the Kohonen network.}
 %TODO
 TODO
-TO USE: \citep{Browning2007}; \citep{Chellapilla2005}; \citep{Fletcher2009}; \citep{Gang}; \citep{Jiang2003}; \citep{SathasivamSaratha2011}; \citep{Torma1995}s
+\citep{Torma1995}
+\subparagraph{Testing out the network}
+%TODO
+TODO
 \chapter{Conclusion}
 \label{ch:conclusie}
 %TODO
 TODO
+Learning rules: \citep{SathasivamSaratha2011}
+Single character success: \citep{Chellapilla2005}
 %
 %%---------- Bijlagen ----------------------------------------------------
 %
@@ -886,6 +898,21 @@ TODO
 
 \codefragment{source/Captcha.java}{The Captcha test.}
 \label{source:Captcha.java}
+
+\codefragment{source/ImageToArray.java}{Utility class to convert images to array representations.}
+\label{source:ImagToArray.java}
+
+\codefragment{source/EncogHopfieldNetwork.java}{The Hopfield network.}
+\label{source:EncogHopfieldNetwork.java}
+
+\codefragment{source/EncogPerceptronNetwork.java}{The multilayered perceptron network.}
+\label{source:EncogPerceptronNetwork.java}
+
+\codefragment{source/TrainingSet.java}{The new trainingset container.}
+\label{source:TrainingSet.java}
+
+\codefragment{source/NeuralNetwork.java}{The abstract network class.}
+\label{source:KohonenNetwork.java}
 %
 % Automatisch invoegen van al je Java broncode:
 % 1/ maak een link naar je broncodedirectory naar subdirectory source
@@ -976,183 +1003,183 @@ TODO
 \end{figure}
 \begin{figure}
 \centering
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_A-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_B-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_C-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_D-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_E-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_F-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_G-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_H-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_I-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_J-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_K-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_L-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_M-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_N-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_O-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_P-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_Q-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_R-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_S-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_T-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_U-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_V-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_W-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_X-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_Y-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/LATIN_SMALL_LETTER_Z-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_ONE-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_TWO-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_THREE-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_FOUR-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_FIVE-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_SIX-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_SEVEN-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_EIGHT-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_NINE-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DIGIT_ZERO-40X50.png}
-	\end{subfigure
-	\begin{subfigure}[b]{40}
+	\end{subfigure}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/COMMERCIAL_AT-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/DOLLAR_SIGN-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/EQUALS_SIGN-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/EXCLAMATION_MARK-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/AMPERSAND-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/NUMBER_SIGN-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/PERCENT_SIGN-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/PLUS_SIGN-40X50.png}
 	\end{subfigure}
-	\begin{subfigure}[b]{40}
+	\begin{subfigure}[b]{40px}
 	\centering
 		\includegraphics[width=\textwidth]{./img/trainingimages/QUESTION_MARK-40X50.png}
 	\end{subfigure}
