@@ -69,6 +69,7 @@ public class BachelorThesisImplementation {
 
             switch (input) {
                 case "1":
+                    end = true;
                     new CaptchaPreviewer();
                     break;
                 case "exit":
