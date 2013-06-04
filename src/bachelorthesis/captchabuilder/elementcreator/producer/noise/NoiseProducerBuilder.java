@@ -24,7 +24,7 @@
 package bachelorthesis.captchabuilder.elementcreator.producer.noise;
 
 import bachelorthesis.captchabuilder.elementcreator.CaptchaElementCreatorBuilder;
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.producer.NoiseProducerType;
 
 /**
@@ -43,7 +43,7 @@ import bachelorthesis.captchabuilder.util.enums.producer.NoiseProducerType;
 public class NoiseProducerBuilder implements CaptchaElementCreatorBuilder {
 
     private float thickness;
-    private ColorRangeRGBA colorRange;
+    private ColorRangeContainer colorRange;
     private NoiseProducerType type;
 
     /**
@@ -52,7 +52,7 @@ public class NoiseProducerBuilder implements CaptchaElementCreatorBuilder {
      * @param type the type of noise producer to be created
      */
     public NoiseProducerBuilder(NoiseProducerType type) {
-        this.colorRange = new ColorRangeRGBA(0);
+        this.colorRange = new ColorRangeContainer(0);
         this.type = type;
         this.thickness = 3.5f;
     }
@@ -62,7 +62,7 @@ public class NoiseProducerBuilder implements CaptchaElementCreatorBuilder {
         return this;
     }
 
-    public NoiseProducerBuilder setColorRange(ColorRangeRGBA colorRange) {
+    public NoiseProducerBuilder setColorRange(ColorRangeContainer colorRange) {
         this.colorRange = colorRange;
         return this;
     }

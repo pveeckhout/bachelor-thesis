@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.border;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -43,10 +43,10 @@ import java.awt.image.BufferedImage;
  */
 public abstract class AbstractBorderProducer implements BorderProducer {
 
-    protected ColorRangeRGBA colorRange;
+    protected ColorRangeContainer colorRange;
     protected int thickness;
 
-    protected AbstractBorderProducer(ColorRangeRGBA colorRange, int thickness) {
+    protected AbstractBorderProducer(ColorRangeContainer colorRange, int thickness) {
         this.colorRange = colorRange;
         this.thickness = thickness;
     }

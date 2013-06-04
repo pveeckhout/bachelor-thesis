@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.renderer.gimpy;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.ImageUtil;
 import com.jhlabs.image.RippleFilter;
 import com.jhlabs.image.TransformFilter;
@@ -44,8 +44,8 @@ import java.awt.image.BufferedImage;
  */
 public class RippleGimpyRenderer extends AbstractGimpyRenderer {
 
-    public RippleGimpyRenderer(double d1, double d2, ColorRangeRGBA colorRange1,
-                               ColorRangeRGBA colorRange2) {
+    public RippleGimpyRenderer(double d1, double d2, ColorRangeContainer colorRange1,
+                               ColorRangeContainer colorRange2) {
         super(d1, d2, colorRange1, colorRange2);
     }
 

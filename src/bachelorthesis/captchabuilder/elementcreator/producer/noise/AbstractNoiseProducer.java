@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.noise;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 
 /**
  * AbstractNoiseProducer.java (UTF-8)
@@ -41,9 +41,9 @@ import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
 public abstract class AbstractNoiseProducer implements NoiseProducer {
 
     protected float thickness;
-    protected ColorRangeRGBA colorRange;
+    protected ColorRangeContainer colorRange;
 
-    protected AbstractNoiseProducer(float thickness, ColorRangeRGBA colorRange) {
+    protected AbstractNoiseProducer(float thickness, ColorRangeContainer colorRange) {
         this.thickness = thickness;
         this.colorRange = colorRange;
     }

@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.background;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -49,8 +49,8 @@ public class FlatColorBackgroundProducer extends AbstractBackgroundProducer {
      * @param colorRange1 the first colour collection
      * @param colorRange2 the second colour collection
      */
-    public FlatColorBackgroundProducer(ColorRangeRGBA colorRange1,
-                                       ColorRangeRGBA colorRange2) {
+    public FlatColorBackgroundProducer(ColorRangeContainer colorRange1,
+                                       ColorRangeContainer colorRange2) {
         super(colorRange1, colorRange2);
     }
 

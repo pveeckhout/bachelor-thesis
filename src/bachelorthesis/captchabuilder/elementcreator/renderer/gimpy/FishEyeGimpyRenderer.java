@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.renderer.gimpy;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import java.awt.image.BufferedImage;
 
 import java.awt.Graphics2D;
@@ -43,8 +43,8 @@ import java.awt.Graphics2D;
  */
 public class FishEyeGimpyRenderer extends AbstractGimpyRenderer {
 
-    public FishEyeGimpyRenderer(double d1, double d2, ColorRangeRGBA colorRange1,
-                                ColorRangeRGBA colorRange2) {
+    public FishEyeGimpyRenderer(double d1, double d2, ColorRangeContainer colorRange1,
+                                ColorRangeContainer colorRange2) {
         super(d1, d2, colorRange1, colorRange2);
     }
 

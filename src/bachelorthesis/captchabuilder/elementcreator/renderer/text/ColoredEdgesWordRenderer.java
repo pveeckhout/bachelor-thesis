@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.renderer.text;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.Shape;
@@ -50,7 +50,7 @@ import java.util.List;
  */
 public class ColoredEdgesWordRenderer extends AbstractWordRenderer {
 
-    public ColoredEdgesWordRenderer(ColorRangeRGBA colorRange, List<Font> fonts,
+    public ColoredEdgesWordRenderer(ColorRangeContainer colorRange, List<Font> fonts,
                                     double xOffset, double yOffset,
                                     float strokeWidth) {
         super(colorRange, fonts, xOffset, yOffset, strokeWidth);

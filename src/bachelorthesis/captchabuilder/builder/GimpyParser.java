@@ -68,7 +68,7 @@ public class GimpyParser {
         }
 
         if (buildSequenceOptions.length > GimpyRendererOptions.values().length) {
-            throw new ParseException("Background takes a max of " +
+            throw new ParseException("Gimp takes a max of " +
                     GimpyRendererOptions.values().length + " arguments");
         }
 

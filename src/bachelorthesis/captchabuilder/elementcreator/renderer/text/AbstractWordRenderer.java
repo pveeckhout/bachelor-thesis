@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.renderer.text;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -48,15 +48,15 @@ import java.util.List;
  */
 public abstract class AbstractWordRenderer implements WordRenderer {
 
-    public static final ColorRangeRGBA DEFAULT_COLOR_RANGE;
+    public static final ColorRangeContainer DEFAULT_COLOR_RANGE;
     public static final List<Font> DEFAULT_FONTS = new ArrayList<>();
 
     static {
-        DEFAULT_COLOR_RANGE = new ColorRangeRGBA(0);
+        DEFAULT_COLOR_RANGE = new ColorRangeContainer(0);
         DEFAULT_FONTS.add(new Font("Arial", Font.BOLD, 40));
 //        DEFAULT_FONTS.add(new Font("Courier", Font.BOLD, 40));
     }
-    protected ColorRangeRGBA colorRange;
+    protected ColorRangeContainer colorRange;
     protected List<Font> fonts;
     private double xOffset;
     private double yOffset;
@@ -73,7 +73,7 @@ public abstract class AbstractWordRenderer implements WordRenderer {
      * @param colorRange
      * @param fonts
      */
-    public AbstractWordRenderer(ColorRangeRGBA colorRange, List<Font> fonts,
+    public AbstractWordRenderer(ColorRangeContainer colorRange, List<Font> fonts,
                                 double xOffset, double yOffset,
                                 float strokeWidth) {
         this.colorRange = colorRange;

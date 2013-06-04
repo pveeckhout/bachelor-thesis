@@ -24,7 +24,7 @@
 package bachelorthesis.captchabuilder.elementcreator.renderer.gimpy;
 
 import bachelorthesis.captchabuilder.elementcreator.CaptchaElementCreatorBuilder;
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.renderer.GimpyRendererType;
 
 /**
@@ -44,13 +44,13 @@ public class GimpyRendererBuilder implements CaptchaElementCreatorBuilder {
 
     private double d1;
     private double d2;
-    private ColorRangeRGBA colorRange1;
-    private ColorRangeRGBA colorRange2;
+    private ColorRangeContainer colorRange1;
+    private ColorRangeContainer colorRange2;
     private GimpyRendererType type;
 
     public GimpyRendererBuilder(GimpyRendererType type) {
-        this.colorRange1 = new ColorRangeRGBA(211, 211, 211);
-        this.colorRange2 = new ColorRangeRGBA(169, 169, 169);
+        this.colorRange1 = new ColorRangeContainer(211, 211, 211);
+        this.colorRange2 = new ColorRangeContainer(169, 169, 169);
 
         this.d1 = 3.0;
         this.d2 = 75;
@@ -74,12 +74,12 @@ public class GimpyRendererBuilder implements CaptchaElementCreatorBuilder {
         return this;
     }
 
-    public GimpyRendererBuilder setColorRange1(ColorRangeRGBA colorRange1) {
+    public GimpyRendererBuilder setColorRange1(ColorRangeContainer colorRange1) {
         this.colorRange1 = colorRange1;
         return this;
     }
 
-    public GimpyRendererBuilder setColorRange2(ColorRangeRGBA colorRange2) {
+    public GimpyRendererBuilder setColorRange2(ColorRangeContainer colorRange2) {
         this.colorRange2 = colorRange2;
         return this;
     }

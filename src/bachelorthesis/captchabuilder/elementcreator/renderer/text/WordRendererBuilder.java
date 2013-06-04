@@ -24,7 +24,7 @@
 package bachelorthesis.captchabuilder.elementcreator.renderer.text;
 
 import bachelorthesis.captchabuilder.elementcreator.CaptchaElementCreatorBuilder;
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
 import bachelorthesis.captchabuilder.util.enums.renderer.WordRendererType;
 import java.awt.Font;
@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class WordRendererBuilder implements CaptchaElementCreatorBuilder {
 
-    private ColorRangeRGBA colorRange;
+    private ColorRangeContainer colorRange;
     private List<Font> fonts;
     private double xOffset;
     private double yOffset;
@@ -61,7 +61,7 @@ public class WordRendererBuilder implements CaptchaElementCreatorBuilder {
         this.type = type;
     }
 
-    public WordRendererBuilder setColorRange(ColorRangeRGBA colorRange) {
+    public WordRendererBuilder setColorRange(ColorRangeContainer colorRange) {
         this.colorRange = colorRange;
         return this;
     }

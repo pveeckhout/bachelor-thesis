@@ -26,7 +26,7 @@ package bachelorthesis.neuralnetworks.util;
 import bachelorthesis.captchabuilder.elementcreator.renderer.text.AbstractWordRenderer;
 import bachelorthesis.captchabuilder.elementcreator.renderer.text.DefaultWordRenderer;
 import bachelorthesis.captchabuilder.elementcreator.renderer.text.WordRenderer;
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -65,7 +65,7 @@ public class EncogTrainingSet {
         double[][] inputTrainingsSet = new double[chars.length][];
         System.out.println("building Trainingsets");
         BufferedImage img;
-        WordRenderer renderer = new DefaultWordRenderer(new ColorRangeRGBA(0, 0,
+        WordRenderer renderer = new DefaultWordRenderer(new ColorRangeContainer(0, 0,
                                                                            0,
                                                                            255),
                                                         AbstractWordRenderer.DEFAULT_FONTS,

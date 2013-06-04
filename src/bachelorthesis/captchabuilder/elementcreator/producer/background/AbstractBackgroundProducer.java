@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.background;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import java.awt.image.BufferedImage;
 
 /**
@@ -41,11 +41,11 @@ import java.awt.image.BufferedImage;
  */
 public abstract class AbstractBackgroundProducer implements BackgroundProducer {
 
-    protected ColorRangeRGBA colorRange1;
-    protected ColorRangeRGBA colorRange2;
+    protected ColorRangeContainer colorRange1;
+    protected ColorRangeContainer colorRange2;
 
-    protected AbstractBackgroundProducer(ColorRangeRGBA colors1Range,
-                                         ColorRangeRGBA colors2Range) {
+    protected AbstractBackgroundProducer(ColorRangeContainer colors1Range,
+                                         ColorRangeContainer colors2Range) {
         this.colorRange1 = colors1Range;
         this.colorRange2 = colors2Range;
     }

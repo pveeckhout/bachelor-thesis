@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.border;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 
@@ -48,7 +48,7 @@ public class SolidBorderProducer extends AbstractBorderProducer {
      * @param colorRange the colour collection to choose from
      * @param thickness  the border thickness
      */
-    public SolidBorderProducer(ColorRangeRGBA colorRange, int thickness) {
+    public SolidBorderProducer(ColorRangeContainer colorRange, int thickness) {
         super(colorRange, thickness);
     }
 

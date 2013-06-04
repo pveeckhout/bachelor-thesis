@@ -24,7 +24,7 @@
 package bachelorthesis.captchabuilder.elementcreator.producer.background;
 
 import bachelorthesis.captchabuilder.elementcreator.CaptchaElementCreatorBuilder;
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.producer.BackgroundProducerType;
 
 /**
@@ -42,8 +42,8 @@ import bachelorthesis.captchabuilder.util.enums.producer.BackgroundProducerType;
  */
 public class BackgroundProducerBuilder implements CaptchaElementCreatorBuilder {
 
-    private ColorRangeRGBA colorRange1;
-    private ColorRangeRGBA colorRange2;
+    private ColorRangeContainer colorRange1;
+    private ColorRangeContainer colorRange2;
     private BackgroundProducerType type;
 
     /**
@@ -56,33 +56,33 @@ public class BackgroundProducerBuilder implements CaptchaElementCreatorBuilder {
 
         switch (type) {
             case FLATCOLOR:
-                colorRange1 = new ColorRangeRGBA(222, 222, 222);
-                colorRange2 = new ColorRangeRGBA(222, 222, 222);
+                colorRange1 = new ColorRangeContainer(222, 222, 222);
+                colorRange2 = new ColorRangeContainer(222, 222, 222);
                 break;
             case SQUIGGLES:
-                colorRange1 = new ColorRangeRGBA(0);
-                colorRange2 = new ColorRangeRGBA(0);
+                colorRange1 = new ColorRangeContainer(0);
+                colorRange2 = new ColorRangeContainer(0);
                 break;
             case TRANSPARENT:
-                colorRange1 = new ColorRangeRGBA(255, 255, 255);
-                colorRange2 = new ColorRangeRGBA(255, 255, 255);
+                colorRange1 = new ColorRangeContainer(255, 255, 255);
+                colorRange2 = new ColorRangeContainer(255, 255, 255);
                 break;
             case TWOCOLORGRADIENT:
-                colorRange1 = new ColorRangeRGBA(0, 0, 255);
-                colorRange2 = new ColorRangeRGBA(0, 255, 0);
+                colorRange1 = new ColorRangeContainer(0, 0, 255);
+                colorRange2 = new ColorRangeContainer(0, 255, 0);
                 break;
             default:
-                colorRange1 = new ColorRangeRGBA(211, 211, 211);
-                colorRange2 = new ColorRangeRGBA(169, 169, 169);
+                colorRange1 = new ColorRangeContainer(211, 211, 211);
+                colorRange2 = new ColorRangeContainer(169, 169, 169);
         }
     }
 
-    public BackgroundProducerBuilder setColorRange1(ColorRangeRGBA colorRange1) {
+    public BackgroundProducerBuilder setColorRange1(ColorRangeContainer colorRange1) {
         this.colorRange1 = colorRange1;
         return this;
     }
 
-    public BackgroundProducerBuilder setColorRange2(ColorRangeRGBA colorRange2) {
+    public BackgroundProducerBuilder setColorRange2(ColorRangeContainer colorRange2) {
         this.colorRange2 = colorRange2;
         return this;
     }

@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.renderer.text;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
 import java.awt.Font;
 import java.awt.font.GlyphVector;
@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class DefaultWordRenderer extends AbstractWordRenderer {
 
-    public DefaultWordRenderer(ColorRangeRGBA colorRange, List<Font> fonts,
+    public DefaultWordRenderer(ColorRangeContainer colorRange, List<Font> fonts,
                                double xOffset, double yOffset, float strokeWidth) {
         super(colorRange, fonts, xOffset, yOffset, strokeWidth);
     }

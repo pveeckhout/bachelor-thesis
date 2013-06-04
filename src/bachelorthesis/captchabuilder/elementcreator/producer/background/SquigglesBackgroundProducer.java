@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.background;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -51,8 +51,8 @@ public class SquigglesBackgroundProducer extends AbstractBackgroundProducer {
      * @param colorRange1 the first colour collection
      * @param colorRange2 the second colour collection
      */
-    public SquigglesBackgroundProducer(ColorRangeRGBA colorRange1,
-                                       ColorRangeRGBA colorRange2) {
+    public SquigglesBackgroundProducer(ColorRangeContainer colorRange1,
+                                       ColorRangeContainer colorRange2) {
         super(colorRange1, colorRange2);
     }
 

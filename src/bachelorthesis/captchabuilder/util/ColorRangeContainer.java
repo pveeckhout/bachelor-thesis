@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * ColorRangeRGBA.java (UTF-8)
+ * ColorRangeContainer.java (UTF-8)
  *
  * usage and functionality here
  *
@@ -41,7 +41,7 @@ import java.util.Random;
  * @since 1.1.0
  * @version 1.1.0
  */
-public class ColorRangeRGBA {
+public class ColorRangeContainer {
 
     private final int startR;
     private final int endR;
@@ -60,7 +60,7 @@ public class ColorRangeRGBA {
      * <p/>
      * @param MSa a colour in MSaccess format
      */
-    public ColorRangeRGBA(int MSa) {
+    public ColorRangeContainer(int MSa) {
         this(MSa, MSa);
     }
 
@@ -69,7 +69,7 @@ public class ColorRangeRGBA {
      * <p/>
      * @param hexList a list of colours in hexadecimal form
      */
-    public ColorRangeRGBA(List<String> hexList) {
+    public ColorRangeContainer(List<String> hexList) {
         this(0);
         this.listMode = true;
         this.hexList = hexList;
@@ -80,7 +80,7 @@ public class ColorRangeRGBA {
      * <p/>
      * @param rgba a collection of colours in RGBA format
      */
-    public ColorRangeRGBA(int[] rgba) {
+    public ColorRangeContainer(int[] rgba) {
         this(rgba, rgba);
     }
 
@@ -91,7 +91,7 @@ public class ColorRangeRGBA {
      * @param g a colour's green value
      * @param b a colour's blue value
      */
-    public ColorRangeRGBA(int r, int g, int b) {
+    public ColorRangeContainer(int r, int g, int b) {
         this(r, g, b, 0);
     }
 
@@ -103,7 +103,7 @@ public class ColorRangeRGBA {
      * @param b a colour's blue value
      * @param a a colour's alpha value
      */
-    public ColorRangeRGBA(int r, int b, int g, int a) {
+    public ColorRangeContainer(int r, int b, int g, int a) {
         this(r, r, g, g, g, g, a, a);
     }
 
@@ -113,7 +113,7 @@ public class ColorRangeRGBA {
      * @param startRGBa the start of a colour range in RGBa format
      * @param endRGBa   the end of a colour range in RGBa format
      */
-    public ColorRangeRGBA(int[] startRGBa, int[] endRGBa) {
+    public ColorRangeContainer(int[] startRGBa, int[] endRGBa) {
         this(startRGBa[0], endRGBa[0], startRGBa[1], endRGBa[1], startRGBa[2],
              endRGBa[2], startRGBa[3], endRGBa[3]);
     }
@@ -124,7 +124,7 @@ public class ColorRangeRGBA {
      * @param startMSa the start of a colour range in MSAcces format
      * @param endMSa   the start of a colour range in MSAcces format
      */
-    public ColorRangeRGBA(int startMSa, int endMSa) {
+    public ColorRangeContainer(int startMSa, int endMSa) {
         this(ImageUtil.msAccesToRGBa(startMSa), ImageUtil.msAccesToRGBa(endMSa));
     }
 
@@ -140,7 +140,7 @@ public class ColorRangeRGBA {
      * @param startA the start of a colour range alpha value
      * @param endA   the end of a colour range red value
      */
-    public ColorRangeRGBA(int startR, int endR, int startG, int endG, int startB,
+    public ColorRangeContainer(int startR, int endR, int startG, int endG, int startB,
                           int endB, int startA, int endA) {
         this.random = CaptchaConstants.RANDOM;
         this.startR = startR;

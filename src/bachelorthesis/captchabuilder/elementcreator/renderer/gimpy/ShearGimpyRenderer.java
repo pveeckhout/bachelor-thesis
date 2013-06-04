@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.renderer.gimpy;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
 import java.awt.image.BufferedImage;
 
@@ -47,8 +47,8 @@ public class ShearGimpyRenderer extends AbstractGimpyRenderer {
 
     private Random random;
 
-    public ShearGimpyRenderer(double d1, double d2, ColorRangeRGBA colorRange1,
-                              ColorRangeRGBA colorRange2) {
+    public ShearGimpyRenderer(double d1, double d2, ColorRangeContainer colorRange1,
+                              ColorRangeContainer colorRange2) {
         super(d1, d2, colorRange1, colorRange2);
         this.random = CaptchaConstants.RANDOM;
     }

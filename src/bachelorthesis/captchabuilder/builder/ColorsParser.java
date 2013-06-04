@@ -21,7 +21,7 @@
  */
 package bachelorthesis.captchabuilder.builder;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.ImageUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,9 +50,9 @@ public class ColorsParser {
      * @return a ColorRangRGBA object
      * <p/>
      * @throws ParseException
-     * @see ColorRangeRGBA
+     * @see ColorRangeContainer
      */
-    public static ColorRangeRGBA parse(String[] colorArgs) throws ParseException {
+    public static ColorRangeContainer parse(String[] colorArgs) throws ParseException {
 
         System.out.println("parsing colors option: " + Arrays.deepToString(
                 colorArgs));
@@ -66,7 +66,7 @@ public class ColorsParser {
                 }
                 String startHex = "#" + colorArgs[1].toUpperCase();
                 String endHex = "#" + colorArgs[2].toUpperCase();
-                return new ColorRangeRGBA(ImageUtil.hexadecimalToRGBa(startHex),
+                return new ColorRangeContainer(ImageUtil.hexadecimalToRGBa(startHex),
                                           ImageUtil.hexadecimalToRGBa(endHex));
             case LIST:
                 if (colorArgs.length < 2) {
@@ -79,7 +79,7 @@ public class ColorsParser {
                     hexList.add(colorHex);
                 }
 
-                return new ColorRangeRGBA(hexList);
+                return new ColorRangeContainer(hexList);
             default:
                 throw new ParseException("Colors option not found: " +
                         colorOptionType.name());

@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.background;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -51,8 +51,8 @@ public class TwoColorGradientBackgroundProducer extends AbstractBackgroundProduc
      * @param colorRange1 the first colour collection
      * @param colorRange2 the second colour collection
      */
-    public TwoColorGradientBackgroundProducer(ColorRangeRGBA colorRange1,
-                                              ColorRangeRGBA colorRange2) {
+    public TwoColorGradientBackgroundProducer(ColorRangeContainer colorRange1,
+                                              ColorRangeContainer colorRange2) {
         super(colorRange1, colorRange2);
     }
 

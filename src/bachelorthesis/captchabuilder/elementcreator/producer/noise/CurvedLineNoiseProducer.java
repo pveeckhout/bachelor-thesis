@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.noise;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -55,7 +55,7 @@ public class CurvedLineNoiseProducer extends AbstractNoiseProducer {
      * @param colorRange the colour collection to choose from
      * @param thickness  the border thickness
      */
-    public CurvedLineNoiseProducer(float thickness, ColorRangeRGBA colorRange) {
+    public CurvedLineNoiseProducer(float thickness, ColorRangeContainer colorRange) {
         super(thickness, colorRange);
     }
 

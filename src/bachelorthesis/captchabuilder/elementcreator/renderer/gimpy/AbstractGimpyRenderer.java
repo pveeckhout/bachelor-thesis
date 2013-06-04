@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.renderer.gimpy;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 
 /**
  * AbstractGimpyRenderer.java (UTF-8)
@@ -42,12 +42,12 @@ public abstract class AbstractGimpyRenderer implements GimpyRenderer {
 
     protected double d1;
     protected double d2;
-    protected ColorRangeRGBA colorRange1;
-    protected ColorRangeRGBA colorRange2;
+    protected ColorRangeContainer colorRange1;
+    protected ColorRangeContainer colorRange2;
 
     protected AbstractGimpyRenderer(double d1, double d2,
-                                    ColorRangeRGBA colorRange1,
-                                    ColorRangeRGBA colorRange2) {
+                                    ColorRangeContainer colorRange1,
+                                    ColorRangeContainer colorRange2) {
         this.d1 = d1;
         this.d2 = d2;
         this.colorRange1 = colorRange1;

@@ -23,7 +23,7 @@
  */
 package bachelorthesis.captchabuilder.elementcreator.producer.noise;
 
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -50,7 +50,7 @@ public class StraightLineNoiseProducer extends AbstractNoiseProducer {
      * @param colorRange the colour collection to choose from
      * @param thickness  the border thickness
      */
-    public StraightLineNoiseProducer(float thickness, ColorRangeRGBA colorRange) {
+    public StraightLineNoiseProducer(float thickness, ColorRangeContainer colorRange) {
         super(thickness, colorRange);
     }
 

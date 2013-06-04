@@ -24,7 +24,7 @@
 package bachelorthesis.captchabuilder.elementcreator.producer.border;
 
 import bachelorthesis.captchabuilder.elementcreator.CaptchaElementCreatorBuilder;
-import bachelorthesis.captchabuilder.util.ColorRangeRGBA;
+import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.producer.BorderProducerType;
 
 /**
@@ -42,7 +42,7 @@ import bachelorthesis.captchabuilder.util.enums.producer.BorderProducerType;
  */
 public class BorderProducerBuilder implements CaptchaElementCreatorBuilder {
 
-    private ColorRangeRGBA colorRange;
+    private ColorRangeContainer colorRange;
     private int thickness;
     private BorderProducerType type;
 
@@ -53,11 +53,11 @@ public class BorderProducerBuilder implements CaptchaElementCreatorBuilder {
      */
     public BorderProducerBuilder(BorderProducerType type) {
         this.type = type;
-        this.colorRange = new ColorRangeRGBA(0);
+        this.colorRange = new ColorRangeContainer(0);
         this.thickness = 1;
     }
 
-    public BorderProducerBuilder setColorRange(ColorRangeRGBA colorRange) {
+    public BorderProducerBuilder setColorRange(ColorRangeContainer colorRange) {
         this.colorRange = colorRange;
         return this;
     }
