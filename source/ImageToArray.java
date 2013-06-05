@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.captchacleanup.image;
+package bachelorthesis.captchacleanup;
 
 import java.awt.image.BufferedImage;
 
@@ -39,8 +39,6 @@ import java.awt.image.BufferedImage;
  * @version 1.0.0
  */
 public class ImageToArray {
-    private static final double INRANGEVALUE = 1;
-    private static final double OUTRANGEVALUE = -1;
 
     /**
      * extracts the image data, all pixels within the colour range return true
@@ -95,7 +93,7 @@ public class ImageToArray {
      */
     public static double[][] colorRangeToDoubleArray(BufferedImage image,
                                                      int startRange,
-                                                     int endRange) {
+                                                     int endRange, double inRangeValue, double outRangeValue) {
         double[][] array = new double[image.getWidth()][image.getHeight()];
         int startR = (startRange >> 16) & 0x000000FF;
         int startG = (startRange >> 8) & 0x000000FF;
@@ -114,9 +112,9 @@ public class ImageToArray {
                     int B = (startRange) & 0x000000FF;
                     if (startR <= R && R <= endR && startG <= G && G <= endG &&
                             startB <= B && B <= endB) {
-                        array[x][y] = INRANGEVALUE;
+                        array[x][y] = inRangeValue;
                     } else {
-                        array[x][y] = OUTRANGEVALUE;
+                        array[x][y] = outRangeValue;
                     }
                 }
             }

@@ -48,11 +48,11 @@ import javax.imageio.ImageIO;
 public class Captcha implements Serializable {
 
     private static final long serialVersionUID = 617954136L;
-    private final String answer;
-    private final String buildSequence;
-    private final boolean caseSensative;
-    private final Date timestamp;
-    private final BufferedImage captchaImage;
+    private String answer;
+    private String buildSequence;
+    private boolean caseSensative;
+    private Date timestamp;
+    private BufferedImage captchaImage;
 
     /**
      * Constructor
@@ -126,5 +126,22 @@ public class Captcha implements Serializable {
                 .append(buildSequence)
                 .append("]")
                 .toString();
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(buildSequence);
+        out.writeObject(answer);
+        out.writeObject(caseSensative);
+        out.writeObject(timestamp);
+        ImageIO.write(captchaImage, "png", ImageIO.createImageOutputStream(out));
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException,
+            ClassNotFoundException {
+        buildSequence = (String) in.readObject();
+        answer = (String) in.readObject();
+        caseSensative = (Boolean) in.readObject();
+        timestamp = (Date) in.readObject();
+        captchaImage = ImageIO.read(ImageIO.createImageInputStream(in));
     }
 }
