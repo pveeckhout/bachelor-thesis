@@ -23,7 +23,7 @@
  */
 package bachelorthesis.neuralnetworks.util;
 
-import bachelorthesis.captchacleanup.image.ImageToArray;
+import bachelorthesis.captchacleanup.ImageToArray;
 import java.awt.image.BufferedImage;
 import org.encog.ml.data.specific.BiPolarNeuralData;
 

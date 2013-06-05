@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.captchacleanup.image;
+package bachelorthesis.captchacleanup;
 
 import java.awt.image.BufferedImage;
 
