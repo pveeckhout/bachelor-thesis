@@ -24,6 +24,11 @@
 package bachelorthesis.neuralnetworks.network.encog.kohonen;
 
 import bachelorthesis.neuralnetworks.network.NeuralNetwork;
+import static bachelorthesis.neuralnetworks.network.encog.kohonen.NeighborhoodFunctionType.BUBLLE;
+import static bachelorthesis.neuralnetworks.network.encog.kohonen.NeighborhoodFunctionType.RBF;
+import static bachelorthesis.neuralnetworks.network.encog.kohonen.NeighborhoodFunctionType.RBF1D;
+import static bachelorthesis.neuralnetworks.network.encog.kohonen.NeighborhoodFunctionType.SINGLE;
+import bachelorthesis.neuralnetworks.util.TrainingSet;
 import java.util.HashMap;
 import java.util.Map;
 import org.encog.mathutil.rbf.RBFEnum;
@@ -54,7 +59,6 @@ import org.encog.neural.som.training.basic.neighborhood.NeighborhoodSingle;
  */
 public class EncogKohonenNetwork extends NeuralNetwork {
 
-    private double trainingInput[][];
     private Map<Integer, Double[]> output;
     private SOM network;
     private NeighborhoodFunctionType neighborhoodFunctionType;
@@ -65,12 +69,10 @@ public class EncogKohonenNetwork extends NeuralNetwork {
     private double error;
     private boolean forceWinner;
 
-    protected EncogKohonenNetwork(double[][] trainingInput,
-            NeighborhoodFunctionType neighborhoodFunction,
-            RBFEnum radialBiasFunction, int radius, double learningRate, double error, boolean forceWinner, int id, int hSize,
-            int vSize) {
-        super(id, hSize, vSize);
-        this.trainingInput = trainingInput;
+    protected EncogKohonenNetwork(NeighborhoodFunctionType neighborhoodFunction,
+            RBFEnum radialBiasFunction, int radius, double learningRate,
+            double error, boolean forceWinner, int id) {
+        super(id);
         this.neighborhoodFunctionType = neighborhoodFunction;
         this.radialBiasFunction = radialBiasFunction;
         this.radius = radius;
@@ -85,14 +87,12 @@ public class EncogKohonenNetwork extends NeuralNetwork {
     }
 
     @Override
-    public void buildNetwork() {
-        network = new SOM((super.getHsize() * super
-                .getVsize()), trainingInput.length);
+    public void buildAndTrainNetwork(TrainingSet trainingSet) {
+        network = new SOM(trainingSet.getInputCount(), trainingSet.getTrainingSetCount());
         network.reset();
-    }
-
-    @Override
-    public void trainNetwork() {
+        
+        double[][] trainingInput = trainingSet.getInput();
+        
         MLDataSet training = new BasicMLDataSet(trainingInput, null);
 
         NeighborhoodFunction neighborhoodFunction;
@@ -127,6 +127,7 @@ public class EncogKohonenNetwork extends NeuralNetwork {
             train.iteration();
             err = train.getError();
             System.out.println("Iteration: " + iteration + ", Error:" + err + ", target error: " + error);
+            iteration++;
         }
         
         

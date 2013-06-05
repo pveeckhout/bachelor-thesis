@@ -58,13 +58,8 @@ public class DefaultNeuralNetworkController implements NeuralNetworkController<C
     }
 
     @Override
-    public void buildNetwork() {
-        network.buildNetwork();
-    }
-
-    @Override
-    public void trainNetwork() {
-        network.trainNetwork();
+    public void buildAndTrainNetwork(CharactersTrainingSet trainingSet) {
+        network.buildAndTrainNetwork(trainingSet);
     }
 
     @Override

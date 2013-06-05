@@ -24,6 +24,7 @@
 package bachelorthesis.neuralnetworks.network.encog.hopfield;
 
 import bachelorthesis.neuralnetworks.network.NeuralNetwork;
+import bachelorthesis.neuralnetworks.util.TrainingSet;
 import org.encog.ml.data.specific.BiPolarNeuralData;
 import org.encog.neural.thermal.HopfieldNetwork;
 
@@ -42,43 +43,28 @@ import org.encog.neural.thermal.HopfieldNetwork;
  */
 public class EncogHopfieldNetwork extends NeuralNetwork {
 
-    private double trainingInput[][];
     private HopfieldNetwork network;
-    private final int neuroncount;
+    private int neuroncount;
 
     /**
      * Constructor
      * <p/>
-     * @param trainingInput the inputs for training the network
-     * @param id            the network id
-     * @param hSize         the horizontal size of the network
-     * @param vSize         the vertical size of the network
+     * @param id the network id
      */
-    protected EncogHopfieldNetwork(double[][] trainingInput, int id, int hSize,
-                                   int vSize) {
-        super(id, hSize, vSize);
-        this.trainingInput = trainingInput;
-        neuroncount = vSize * hSize;
-
-        if (neuroncount != trainingInput[0].length) {
-            IllegalArgumentException e = new IllegalArgumentException(
-                    "the length of the trainingsinputs and the neuroncount do not match");
-            throw e;
-        }
+    protected EncogHopfieldNetwork(int id) {
+        super(id);
     }
 
     @Override
-    public void buildNetwork() {
+    public void buildAndTrainNetwork(TrainingSet trainingSet) {
+        neuroncount = trainingSet.getInputCount();
         System.out.println("Building hopfield network");
-        network = new HopfieldNetwork(neuroncount);
-    }
-
-    @Override
-    public void trainNetwork() {
+        network = new HopfieldNetwork(trainingSet.getInputCount());
+        
         network.reset();
         System.out.println("Training hopfield network");
         long startTimeLong = System.nanoTime();
-        for (double[] ds : trainingInput) {
+        for (double[] ds : trainingSet.getInput()) {
             network.addPattern(doubleArrayToBiPolarNeuralData(ds));
         }
         long endTimeLong = System.nanoTime();
@@ -101,30 +87,28 @@ public class EncogHopfieldNetwork extends NeuralNetwork {
 
     @Override
     public double[] evaluate(double[] input, int maxIterations) {
-        System.out.println("hopfield network evaluating with max iterations: " +
-                maxIterations);
+        System.out.println("hopfield network evaluating with max iterations: "
+                + maxIterations);
         BiPolarNeuralData inputPattern = doubleArrayToBiPolarNeuralData(input);
         network.setCurrentState(inputPattern);
         int cycles = network.runUntilStable(maxIterations);
-        System.out.println("Cycles until stable(max " + maxIterations + "): " +
-                cycles + ", result=");
+        System.out.println("Cycles until stable(max " + maxIterations + "): "
+                + cycles);
         BiPolarNeuralData outputPattern = (BiPolarNeuralData) network
                 .getCurrentState();
-        System.out.println(convertForDisplay(inputPattern, outputPattern));
         return outputPattern.getData();
     }
 
-    private String convertForDisplay(BiPolarNeuralData inputPattern,
-                                     BiPolarNeuralData outputPattern) {
+    public static String convertForDisplay(double[] inputPattern, double[] outputPattern, int width, int height) {
         int index1 = 0;
         int index2 = 0;
         StringBuilder block = new StringBuilder();
 
-        for (int row = 0; row < super.getVsize(); row++) {
+        for (int row = 0; row < height; row++) {
 
 
-            for (int col = 0; col < super.getHsize(); col++) {
-                if (inputPattern.getBoolean(index1++)) {
+            for (int col = 0; col < width; col++) {
+                if (inputPattern[index1++] == 1) {
                     block.append('O');
                 } else {
                     block.append(' ');
@@ -133,8 +117,8 @@ public class EncogHopfieldNetwork extends NeuralNetwork {
 
             block.append("   ->   ");
 
-            for (int col = 0; col < super.getHsize(); col++) {
-                if (outputPattern.getBoolean(index2++)) {
+            for (int col = 0; col < width; col++) {
+                if (outputPattern[index2++] == 1) {
                     block.append('O');
                 } else {
                     block.append(' ');
@@ -149,6 +133,6 @@ public class EncogHopfieldNetwork extends NeuralNetwork {
 
     @Override
     public String getLayerLayout() {
-        return "[ " + getHsize() + " X " + getVsize() + " ]";
+        return "[ " + neuroncount + " ]";
     }
 }

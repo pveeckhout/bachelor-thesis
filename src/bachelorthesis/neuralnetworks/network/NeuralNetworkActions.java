@@ -23,6 +23,8 @@
  */
 package bachelorthesis.neuralnetworks.network;
 
+import bachelorthesis.neuralnetworks.util.TrainingSet;
+
 /**
  * NeuralNetworkActions.java (UTF-8)
  *
@@ -36,25 +38,24 @@ package bachelorthesis.neuralnetworks.network;
  * @since 1.0.0
  * @version 1.0.0
  */
-public interface NeuralNetworkActions {
+public interface NeuralNetworkActions<T extends TrainingSet> {
 
     /**
-     * Build/generates the network.
+     * Build/generates the network and trains it.
+     *
+     * @param trainingSet The trainingSet used to train
+     * @see TrainingSet
      */
-    public void buildNetwork();
-
-    /**
-     * Trains the network
-     */
-    public void trainNetwork();
+    public void buildAndTrainNetwork(T trainingSet);
 
     /**
      * evaluates the input with the network.
      *
-     * @param input         the object to be evaluated
+     * @param input the object to be evaluated
      * @param maxIterations the maximum iterations before giving up
      * <p/>
      * @return the result
      */
     public double[] evaluate(double[] input, int maxIterations);
+
 }

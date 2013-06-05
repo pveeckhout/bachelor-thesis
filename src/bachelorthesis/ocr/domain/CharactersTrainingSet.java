@@ -55,10 +55,13 @@ import javax.imageio.ImageIO;
 public class CharactersTrainingSet extends TrainingSet {
 
     private char[] chars;
-    private int height, width;
+    private final int height;
+    private final int width;
 
     public CharactersTrainingSet(char[] chars, int width, int height) {
-        super(width*height, 8);
+        super(width * height, 8);
+        this.height = height;
+        this.width = width;
         this.chars = chars;
         super.setTrainingSetCount(chars.length);
     }
@@ -77,19 +80,27 @@ public class CharactersTrainingSet extends TrainingSet {
         this.chars = chars;
         setInput(new double[chars.length][super.getInputCount()]);
     }
-    
+
     public char getChar(int set) throws RuntimeException {
         if ((set < 0) || (set >= getTrainingSetCount())) {
             throw (new RuntimeException("Training set out of range:" + set));
         }
         return chars[set];
     }
-    
-    public void setChar (int set, char character) throws RuntimeException {
+
+    public void setChar(int set, char character) throws RuntimeException {
         if ((set < 0) || (set >= getTrainingSetCount())) {
             throw (new RuntimeException("Training set out of range:" + set));
         }
         this.chars[set] = character;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     public void buildSet() {
@@ -102,7 +113,7 @@ public class CharactersTrainingSet extends TrainingSet {
                 CaptchaConstants.DEFAULT_STROKE_WIDTH);
         for (int i = 0; i < chars.length; i++) {
             char c = chars[i];
-            
+
             img = new BufferedImage(40, 50, BufferedImage.TYPE_INT_ARGB);
             renderer.render(String.valueOf(c), img);
 
@@ -112,15 +123,20 @@ public class CharactersTrainingSet extends TrainingSet {
                         .getType());
                 Graphics2D g = resized.createGraphics();
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                   RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                        RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                 g.drawImage(img, 0, 0, width, height, 0, 0, img.getWidth(), img
                         .getHeight(), null);
                 g.dispose();
 
                 //replace the origal with the resized
                 img = resized;
-                
-                try {
+            }
+
+            setInputSet(i, ImageToInputPattern
+                    .colorRangeToDoubleInputPattern(img, 0, 0, 1, -1));
+            setOutputSet(i, CharacterPatternUtils
+                    .characterToBitArray(c));
+            try {
                 String path = "TrainingsetImages/";
                 // if the directory does not exist, create it and it's parents
                 File theDir = new File(path);
@@ -132,16 +148,10 @@ public class CharactersTrainingSet extends TrainingSet {
                     }
                 }
 
-                ImageIO.write(img, "png", new File(path + Character.getName(c) +
-                        "-" + width + "X" + height + ".png"));
+                ImageIO.write(img, "png", new File(path + Character.getName(c)
+                        + "-" + width + "X" + height + ".png"));
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
-            }
-
-            setInputSet(i, ImageToInputPattern
-                    .colorRangeToDoubleInputPattern(img, 0, 0));
-            setOutputSet(i, CharacterPatternUtils
-                    .characterToBitArray(c));
             }
         }
     }

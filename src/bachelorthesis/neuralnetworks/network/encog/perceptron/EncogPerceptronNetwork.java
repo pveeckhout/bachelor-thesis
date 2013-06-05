@@ -25,6 +25,7 @@ package bachelorthesis.neuralnetworks.network.encog.perceptron;
 
 import bachelorthesis.neuralnetworks.network.NeuralNetwork;
 import static bachelorthesis.neuralnetworks.network.encog.perceptron.PropagationType.ManhattanPropagation;
+import bachelorthesis.neuralnetworks.util.TrainingSet;
 import java.util.List;
 import org.encog.engine.network.activation.ActivationSigmoid;
 import org.encog.ml.data.MLDataSet;
@@ -54,21 +55,18 @@ import org.encog.util.simple.EncogUtility;
  */
 public class EncogPerceptronNetwork extends NeuralNetwork {
 
-    private double trainingInput[][];
-    private double trainingIdeal[][];
     private BasicNetwork network;
     private int[] hiddenLayers;
     private double accuracy;
     private double learningRate;
     private List<Strategy> trainingStrategies;
     private PropagationType propagationType;
+    private int outputCount;
 
     /**
      * Constructor
      *
      * @param id                 the id of the network
-     * @param trainingInput      The inputs for the training
-     * @param trainingIdeal      the expected results for the training
      * @param hiddenLayers       the amount of neuron each hidden layer has (in
      *                           order)
      * @param acuracy            the desired accuracy
@@ -76,15 +74,11 @@ public class EncogPerceptronNetwork extends NeuralNetwork {
      *                           ManhattanPropagation)
      * @param trainingStrategies the training strategies to be used
      */
-    protected EncogPerceptronNetwork(int id, int hSize, int vSize,
-                                double[][] trainingInput,
-                                double[][] trainingIdeal, int[] hiddenLayers,
+    protected EncogPerceptronNetwork(int id, int[] hiddenLayers,
                                 double accuracy, double learningRate,
                                 List<Strategy> trainingStrategies,
                                 PropagationType propagationType) {
-        super(id, hSize, vSize);
-        this.trainingInput = trainingInput;
-        this.trainingIdeal = trainingIdeal;
+        super(id);
         this.hiddenLayers = hiddenLayers;
         this.accuracy = accuracy;
         this.learningRate = learningRate;
@@ -93,13 +87,14 @@ public class EncogPerceptronNetwork extends NeuralNetwork {
     }
 
     @Override
-    public void buildNetwork() {
+    public void buildAndTrainNetwork(TrainingSet trainingSet) {
         System.out.println("Building basic network");
         this.network = new BasicNetwork();
+        
+        this.outputCount = trainingSet.getOutputCount();
 
         System.out.println("Adding layers to network");
-        network.addLayer(new BasicLayer(null, true, (super.getHsize() * super
-                .getVsize())));
+        network.addLayer(new BasicLayer(null, true, trainingSet.getInputCount()));
         if (hiddenLayers != null) {
             for (int i : hiddenLayers) {
                 network.addLayer(
@@ -107,33 +102,28 @@ public class EncogPerceptronNetwork extends NeuralNetwork {
             }
         }
         network.addLayer(new BasicLayer(new ActivationSigmoid(), true,
-                                        trainingIdeal[0].length));
+                                        trainingSet.getOutputCount()));
 
         network.getStructure().finalizeStructure();
         network.reset();
-    }
-
-    @Override
-    public void trainNetwork() {
-        network.reset();
-
+        
         System.out.println("initializing network training system");
-        MLDataSet trainingSet = new BasicMLDataSet(trainingInput, trainingIdeal);
+        MLDataSet trainingData = new BasicMLDataSet(trainingSet.getInput(), trainingSet.getOutput());
         final MLTrain training;
 
         switch (propagationType) {
             case Backpropagation:
-                training = new Backpropagation(network, trainingSet);
+                training = new Backpropagation(network, trainingData);
                 break;
             case ManhattanPropagation:
-                training = new ManhattanPropagation(network, trainingSet,
+                training = new ManhattanPropagation(network, trainingData,
                                                     learningRate);
                 break;
             case ResilientPropagation:
-                training = new ResilientPropagation(network, trainingSet);
+                training = new ResilientPropagation(network, trainingData);
                 break;
             case ScaledConjugateGradient:
-                training = new ScaledConjugateGradient(network, trainingSet);
+                training = new ScaledConjugateGradient(network, trainingData);
                 break;
             default:
                 IllegalArgumentException e = new IllegalArgumentException(
@@ -167,7 +157,7 @@ public class EncogPerceptronNetwork extends NeuralNetwork {
 
     @Override
     public double[] evaluate(double[] input, int maxIterations) {
-        double[] output = new double[trainingIdeal[0].length];
+        double[] output = new double[outputCount];
         System.out.println("Evaluating input");
         long startTimeLong = System.nanoTime();
         network.compute(input, output);

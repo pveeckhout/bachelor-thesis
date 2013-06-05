@@ -41,7 +41,7 @@ import bachelorthesis.neuralnetworks.util.TrainingSet;
  * @since 1.0.0
  * @version 1.0.0
  */
-public interface NeuralNetworkController<T extends TrainingSet> extends NeuralNetworkActions {
+public interface NeuralNetworkController<T extends TrainingSet> extends NeuralNetworkActions<T> {
 
     public NeuralNetwork getNetwork();
 

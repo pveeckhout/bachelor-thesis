@@ -57,10 +57,10 @@ public class ImageToInputPattern {
      */
     public static double[] colorRangeToDoubleInputPattern(BufferedImage img,
                                                           int startRange,
-                                                          int endRange) {
+                                                          int endRange, double inRangeValue, double outRangeValue) {
         return reduceDimension(ImageToArray.colorRangeToDoubleArray(img,
                                                                     startRange,
-                                                                    endRange));
+                                                                    endRange, inRangeValue, outRangeValue));
     }
 
     private static double[] reduceDimension(double[][] data) {

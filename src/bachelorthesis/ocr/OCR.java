@@ -23,6 +23,7 @@
  */
 package bachelorthesis.ocr;
 
+import bachelorthesis.ocr.domain.DomainFacade;
 import javax.swing.JOptionPane;
 
 /**
@@ -50,20 +51,24 @@ public class OCR {
     }
 
     public OCR() {
+        DomainFacade dom = new DomainFacade();
         String input = null;
         boolean end = false;
 
         while (!end) {
-            input = JOptionPane.showInputDialog(null, "Plesae pick the network type:\n1: Hopfield\n2: MLP\n3: Kohonen\n\nexit: stop");
+            input = JOptionPane.showInputDialog(null, "Plesae pick the network type:\n1: Hopfield\n2: Kohonen\n3: Perceptron\n\nexit: stop");
 
             switch (input) {
                 case "1":
+                    dom.hopfield();
                     end = true;
                     break;
                 case "2":
+                    dom.kohonen();
                     end = true;
                     break;
                 case "3":
+                    dom.perceptron();
                     end = true;
                     break;
                 case "exit":

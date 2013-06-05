@@ -38,23 +38,14 @@ package bachelorthesis.neuralnetworks.network.encog.hopfield;
  */
 public class EncogHopfieldNetworkBuilder {
 
-    private double[][] trainingInput;
     private int id;
-    private int hSize;
-    private int vSize;
 
     /**
      * builder constructor
      * <p/>
      * @param trainingInput the input data for training
-     * @param hSize         the width of the network
-     * @param vSize         the height of the network
      */
-    public EncogHopfieldNetworkBuilder(double[][] trainingInput, int hSize,
-                                       int vSize) {
-        this.trainingInput = trainingInput;
-        this.hSize = hSize;
-        this.vSize = vSize;
+    public EncogHopfieldNetworkBuilder() {;
         this.id = -1;
     }
 
@@ -64,6 +55,6 @@ public class EncogHopfieldNetworkBuilder {
     }
 
     public EncogHopfieldNetwork createEncogHopfieldNetwork() {
-        return new EncogHopfieldNetwork(trainingInput, id, hSize, vSize);
+        return new EncogHopfieldNetwork(id);
     }
 }

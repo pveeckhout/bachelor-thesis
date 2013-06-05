@@ -43,15 +43,11 @@ import org.encog.ml.train.strategy.Strategy;
 public class EncogPerceptronNetworkBuilder {
 
     private int id;
-    private double[][] trainingInput;
-    private double[][] trainingIdeal;
     private int[] hiddenLayers;
     private double accuracy;
     private double learningRate;
     private List<Strategy> trainingStrategies;
     private PropagationType propagationType;
-    private int hSize;
-    private int vSize;
 
     /**
      * builderConstructor
@@ -59,31 +55,16 @@ public class EncogPerceptronNetworkBuilder {
      * @param trainingInput The inputs for the training
      * @param trainingIdeal the expected results for the training
      */
-    public EncogPerceptronNetworkBuilder(double[][] trainingInput,
-                                    double[][] trainingIdeal) {
+    public EncogPerceptronNetworkBuilder() {
         this.id = -1;
         this.accuracy = 0.00000000001;
         this.learningRate = 2;
         this.trainingStrategies = new ArrayList<>();
         this.propagationType = PropagationType.ResilientPropagation;
-        this.trainingInput = trainingInput;
-        this.trainingIdeal = trainingIdeal;
-        this.hSize = 40;
-        this.vSize = 50;
     }
 
     public EncogPerceptronNetworkBuilder setId(int id) {
         this.id = id;
-        return this;
-    }
-
-    public EncogPerceptronNetworkBuilder setHsize(int hSize) {
-        this.hSize = hSize;
-        return this;
-    }
-
-    public EncogPerceptronNetworkBuilder setVsize(int vSize) {
-        this.vSize = vSize;
         return this;
     }
 
@@ -115,8 +96,7 @@ public class EncogPerceptronNetworkBuilder {
     }
 
     public EncogPerceptronNetwork createEncogBasicLetterRecognitionNetwork() {
-        return new EncogPerceptronNetwork(id, hSize, vSize, trainingInput,
-                                     trainingIdeal, hiddenLayers, accuracy,
+        return new EncogPerceptronNetwork(id, hiddenLayers, accuracy,
                                      learningRate, trainingStrategies,
                                      propagationType);
     }

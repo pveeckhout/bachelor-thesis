@@ -23,10 +23,26 @@
  */
 package bachelorthesis.ocr.domain;
 
+import bachelorthesis.captchabuilder.Captcha;
+import bachelorthesis.captchabuilder.builder.CaptchaBuilder;
 import bachelorthesis.captchabuilder.util.ArrayUtil;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
+import bachelorthesis.neuralnetworks.network.encog.hopfield.EncogHopfieldNetwork;
 import bachelorthesis.neuralnetworks.network.encog.hopfield.EncogHopfieldNetworkBuilder;
+import bachelorthesis.neuralnetworks.network.encog.kohonen.EncogKohonenNetwork;
+import bachelorthesis.neuralnetworks.network.encog.kohonen.EncogKohonenNetworkBuilder;
 import bachelorthesis.neuralnetworks.util.TrainingSet;
+import bachelorthesis.ocr.util.CharacterPatternUtils;
+import bachelorthesis.ocr.util.ImageToInputPattern;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.apache.commons.cli.ParseException;
 
 /**
  * DomainFacade.java (UTF-8)
@@ -45,26 +61,110 @@ import bachelorthesis.neuralnetworks.util.TrainingSet;
  */
 public class DomainFacade {
 
-    private TrainingSet trainingSet;
+    public static final String BUILDSTRING = ":TEXT!TEXTPRODUCER#ALPHANUMERIC_SPECIAL@MINLENGTH*1@MAXLENGTH*1";
+    private CharactersTrainingSet trainingSet;
     private NeuralNetworkController networkController;
-    private int width, height;
-    
 
     public DomainFacade() {
-        width = 40;
-        height = 50;
         char[] chars = ArrayUtil.concat(CaptchaConstants.LETTERS,
                 CaptchaConstants.NUMBERS,
                 CaptchaConstants.SPECIAL);
-        trainingSet = new CharactersTrainingSet(chars, width, height);
-        
+        trainingSet = new CharactersTrainingSet(chars, 40, 50);
+
         networkController = new DefaultNeuralNetworkController();
     }
 
-    public DomainFacade(TrainingSet trainingSet, NeuralNetworkController networkController) {
+    public DomainFacade(CharactersTrainingSet trainingSet, NeuralNetworkController networkController) {
         this.trainingSet = trainingSet;
         this.networkController = networkController;
-        
+
         networkController.setTrainingSet(trainingSet);
-    }    
+    }
+
+    public CharactersTrainingSet getTrainingSet() {
+        return trainingSet;
+    }
+
+    public void setTrainingSet(CharactersTrainingSet trainingSet) {
+        this.trainingSet = trainingSet;
+    }
+
+    public NeuralNetworkController getNetworkController() {
+        return networkController;
+    }
+
+    public void setNetworkController(NeuralNetworkController networkController) {
+        this.networkController = networkController;
+    }
+
+    public void hopfield() {
+        networkController.setNetwork(new EncogHopfieldNetworkBuilder().createEncogHopfieldNetwork());
+
+        trainingSet.buildSet();
+        networkController.buildAndTrainNetwork(trainingSet);
+        Captcha captcha = createCaptcha(BUILDSTRING, trainingSet.getWidth(), trainingSet.getHeight());
+        double[] expectedResult = CharacterPatternUtils.characterToBitArray(captcha.getAnswer().charAt(0));
+        double[] inputPattern = ImageToInputPattern.colorRangeToDoubleInputPattern(captcha.getImage(), 0, 0, 1, -1);
+        double[] result = networkController.evaluate(inputPattern, 0);
+
+        System.out.println("Processing output");
+        for (int j = 0; j < result.length; j++) {
+            result[j] = (result[j] >= 0) ? 1 : 0;
+        }
+
+        boolean correct = Arrays.equals(result, expectedResult);
+
+        System.out.println(captcha.getAnswer().charAt(0) + " recognized? " + correct + "\n\n" + EncogHopfieldNetwork.convertForDisplay(inputPattern, result, trainingSet.getWidth(), trainingSet.getHeight()));
+
+    }
+
+    public void kohonen() {
+        networkController.setNetwork(new EncogKohonenNetworkBuilder().setForceWinner(true).setRadius(20).setLearningRate(5).setError(0.17).createEncogKohonenNetwork());
+        
+        char[] chars = CaptchaConstants.NUMBERS
+                ;
+        trainingSet = new CharactersTrainingSet(chars, 40, 50);
+        trainingSet.buildSet();
+        networkController.buildAndTrainNetwork(trainingSet);
+        Captcha captcha = createCaptcha(BUILDSTRING, trainingSet.getWidth(), trainingSet.getHeight());
+        double[] expectedResult = CharacterPatternUtils.characterToBitArray(captcha.getAnswer().charAt(0));
+        double[] inputPattern = ImageToInputPattern.colorRangeToDoubleInputPattern(captcha.getImage(), 0, 0, 1, -1);
+        double[] result = networkController.evaluate(inputPattern, 0);
+        
+        boolean correct = Arrays.equals(result, expectedResult);
+
+        System.out.println(captcha.getAnswer().charAt(0) + " recognized? " + correct);
+    }
+
+    public void perceptron() {
+    }
+
+    private Captcha createCaptcha(String buildString, int width, int height) throws RuntimeException {
+        try {
+            CaptchaBuilder captchaBuilder = new CaptchaBuilder(40, 50, buildString);
+            Captcha c = captchaBuilder.buildCaptcha();
+            BufferedImage img = c.getImage();
+
+            // check if size == the default size (40*50) if not scale
+            if (width != 40 || height != 50) {
+                BufferedImage resized =
+                        new BufferedImage(width, height, img.getType());
+                Graphics2D g = resized.createGraphics();
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                        RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g.drawImage(img, 0, 0, width, height, 0, 0, img.getWidth(), img.getHeight(),
+                        null);
+                g.dispose();
+
+                //build new CAPTCHA WITH THE NEW IMAGE SIZE
+                c = new Captcha(c.getBuildSequence(), c.getAnswer(), c.isCaseSensative(), img, new Date());
+            }
+
+            return c;
+
+        } catch (ParseException ex) {
+            Logger.getLogger(DomainFacade.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("error creating CAPTCHA");
+        }
+    }
 }

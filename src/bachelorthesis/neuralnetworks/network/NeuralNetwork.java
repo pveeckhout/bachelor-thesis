@@ -45,14 +45,14 @@ import java.io.Serializable;
 public abstract class NeuralNetwork implements NeuralNetworkActions,
         Serializable {
 
-    private int id, hSize, vSize;
+    private int id;
 
     /**
      * Default constructor, sets the id to -1, hSize to 40 and vSize to 50.
      *
      */
     public NeuralNetwork() {
-        this(-1, 40, 50);
+        this(-1);
     }
 
     /**
@@ -62,10 +62,8 @@ public abstract class NeuralNetwork implements NeuralNetworkActions,
      * @param hSize the horizontal size (width)
      * @param vSize the vertical size (height)
      */
-    public NeuralNetwork(int id, int hSize, int vSize) {
+    public NeuralNetwork(int id) {
         this.id = id;
-        this.hSize = hSize;
-        this.vSize = vSize;
     }
 
     public int getId() {
@@ -74,22 +72,6 @@ public abstract class NeuralNetwork implements NeuralNetworkActions,
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getHsize() {
-        return hSize;
-    }
-
-    public void setHsize(int hSize) {
-        this.hSize = hSize;
-    }
-
-    public int getVsize() {
-        return vSize;
-    }
-
-    public void setVsize(int vSize) {
-        this.vSize = vSize;
     }
 
     /**

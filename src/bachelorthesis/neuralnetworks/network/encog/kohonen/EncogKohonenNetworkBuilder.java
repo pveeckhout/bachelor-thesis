@@ -24,6 +24,7 @@
 package bachelorthesis.neuralnetworks.network.encog.kohonen;
 
 import org.encog.mathutil.rbf.RBFEnum;
+import static org.encog.mathutil.rbf.RBFEnum.InverseMultiquadric;
 
 /**
  * EncogHopfieldNetworkBuilder.java (UTF-8)
@@ -39,28 +40,24 @@ import org.encog.mathutil.rbf.RBFEnum;
  * @version 1.0.0
  */
 public class EncogKohonenNetworkBuilder {
-    private double[][] trainingInput;
     private NeighborhoodFunctionType neighborhoodFunction;
     private RBFEnum radialBiasFunction;
     private int radius;
+    private int[] neighborhoodSize;
     private double learningRate;
     private int id;
-    private int hSize;
-    private int vSize;
     private double error;
     private boolean forceWinner;
 
-    public EncogKohonenNetworkBuilder(double[][] trainingInput, int width, int height) {
-        neighborhoodFunction = NeighborhoodFunctionType.SINGLE;
-        radialBiasFunction = RBFEnum.Gaussian;
+    public EncogKohonenNetworkBuilder() {
+        neighborhoodFunction = NeighborhoodFunctionType.BUBLLE;
+        radialBiasFunction = RBFEnum.InverseMultiquadric;
         radius = 2;
         learningRate = 0.7;
         id = -1;
-        hSize = width;
-        vSize = height;
         forceWinner =  false;
         error = 0.01;
-        this.trainingInput = trainingInput;
+        neighborhoodSize = new int[]{40,50};
     }
 
     public EncogKohonenNetworkBuilder setNeighborhoodFunction(NeighborhoodFunctionType neighborhoodFunction) {
@@ -101,7 +98,7 @@ public class EncogKohonenNetworkBuilder {
     
 
     public EncogKohonenNetwork createEncogKohonenNetwork() {
-        return new EncogKohonenNetwork(trainingInput, neighborhoodFunction, radialBiasFunction, radius, learningRate, error, forceWinner, id, hSize, vSize);
+        return new EncogKohonenNetwork(neighborhoodFunction, radialBiasFunction, radius, learningRate, error, forceWinner, id);
     }
     
 }
