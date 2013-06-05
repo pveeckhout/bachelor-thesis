@@ -42,7 +42,7 @@ import org.encog.neural.som.training.basic.neighborhood.NeighborhoodSingle;
 /**
  * EncogKohonenNetwork.java (UTF-8)
  *
- * Provides a configurable Encog HopfieldNetwork
+ * Provides a configurable Encog KohonenNetwork
  *
  * 2013/05/19
  *
@@ -126,9 +126,11 @@ public class EncogKohonenNetwork extends bachelorthesis.neuralnetworks.network.N
         while (err>error) {
             train.iteration();
             err = train.getError();
-            System.out.println("Iteration: " + iteration + ", Error:" + err);
+            System.out.println("Iteration: " + iteration + ", Error:" + err + ", target error: " + error);
         }
         
+        
+        //couple each output neuron to a trained pattern #output neurons == #trained pattterns
         output = new HashMap<>();
          MLData data;
         for (int i = 0; i < trainingInput.length; i++) {
