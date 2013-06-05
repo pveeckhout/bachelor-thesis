@@ -212,6 +212,10 @@ Submitted \datum
 
 \end{titlepage}
 
+%%Schutblad
+
+\emptypage
+
 %% Inhoudstafel
 
 \tableofcontents
@@ -230,6 +234,8 @@ Submitted \datum
 TODO
 \end{abstract}
 
+\emptypage
+
 \chapter*{Preamble}
 \label{ch:preamble}
 First, dear reader, I would like to thank you for taking the time to read this thesis. Without an audience this entire endeavour would not mean as much as it does right now, while you are reading its results. I personally believe this is because I would like my life not to go unnoticed. So if this thesis helps, or influences you in any way, then this work has gained more meaning.\\Second I would like to thank the following people who have made it possible for me to arrive at this point. Special thanks and mentions go to:
@@ -244,6 +250,9 @@ Bare in mind that this is not an exclusive list. Finally I would like to thank a
 \includegraphics[width=5cm]{./img/signature.png}\\[.5cm]
 \studenta
 \end{center}
+
+\emptypage
+
 \chapter{\titel}
 \label{ch:introduction}
 \paragraph{The target audience.}
@@ -260,6 +269,7 @@ The two previously mentioned researches signify the importance and impact of SPA
 \paragraph{Spammers fight back.}
 All these prevention and detection methods did not stop the spammers from trying to reach an audience as large  as possible. The spammers rely on a large target audience because of the return rates being as low as 0.0023\% \citep{Cobb2003}. The spammers started to device ways to circumvent or break the existing systems in order to reach a large enough audience. One of these methods is solving CAPTCHA tests by making use of the adaptive learning and pattern recognizing capabilities of neural networks. These networks can be used to recognize letters from images with adversarial clutter.
 This is the area I will focus on in this thesis. This thesis will list some of the difficulties regarding the extraction of relevant data from a CAPTCHA and how to possibly overcome these difficulties. However the main focus will be on understanding the inner workings of neural networks and on searching for the types and configuration of neural networks best used for pattern recognition.
+\cleardoublepage
 \chapter{Premise and research questions}
 \label{ch:Premise}
 \section{Premise}
@@ -285,6 +295,7 @@ The research can be divided into two separate subjects. If one was to develop so
 \item How future proof would this solution be?
 \item Is there enough economic incentive to invest in development?
 \end{itemize}
+\cleardoublepage
 \chapter{Methodology}
 \label{ch:methodology}
 This thesis is made up out of several parts, the first parts are a study on CAPTCHA and neural networks. The last part is a description of applying the the gathered information.
@@ -292,6 +303,7 @@ This thesis is made up out of several parts, the first parts are a study on CAPT
 The research philosophy used in this thesis is post-positivism. It will used quantitative, qualitative and other methods (such as interpreting and combining several sources). The premise in this philosophy is that the world can be objectified, but the objectification is always coloured based on the subjective knowledge, experiences and believes of each individual.
 \subsection{Approach}
 The information in this thesis was gathered primarily by performing literature studies on the subjects that presented problems, and then trying to verify the conclusions made from the literature study by testing them in an experimental setting.
+\cleardoublepage
 \chapter{Corpus}
 \label{ch:corpus}
 \section{CAPTCHA}
@@ -865,55 +877,62 @@ The hardest thing to implement was the conversion from an image with a letter to
 \paragraph{Creating the Hopfield network.}
 The first network implemented was the Hopfield network (Code ~\ref{source:EncogHopfieldNetwork.java}, page ~\pageref{source:EncogHopfieldNetwork.java}). This was straightforward to implement thanks to the fact that the Encog framework has default implementation of a Hopfield network. The functionalities (build, train and evaluate) haven been implemented so that all the needed steps are executed in one method call. A state pattern might prove a useful extra extension to prevent the execution of one function when it cannot be executed yet (e.g. training the network when it hasn't been build yet).
 \subparagraph{Testing out the network}
-Images of letters weren't immediately use  when first testing out this network, instead generic 10X10 patterns were used to see whether the network was capable of recognizing patterns. The first results were promising so the implementation was adjusted to accommodate for using the input from the letters. The network was expanded to receive input for each pixel of the image containing one character (40X50) (Figure ~\ref{fig:trainingImages}, page ~\pageref{fig:trainingImages}) resulting in a massive network of 2000 neurons. The training of the network was very easy, again thanks to the Encog framework. However, when evaluating the network it quickly became apparent that the implementation of the Hopfield network was flawed. The patterns trained were all combined into a single pattern. As stated before, a Hopfield network is only capable of storing a maximum of $\approx  0.139 \cdot |H|$ patterns, with $H$ being the total amount of neurons. This was a problem that was not identified quickly, seeing that the network should be able to theoretically store a maximum of 278 reconstructible patterns, being far more than the 45 patterns being trained. A more detailed study has shown that the theoretical maximum amount of reconstructible patterns overshoots the real value by a magnitude 10. The storage capacity of a Hopfield network decreases significantly if the patterns are highly correlated (which is the case when training the network for character recognition). A more realistic storage capacity for Hopfield networks training character patterns using the Hebbian rule is $\approx 0.012$ \citep{Gang}. Gang Wei and Zheyuan Yu also propose a better learning rule, namely the Pseudo-inverse Rule. The pseudo-inverse rule has a technical maximum capacity of $p = 2|H|$ \citep{Gardner}, but again, realistically the pseudo-inverse rule has a storage capacity of $\approx 0.064$ when training for character recognition. Using the pseudo-inverse rule the network would need to consist out of at least 704 neurons to store 45 character patterns. The network implemented should be able to store and recognize the patterns correctly once the pseudo-inverse learning rule is implemented. Unfortunately Encog did not allow to quickly change the learning rule, as only the Hebbian rule is default implemented and the API for writing a custom learning rule did not bring much clarity.
+Images of letters weren't immediately use  when first testing out this network, instead generic 10X10 patterns were used to see whether the network was capable of recognizing patterns. The first results were promising so the implementation was adjusted to accommodate for using the input from the letters. The network was expanded to receive input for each pixel of the image containing one character (40X50) (Figure ~\ref{fig:trainingImages}, page ~\pageref{fig:trainingImages}) resulting in a massive network of 2000 neurons. The training of the network was very easy, again thanks to the Encog framework. However, when evaluating the network it quickly became apparent that the implementation of the Hopfield network was flawed. The patterns trained were all combined into a single pattern. As stated before, a Hopfield network is only capable of storing a maximum of $\approx  0.139 \cdot |H|$ patterns, with $H$ being the total amount of neurons. This was a problem that was not identified quickly, seeing that the network should be able to theoretically store a maximum of 278 reconstructible patterns, being far more than the 45 patterns being trained. A more detailed study has shown that the theoretical maximum amount of reconstructible patterns overshoots the real value by a magnitude 10. The storage capacity of a Hopfield network decreases significantly if the patterns are highly correlated (which is the case when training the network for character recognition). A more realistic storage capacity for Hopfield networks training character patterns using the Hebbian rule is $\approx 0.012$ \citep{Gang}. Gang Wei and Zheyuan Yu also propose a better learning rule, namely the Pseudo-inverse Rule. The pseudo-inverse rule has a technical maximum capacity of $p = 2|H|$ \citep{Gardner}, but again, realistically the pseudo-inverse rule has a storage capacity of $\approx 0.064$ when training for character recognition. Using the pseudo-inverse rule the network would need to consist out of at least 704 neurons to store 45 character patterns. The network as implemented should be able to store and recognize the patterns correctly once the pseudo-inverse learning rule is implemented. Unfortunately Encog did not allow to quickly change the learning rule, as only the Hebbian rule is default implemented and the API for writing a custom learning rule did not bring much clarity.
 \paragraph{Creating the multi layered perceptron.}
 The second network implemented was the MLP network (Code ~\ref{source:EncogPerceptronNetwork.java}, page ~\pageref{source:EncogPerceptronNetwork.java}). This network was just as straightforward to implement as the Hopfield network thanks to the Encog framework. Just like the Hopfield network the functionalities have been implemented so that they can be called with a single method call. The building of the network is capable of adding several hidden layers. The training method can be specified during the initialization of the network. once the training has started, the method cannot be changed any more.
-Feed forward\citep{Jiang2003} and \citep{Browning2007}
 \subparagraph{Testing out the network}
 This network was immediately implemented to use the generated letter images (Figure ~\ref{fig:trainingImages}, page ~\pageref{fig:trainingImages}) as input. For this purpose the retina layer was made up out of 2000 input neurons, one neuron for each pixel in the letter image. By utilizing the previously mentioned ImageToArray utility class this was easily done. The output was chosen to be made up out of 8 neurons, each representing a bit value (the neurons should use the binary threshold function, or the output should be normalized to a range of $\{0,1\}$).\\\\The most influential parameter in this network type is the change in the size and the amount of hidden layers.
 \\\\
 %TODO
 TODO: Statistical DATA --> COLLECT TOMOROW
+TODO: use \citep{Jiang2003} and \citep{Browning2007}
 \paragraph{Creating the Kohonen network.}
-%TODO
-TODO
-\citep{Torma1995}
+Just like the two previous networks, implementing it was very easy to implement this network. just like the previous two are the functionalities implemented so that they can be called with a single method call. What is a bit different here is that we cannot know what character the network recognizes. The only feedback we normally would get is knowing what neuron is firing.So we have to map the output neuron firing to the input pattern triggering it. This mapping is in this case done right after the network has been trained. 
 \subparagraph{Testing out the network}
 %TODO
 TODO
+
+\citep{Torma1995} (2d vs 1d)
+
+\cleardoublepage
+
 \chapter{Conclusion}
 \label{ch:conclusie}
 %TODO
 TODO
-Learning rules: \citep{SathasivamSaratha2011}
 Single character success: \citep{Chellapilla2005}
 %
 %%---------- Bijlagen ----------------------------------------------------
 %
+
 \appendix
-\chapter*{Code}
+\cleardoublepage
+\chapter{Code}
 \label{ch:Sourcecode}
 
+\section{ColorRangeContainer.java}
 \codefragment{source/ColorRangeContainer.java}{The ColorRangeContainerClass, used for storing the colors used in the elements and randomly getting one of the available colors.}
 \label{source:ColorRangeContainer.java}
 
+\section{Captcha.java}
 \codefragment{source/Captcha.java}{The Captcha test.}
 \label{source:Captcha.java}
 
+\section{ImageToArray.java}
 \codefragment{source/ImageToArray.java}{Utility class to convert images to array representations.}
-\label{source:ImagToArray.java}
+\label{source:ImageToArray.java}
 
+\section{EncogHopfieldNetwork.java}
 \codefragment{source/EncogHopfieldNetwork.java}{The Hopfield network.}
 \label{source:EncogHopfieldNetwork.java}
 
+\section{EncogPerceptronNetwork.java}
 \codefragment{source/EncogPerceptronNetwork.java}{The multilayered perceptron network.}
 \label{source:EncogPerceptronNetwork.java}
 
-\codefragment{source/TrainingSet.java}{The new trainingset container.}
-\label{source:TrainingSet.java}
-
-\codefragment{source/NeuralNetwork.java}{The abstract network class.}
-\label{source:KohonenNetwork.java}
+\section{EncogKohonenNetwork.java}
+\codefragment{source/EncogKohonenNetwork.java}{The self organizing map (Kohonen network).}
+\label{source:EncogKohonenNetwork.java}
 %
 % Automatisch invoegen van al je Java broncode:
 % 1/ maak een link naar je broncodedirectory naar subdirectory source
@@ -926,7 +945,8 @@ Single character success: \citep{Chellapilla2005}
 %\input{source.tex}
 %
 
-\chapter*{Images}
+\cleardoublepage
+\chapter{Images}
 \label{images}
 \begin{figure}
 	\centering
@@ -1188,16 +1208,23 @@ Single character success: \citep{Chellapilla2005}
 \label{fig:trainingImages}
 \end{figure}
 
+\cleardoublepage
 \bibliographystyle{plainnat}
 \bibliography{Solving_CAPTCHA_using_neural_networks}
 %
 %%---------- Back matter -------------------------------------------------
 %
+\cleardoublepage
 
 \listoffigures
 %\listoftables
-%
+
+\cleardoublepage
 % Lijst van broncode-listings. Kan je weglaten als je dit niet nodig hebt.
 \lstlistoflistings
 %
+
+\cleardoublepage
+\chapter{CD}
+\label{ch:cd}
 \end{document}
