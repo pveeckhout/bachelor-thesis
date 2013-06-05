@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.neuralnetworks.util;
+package bachelorthesis.ocr.util;
 
 import java.util.Arrays;
 

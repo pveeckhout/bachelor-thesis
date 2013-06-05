@@ -23,7 +23,7 @@
  */
 package bachelorthesis.neuralnetworks.network.encog.kohonen;
 
-import java.util.Arrays;
+import bachelorthesis.neuralnetworks.network.NeuralNetwork;
 import java.util.HashMap;
 import java.util.Map;
 import org.encog.mathutil.rbf.RBFEnum;
@@ -52,7 +52,7 @@ import org.encog.neural.som.training.basic.neighborhood.NeighborhoodSingle;
  * @since 1.0.0
  * @version 1.0.0
  */
-public class EncogKohonenNetwork extends bachelorthesis.neuralnetworks.network.NeuralNetwork {
+public class EncogKohonenNetwork extends NeuralNetwork {
 
     private double trainingInput[][];
     private Map<Integer, Double[]> output;

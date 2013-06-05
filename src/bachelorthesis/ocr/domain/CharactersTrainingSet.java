@@ -21,13 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.neuralnetworks.util;
+package bachelorthesis.ocr.domain;
 
 import bachelorthesis.captchabuilder.elementcreator.renderer.text.AbstractWordRenderer;
 import bachelorthesis.captchabuilder.elementcreator.renderer.text.DefaultWordRenderer;
 import bachelorthesis.captchabuilder.elementcreator.renderer.text.WordRenderer;
 import bachelorthesis.captchabuilder.util.ColorRangeContainer;
 import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
+import bachelorthesis.ocr.util.CharacterPatternUtils;
+import bachelorthesis.ocr.util.ImageToInputPattern;
+import bachelorthesis.neuralnetworks.util.TrainingSet;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -36,12 +39,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * EncogTrainingSet.java (UTF-8)
+ * TrainingSet.java (UTF-8)
  *
- * Utility class to help generate the input and output trainingsets for an encog
- * Neural Network.
+ * class that stores the input and output training patterns for neural network
+ * training.
  *
- * 2013/05/20
+ * 2013/06/04
  *
  * @author Pieter Van Eeckhout <vaneeckhout.pieter@gmail.com>
  * @author Pieter Van Eeckhout <pieter.vaneeckhout.q1295@student.hogent.be>
@@ -49,50 +52,75 @@ import javax.imageio.ImageIO;
  * @since 1.0.0
  * @version 1.0.0
  */
-public class EncogTrainingSet {
+public class CharactersTrainingSet extends TrainingSet {
 
-    /**
-     * builds the input set from a collection of chars
-     * <p/>
-     * @param chars the collection of chars to train for
-     * @param hSize the width of the char image
-     * @param vSize the height of the char image
-     * <p/>
-     * @return
-     */
-    public static double[][] buildTrainingInputSet(char[] chars, int hSize,
-                                                   int vSize) {
-        double[][] inputTrainingsSet = new double[chars.length][];
-        System.out.println("building Trainingsets");
+    private char[] chars;
+    private int height, width;
+
+    public CharactersTrainingSet(char[] chars, int height, int width) {
+        super(width*height, 8);
+        this.chars = chars;
+        super.setTrainingSetCount(chars.length);
+    }
+
+    @Override
+    public void setTrainingSetCount(int trainingSetCount) {
+        throw new UnsupportedOperationException("trianingSetCount is now "
+                + "defined from the input character array");
+    }
+
+    public char[] getChars() {
+        return chars;
+    }
+
+    public void setChars(char[] chars) {
+        this.chars = chars;
+        setInput(new double[chars.length][super.getInputCount()]);
+    }
+    
+    public char getChar(int set) throws RuntimeException {
+        if ((set < 0) || (set >= getTrainingSetCount())) {
+            throw (new RuntimeException("Training set out of range:" + set));
+        }
+        return chars[set];
+    }
+    
+    public void setChar (int set, char character) throws RuntimeException {
+        if ((set < 0) || (set >= getTrainingSetCount())) {
+            throw (new RuntimeException("Training set out of range:" + set));
+        }
+        this.chars[set] = character;
+    }
+
+    public void buildSet() {
         BufferedImage img;
         WordRenderer renderer = new DefaultWordRenderer(new ColorRangeContainer(0, 0,
-                                                                           0,
-                                                                           255),
-                                                        AbstractWordRenderer.DEFAULT_FONTS,
-                                                        0, 0.25,
-                                                        CaptchaConstants.DEFAULT_STROKE_WIDTH);
-        int index = 0;
-
-        for (char c : chars) {
+                0,
+                255),
+                AbstractWordRenderer.DEFAULT_FONTS,
+                0, 0.25,
+                CaptchaConstants.DEFAULT_STROKE_WIDTH);
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            
             img = new BufferedImage(40, 50, BufferedImage.TYPE_INT_ARGB);
             renderer.render(String.valueOf(c), img);
 
             // check if size == the default size (40*50) if not scale
-            if (hSize != 40 || vSize != 50) {
-                BufferedImage resized = new BufferedImage(hSize, vSize, img
+            if (width != 40 || height != 50) {
+                BufferedImage resized = new BufferedImage(width, height, img
                         .getType());
                 Graphics2D g = resized.createGraphics();
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                g.drawImage(img, 0, 0, hSize, vSize, 0, 0, img.getWidth(), img
+                g.drawImage(img, 0, 0, width, height, 0, 0, img.getWidth(), img
                         .getHeight(), null);
                 g.dispose();
 
                 //replace the origal with the resized
                 img = resized;
-            }
-
-            try {
+                
+                try {
                 String path = "TrainingsetImages/";
                 // if the directory does not exist, create it and it's parents
                 File theDir = new File(path);
@@ -105,35 +133,16 @@ public class EncogTrainingSet {
                 }
 
                 ImageIO.write(img, "png", new File(path + Character.getName(c) +
-                        "-" + hSize + "X" + vSize + ".png"));
+                        "-" + width + "X" + height + ".png"));
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
             }
 
-            inputTrainingsSet[index++] = ImageToInputPattern
-                    .colorRangeToDoubleInputPattern(img, 0, 0);
+            setInputSet(i, ImageToInputPattern
+                    .colorRangeToDoubleInputPattern(img, 0, 0));
+            setOutputSet(i, CharacterPatternUtils
+                    .characterToBitArray(c));
+            }
         }
-
-        return inputTrainingsSet;
-    }
-
-    /**
-     * builds the ideal response set from a collection of chars
-     * <p/>
-     * @param chars the collection of chars to train for
-     * <p/>
-     * @return
-     */
-    public static double[][] buildTrainingIdealSet(char[] chars) {
-        double[][] outputTrainingsSet = new double[chars.length][];
-        System.out.println("building TrainingIdealSet");
-        int index = 0;
-
-        for (char c : chars) {
-            outputTrainingsSet[index++] = CharacterPatternUtils
-                    .characterToBitArray(c);
-        }
-
-        return outputTrainingsSet;
     }
 }
