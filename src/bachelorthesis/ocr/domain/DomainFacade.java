@@ -23,14 +23,19 @@
  */
 package bachelorthesis.ocr.domain;
 
-import bachelorthesis.neuralnetworks.network.NeuralNetwork;
+import bachelorthesis.captchabuilder.util.ArrayUtil;
+import bachelorthesis.captchabuilder.util.enums.CaptchaConstants;
+import bachelorthesis.neuralnetworks.network.encog.hopfield.EncogHopfieldNetworkBuilder;
+import bachelorthesis.neuralnetworks.util.TrainingSet;
 
 /**
- * NeuralNetworkController.java (UTF-8)
+ * DomainFacade.java (UTF-8)
  *
- * Default controller implementation.
+ * Acts as the entrypoint for the domain layer. All calls toward the domain
+ * should pass here. Will contain the repositories and the controller instances,
+ * if there are any.
  *
- * 2013/05/19
+ * 2013/06/04
  *
  * @author Pieter Van Eeckhout <vaneeckhout.pieter@gmail.com>
  * @author Pieter Van Eeckhout <pieter.vaneeckhout.q1295@student.hogent.be>
@@ -38,48 +43,28 @@ import bachelorthesis.neuralnetworks.network.NeuralNetwork;
  * @since 1.0.0
  * @version 1.0.0
  */
-public class DefaultNeuralNetworkController implements NeuralNetworkController<CharactersTrainingSet> {
+public class DomainFacade {
+
+    private TrainingSet trainingSet;
+    private NeuralNetworkController networkController;
+    private int width, height;
     
-    private NeuralNetwork network;
-    private CharactersTrainingSet trainingSet;
 
-    public DefaultNeuralNetworkController() {
-        super();
-    }
-    
-    @Override
-    public NeuralNetwork getNetwork() {
-        return network;
-    }
-
-    @Override
-    public void setNetwork(NeuralNetwork network) {
-        this.network = network;
+    public DomainFacade() {
+        width = 40;
+        height = 50;
+        char[] chars = ArrayUtil.concat(CaptchaConstants.LETTERS,
+                CaptchaConstants.NUMBERS,
+                CaptchaConstants.SPECIAL);
+        trainingSet = new CharactersTrainingSet(chars, width, height);
+        
+        networkController = new DefaultNeuralNetworkController();
     }
 
-    @Override
-    public void buildNetwork() {
-        network.buildNetwork();
-    }
-
-    @Override
-    public void trainNetwork() {
-        network.trainNetwork();
-    }
-
-    @Override
-    public double[] evaluate(double[] input, int maxIterations) {
-        return network.evaluate(input, maxIterations);
-    }
-
-    @Override
-    public CharactersTrainingSet getTrainingSet() {
-        return this.trainingSet;
-    }
-
-    @Override
-    public void setTrainingSet(CharactersTrainingSet trainingSet) {
+    public DomainFacade(TrainingSet trainingSet, NeuralNetworkController networkController) {
         this.trainingSet = trainingSet;
-    }
-    
+        this.networkController = networkController;
+        
+        networkController.setTrainingSet(trainingSet);
+    }    
 }

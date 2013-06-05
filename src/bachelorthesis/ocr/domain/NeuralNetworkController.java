@@ -25,6 +25,7 @@ package bachelorthesis.ocr.domain;
 
 import bachelorthesis.neuralnetworks.network.NeuralNetwork;
 import bachelorthesis.neuralnetworks.network.NeuralNetworkActions;
+import bachelorthesis.neuralnetworks.util.TrainingSet;
 
 
 /**
@@ -40,10 +41,14 @@ import bachelorthesis.neuralnetworks.network.NeuralNetworkActions;
  * @since 1.0.0
  * @version 1.0.0
  */
-public interface NeuralNetworkController extends NeuralNetworkActions {
+public interface NeuralNetworkController<T extends TrainingSet> extends NeuralNetworkActions {
 
     public NeuralNetwork getNetwork();
 
     public void setNetwork(NeuralNetwork network);
+    
+    public T getTrainingSet();
+    
+    public void setTrainingSet(T trainingSet);
 
 }

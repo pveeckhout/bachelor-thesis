@@ -57,7 +57,7 @@ public class CharactersTrainingSet extends TrainingSet {
     private char[] chars;
     private int height, width;
 
-    public CharactersTrainingSet(char[] chars, int height, int width) {
+    public CharactersTrainingSet(char[] chars, int width, int height) {
         super(width*height, 8);
         this.chars = chars;
         super.setTrainingSetCount(chars.length);

@@ -42,7 +42,7 @@ import org.encog.neural.som.training.basic.neighborhood.NeighborhoodSingle;
 /**
  * EncogKohonenNetwork.java (UTF-8)
  *
- * Provides a configurable Encog KohonenNetwork
+ * Provides a configurable Encog SOM
  *
  * 2013/05/19
  *
