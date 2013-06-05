@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package bachelorthesis.neuralnetworks.network.encog.util;
+package bachelorthesis.neuralnetworks.network.encog.perceptron;
 
 /**
  * PropagationType.java (UTF-8)

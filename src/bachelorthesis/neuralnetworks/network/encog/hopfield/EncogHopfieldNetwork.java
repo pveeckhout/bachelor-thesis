@@ -28,7 +28,7 @@ import org.encog.ml.data.specific.BiPolarNeuralData;
 import org.encog.neural.thermal.HopfieldNetwork;
 
 /**
- * EncogBasicNetwork.java (UTF-8)
+ * EncogHopfieldNetwork.java (UTF-8)
  *
  * Provides a configurable Encog HopfieldNetwork
  *
@@ -91,7 +91,8 @@ public class EncogHopfieldNetwork extends NeuralNetwork {
         BiPolarNeuralData patternData = new BiPolarNeuralData(neuroncount);
         if (data.length != neuroncount) {
             IndexOutOfBoundsException e = new IndexOutOfBoundsException(
-                    "the size of the traingsinputs is different from the amount of input neurons");
+                    "the size of the traingsinputs is different from the amount "
+                    + "of input neurons");
             throw e;
         }
         patternData.setData(data);

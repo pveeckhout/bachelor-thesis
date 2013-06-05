@@ -23,7 +23,6 @@
  */
 package bachelorthesis.neuralnetworks.network.encog.perceptron;
 
-import bachelorthesis.neuralnetworks.network.encog.util.PropagationType;
 import java.util.ArrayList;
 import java.util.List;
 import org.encog.ml.train.strategy.Strategy;

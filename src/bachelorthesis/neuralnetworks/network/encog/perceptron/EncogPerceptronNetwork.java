@@ -23,9 +23,8 @@
  */
 package bachelorthesis.neuralnetworks.network.encog.perceptron;
 
-import bachelorthesis.neuralnetworks.network.encog.util.PropagationType;
 import bachelorthesis.neuralnetworks.network.NeuralNetwork;
-import static bachelorthesis.neuralnetworks.network.encog.util.PropagationType.ManhattanPropagation;
+import static bachelorthesis.neuralnetworks.network.encog.perceptron.PropagationType.ManhattanPropagation;
 import java.util.List;
 import org.encog.engine.network.activation.ActivationSigmoid;
 import org.encog.ml.data.MLDataSet;

@@ -24,12 +24,11 @@
 package bachelorthesis.neuralnetworks.network.encog.kohonen;
 
 /**
- * NeuralReportable.java (UTF-8)
+ * NeighborhoodFunctionType.java (UTF-8)
  *
- * Utility class used to be able to inform an implementing class of the training
- * progress
+ * usage and functionality here
  *
- * 2013/06/04
+ * 2013/05/19
  *
  * @author Pieter Van Eeckhout <vaneeckhout.pieter@gmail.com>
  * @author Pieter Van Eeckhout <pieter.vaneeckhout.q1295@student.hogent.be>
@@ -37,14 +36,9 @@ package bachelorthesis.neuralnetworks.network.encog.kohonen;
  * @since 1.0.0
  * @version 1.0.0
  */
-public interface NeuralReportable {
-
-    /**
-     * Informs about the progress of the network training
-     * <p/>
-     * @param cycles     how many training cycles have passed
-     * @param totalError the total error for that epoch
-     * @param bestError  the best total error occurred so far
-     */
-    public void update(int cycles, double totalError, double bestError);
+public enum NeighborhoodFunctionType {
+    SINGLE,
+    BUBLLE,
+    RBF,
+    RBF1D;
 }

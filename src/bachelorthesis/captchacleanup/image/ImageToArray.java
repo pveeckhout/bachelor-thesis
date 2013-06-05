@@ -39,6 +39,8 @@ import java.awt.image.BufferedImage;
  * @version 1.0.0
  */
 public class ImageToArray {
+    private static final double INRANGEVALUE = 1;
+    private static final double OUTRANGEVALUE = -1;
 
     /**
      * extracts the image data, all pixels within the colour range return true
@@ -112,9 +114,9 @@ public class ImageToArray {
                     int B = (startRange) & 0x000000FF;
                     if (startR <= R && R <= endR && startG <= G && G <= endG &&
                             startB <= B && B <= endB) {
-                        array[x][y] = 1;
+                        array[x][y] = INRANGEVALUE;
                     } else {
-                        array[x][y] = -1;
+                        array[x][y] = OUTRANGEVALUE;
                     }
                 }
             }

@@ -24,7 +24,7 @@
 package bachelorthesis.neuralnetworks.network.encog.hopfield;
 
 /**
- * EncogBasicNetworkBuilder.java (UTF-8)
+ * EncogHopfieldNetworkBuilder.java (UTF-8)
  *
  * Provides a builder for a configurable Encog HopfieldNetwork
  *
