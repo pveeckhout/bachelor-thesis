@@ -139,7 +139,7 @@ public class EncogPerceptronNetwork extends NeuralNetwork {
             training.addStrategy(strategy);
         }
 
-        System.out.println("Start training to acuracy: " + accuracy);
+        System.out.println("Start training to accuracy: " + accuracy);
         int layers = network.getLayerCount();
         System.out.println("#Layer: " + layers);
         for (int i = 0; i < layers; i++) {
