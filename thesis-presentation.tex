@@ -31,6 +31,8 @@
 %---------- Commando-definities -----------------------------------------------
 \newcommand{\partTOC}{%
   \begin{frame}{overzicht}%
+  \transfade
+  \transduration{1}
   \tableofcontents[currentpart]%
   \end{frame}%
 }
@@ -55,6 +57,7 @@
 % Titeldia met faculteitslogo
 \begin{frame}[plain]
   \titlepage
+  \frametitle{Afronding}
 \end{frame}
 
 %---------- Inhoud ------------------------------------------------------------
@@ -62,19 +65,30 @@
 % Dia voor sectiekop, voorbeeld met een afbeelding onderaan de pagina
 \part{Situering}
 \partframe{%
+  \transfade
+  \transduration{1}
   \vfill%
   \includegraphics[width=3cm]{logo/HG-woordmerk-inv}%
 }
 \part{Onderzoek}
 \partframe{%
+  \transfade
+  \transduration{1}
   \vfill%
   \includegraphics[width=3cm]{logo/HG-woordmerk-inv}%
 }
 \partTOC
 \section{CAPTCHA}
+\begin{frame}
+  \frametitle{onderzoek: CAPTCHA}
+  \transfade
+  \transduration{1}
+\end{frame}
 \subsection{types CAPTCHA}
 \begin{frame}
-\frametitle{Types CAPTCHA}
+  \frametitle{Types CAPTCHA}
+  \transfade
+  \transduration{1}
    \begin{columns}[c]
      \column{.30\textwidth}
        \begin{itemize}
@@ -96,6 +110,8 @@
 \subsection{evolutie}
 \begin{frame}
   \frametitle{CAPTCHA evolutie}
+  \transfade
+  \transduration{1}
   \begin{columns}[c]
      \column{.60\textwidth}
        \begin{itemize}
@@ -112,6 +128,8 @@
 \end{frame}
 \begin{frame}
   \frametitle{CAPTCHA evolutie}
+  \transfade
+  \transduration{1}
   \begin{columns}[c]
     \column{.50\textwidth}
        \begin{center}
@@ -127,6 +145,8 @@
 \end{frame}
 \begin{frame}
   \frametitle{CAPTCHA evolutie - Onmogelijke CAPTCHA}
+  \transfade
+  \transduration{1}
   Onmogelijke CAPTCHA door verhoogde moeilijkheid
   \begin{columns}[c]
     \column{.50\textwidth}
@@ -142,6 +162,8 @@
 \subsection{toekomst}
 \begin{frame}
   \frametitle{CAPTCHA toekomst}
+  \transfade
+  \transduration{1}
   \begin{itemize}
     \item<+-> verbetering OCR algoritmen
     \item<+-> toename in rekenkracht
@@ -154,9 +176,16 @@
   \onslide<+->{evolutie naar empathie en complexere begrippen}    
 \end{frame}
 \section{Neurale netwerken}
+\begin{frame}
+  \frametitle{onderzoek: neurale netwerken}
+  \transfade
+  \transduration{1}
+\end{frame}
 \subsection{componenten}
 \begin{frame}
   \frametitle{neuron componenten}
+  \transfade
+  \transduration{1}
   \begin{itemize}
     \item<+-> propagatie functie
     \item<+-> drempelwaarde
@@ -166,6 +195,8 @@
 \subsection{topologie}
 \begin{frame}
   \frametitle{netwerk topologie}
+  \transfade
+  \transduration{1}
   \begin{itemize}
     \item<+-> feedforward
     \item<+-> recurrent
@@ -179,6 +210,8 @@
 \end{frame}
 \begin{frame}
   \frametitle{bias neuron}
+  \transfade
+  \transduration{1}
   \begin{itemize}
     \item<+-> vervangt de drempelwaarde
     \item<+-> extra neuron per netwerk of laag
@@ -189,6 +222,8 @@
 \subsection{netwerk leren}
 \begin{frame}
   \frametitle{leer paradigma}
+  \transfade
+  \transduration{1}
   \begin{enumerate}
     \item nieuwe connecties
     \item bestaande connecties verwijderen
@@ -201,6 +236,8 @@
 \end{frame}
 \begin{frame}
   \frametitle{methodes van leren}
+  \transfade
+  \transduration{1}
   \begin{itemize}
     \item zonder toezicht
     \item versterkend
@@ -214,13 +251,22 @@
 \end{frame}
 \part{Implementatie}
 \partframe{%
+  \transfade
+  \transduration{1}
   \vfill%
   \includegraphics[width=3cm]{logo/HG-woordmerk-inv}%
 }
 \partTOC
 \section{Captcha maker}
 \begin{frame}
-  \frametitle{CAPTCHA MAKER}
+  \frametitle{implementatie: CAPTCHA maker}
+  \transfade
+  \transduration{1}
+\end{frame}
+\begin{frame}
+  \frametitle{CAPTCHA maker}
+  \transfade
+  \transduration{1}
   Dit is gemaakt om gemakkelijk patroonherkenning te testen.
   \begin{itemize}
     \item achtergronden
@@ -231,7 +277,14 @@
 \end{frame}
 \section{Neurale netwerken}
 \begin{frame}
+  \frametitle{implementatie: neurale netwerken}
+  \transfade
+  \transduration{1}
+\end{frame}
+\begin{frame}
   \frametitle{Neurale netwerken}
+  \transfade
+  \transduration{1}
   Met het Encog framework zijn volgende netwerken ge\"{i}mplementeerd
   \begin{itemize}
     \item Hopfield netwerk
@@ -241,6 +294,8 @@
 \end{frame}
 \begin{frame}
   \frametitle{Hopfield}
+  \transfade
+  \transduration{1}
   \begin{columns}[c]
      \column{.40\textwidth}
        \begin{itemize}
@@ -252,6 +307,8 @@
 \end{frame}
 \begin{frame}
   \frametitle{perceptron}
+  \transfade
+  \transduration{1}
     \begin{itemize}
       \item netwerk in staat letters te herkennen
       \item batch test optimale configuratie
@@ -265,17 +322,23 @@
 \end{frame}
 \begin{frame}
   \frametitle{Kohonen}
+  \transfade
+  \transduration{1}
   Geen succesvol resultaat, foutmarge blijft te hoog
   \vfill
   Vermoedelijk knopen tijdens het ontvouwen van het netwerk
 \end{frame}
 \part{Conclusie}
 \partframe{%
+  \transfade
+  \transduration{1}
   \vfill%
   \includegraphics[width=3cm]{logo/HG-woordmerk-inv}%
 }
 \begin{frame}
   \frametitle{Conclusie}
+  \transfade
+  \transduration{1}
   \begin{itemize}
     \item<+-> CAPTCHA worden steeds moeilijker
     \item<+-> neurale netwerken kunnen patronen herkennen
@@ -294,6 +357,8 @@
 \end{frame}
 \part{Afronding}
 \partframe{%
+  \transfade
+  \transduration{1}
   \begin{itemize}
     \item Vragen
     \item Bedankt
@@ -302,14 +367,18 @@
   \includegraphics[width=3cm]{logo/HG-woordmerk-inv}%
 }
 \begin{frame}{Afronding}
-\begin{center}
-Vragenronde
-\end{center}
+  \transfade
+  \transduration{1}
+  \begin{center}
+    Vragenronde
+  \end{center}
 \end{frame}
 \begin{frame}{Afronding}
-\begin{center}
-Bedankt voor de aandacht
-\end{center}
+  \transfade
+  \transduration{1}
+  \begin{center}
+    Bedankt voor de aandacht
+  \end{center}
 \end{frame}
 
 %---------- Back matter -------------------------------------------------------
