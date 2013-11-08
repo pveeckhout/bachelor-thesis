@@ -7,7 +7,7 @@ The whole colletcion of my thesis is licensed under the MIT license, so all code
 
 ##Paper
 
-# Solving CAPTCHA with neural networks
+###Solving CAPTCHA with neural networks
 This project is my bachelor thesis for University College Ghent, professional Bachelor of applied Computer Science
 
 The thesis will be based on my personal experiences trying to device a working system to crack CAPTCHA images as well as on literature study.
@@ -18,7 +18,7 @@ As per medium used for the thesis, I chose for LaTeX. LaTeX is still a new syste
 
 ##Implementation
 
-#CAPTCHA buildstring examples
+###CAPTCHA buildstring examples
 
 Background:
 
