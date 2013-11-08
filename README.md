@@ -5,8 +5,7 @@ the collection of my bachelor thesis paper, implementation and presentation.
 
 The whole colletcion of my thesis is licensed under the MIT license, so all code (except possibly some third-party libraries) and documents are open source and can be freely reused.
 
-Paper
-_____
+##Paper
 
 # Solving CAPTCHA with neural networks
 This project is my bachelor thesis for University College Ghent, professional Bachelor of applied Computer Science
@@ -17,8 +16,7 @@ The code (Java) written for this is all opensources and will be freely available
 
 As per medium used for the thesis, I chose for LaTeX. LaTeX is still a new system for me to discover, but I feel that it will be an good system for writing a thesis and that it will be valuable learning experience to be had at the end of my academic endevours.
 
-Implementation
-______________
+##Implementation
 
 #CAPTCHA buildstring examples
 
@@ -49,7 +47,6 @@ Combine by placing in sequence and repeating... exp:
 BEWARE:
 	only the last :BACKGROUND: encountered will be used.
 
-Presentation
-____________
+##Presentation
 
 The presentation is again made by using LaTeX.
