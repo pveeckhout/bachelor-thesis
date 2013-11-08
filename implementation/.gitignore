@@ -1,0 +1,15 @@
+# ignore folders
+/build/
+/nbproject/
+
+# ignore files
+/lib/nblibraries.properties
+/nbbuild.xml
+
+# ignore all files inside dist folder
+/dist/*
+
+# do not ignore dist folder itself
+
+# also do not ignore the create jarfiles
+!/dist/*.jar
